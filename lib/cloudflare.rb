@@ -20,8 +20,8 @@ class CloudFlare
 
     TIMEOUT = 5 # Default is 5 seconds
 
-    # @param [String] api_key user or Host API key.
-    # @param [String] email it is for a Client API.
+    # @param api_key [String] user or Host API key.
+    # @param email [String] it is for a Client API.
     def initialize(api_key, email = nil)
         @params = Hash.new
 
@@ -40,9 +40,8 @@ class CloudFlare
     #
     # More: http://www.cloudflare.com/docs/client-api.html#FUNCTION:_Current_Stats_and_Settings
     #
-    # @param [String] zone
-    # @param [Integer] interval the interval parameter defines what period you want to look at. Default is 30 days, but 1 day delayed. Pro only intervals are 100, 110, and 120.
-    #
+    # @param zone [String]
+    # @param interval [Integer] the interval parameter defines what period you want to look at. Default is 30 days, but 1 day delayed. Pro only intervals are 100, 110, and 120.
     # @return [Hash] the current stats and settings for a particular website
 
     def stats(zone, interval = 20)
@@ -55,7 +54,7 @@ class CloudFlare
         send_req(a: :zone_load_multi)
     end
 
-    # @param [zone]
+    # @param zone [String]
     # @return [Hash] all of the DNS records from a particular domain in a CloudFlare account
     def rec_load_all(zone)
         send_req({a: :rec_load_all, z: zone})
@@ -63,7 +62,7 @@ class CloudFlare
 
     # This function checks whether one or more websites/domains are active under an account and return the zone ids (zids) for these.
     #
-    # @param [String or Array] zones like 'www.example.com, www.example2.com' or ['www.examaple.com', 'www.example2.com']
+    # @param zones [String or Array] like 'example.com, example2.com' or ['examaple.com', 'example2.com']
     # @return [Hash] map of passed in zones. If a zone if hosted on CloudFlare and the email + tkn combination is correct for the given zone, the value for the zone will be its zone id (use this for other API calls). Otherwise 0.
 
     def zone_check(*zones)
@@ -72,14 +71,14 @@ class CloudFlare
 
     # This function pulls recent IPs hitting your site.
     #
-    # @param zoneid Id of the zone you would like to check.
-    # @param hours Number of hours to go back. Default is 24, max is 48.
-    # @param class Restrict the result set to a given class. Currently r|s|t, for regular, crawler, threat resp.
-    # @param geo Add to add longitude and latitude information to the response. 0,0 means no data.
-    # @return (Hash) A list of IP addresses which hit your site classified by type.
+    # @param zone [String]
+    # @param hours [Integer] number of hours to go back. Default is 24, max is 48.
+    # @param classification [String] (optional) restrict the result set to a given classification. Currently r|s|t, for regular, crawler, threat resp.
+    # @param geo [Fixnum] (optional) set to 1 to add longitude and latitude information to response
+    # @return [Hash] a list of IP addresses which hit your site classified by type
 
-    def zone_ips(zoneid, classification, hours = 24, geo = '0,0')
-        send_req({a: :zone_ips, zid: zoneid, hours: hours, class: classification, geo: geo})
+    def zone_ips(zone, classification = nil, hours = 24, geo = 1)
+        send_req({a: :zone_ips, z: zone, hours: hours, class: classification, geo: geo})
     end
 
     # This function sets the Basic Security Level to HELP I'M UNDER ATTACK / HIGH / MEDIUM / LOW / ESSENTIALLY OFF.
