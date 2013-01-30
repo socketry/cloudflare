@@ -110,10 +110,10 @@ class CloudFlare
 
     # This function sets the Caching Level to Aggressive or Basic.
     #
-    # @param zone The zone you'd like to run CNAMES through CloudFlare for, e.g. +example.com+.
-    # @param value Must be one of agg|basic.
+    # @param zone [String]
+    # @param value [String] must be one of agg|basic
 
-    def set_cache_lvl(zone, value)
+    def cache_lvl(zone, value)
         send_req({a: :cache_lvl, z: zone, v: value})
     end
 
