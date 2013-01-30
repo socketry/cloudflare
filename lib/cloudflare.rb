@@ -138,6 +138,16 @@ class CloudFlare
         send_req({a: :fpurge_ts, z: zone, v: 1})
     end
 
+    # This function will purge a single file from CloudFlare's cache.
+    #
+    # @param zone [String]
+    # @param url [String] is a full URL the file that needs to be purged from Cloudflare's cache. For example: "http://example.com/style.css"
+    # @return [Hash] vtxt_match, url
+
+    def zone_file_purge(zone, url)
+        send_req({a: :zone_file_purge, z: zone, url: url})
+    end
+
     # This functions updates the snapshot of your site for CloudFlare's challenge page.
     #
     # @note Yhis call is rate limited to once per zone per day. Also the new image may take up to 1 hour to appear.
