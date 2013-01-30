@@ -81,6 +81,17 @@ class CloudFlare
         send_req({a: :zone_ips, z: zone, hours: hours, class: classification, geo: geo})
     end
 
+    # This function checks the threat score for a given IP.
+    #
+    # @note scores are logarithmically increasing, like the Richter scale.
+    #
+    # @param ip [Fixnum] IP address to check.
+    # @return [Array] the current threat score for a given IP.
+
+    def ip_lkup(ip)
+        send_req({a: :ip_lkup, ip: ip})
+    end
+
     # This function sets the Basic Security Level to HELP I'M UNDER ATTACK / HIGH / MEDIUM / LOW / ESSENTIALLY OFF.
     #
     # @param [String] zone the zone you'd like to run CNAMES through CloudFlare for, e.g. +example.com+.
@@ -188,17 +199,6 @@ class CloudFlare
 
     def update_rec(ip, hosts)
         send_req({a: :DIUP, ip: ip, hosts: hosts})
-    end
-
-    # This function checks the threat score for a given IP.
-    #
-    # @note scores are logarithmically increasing, like the Richter scale.
-    #
-    # @param ip IP address to check.
-    # @return The current threat score for a given IP.
-
-    def threat_score(ip)
-        send_req({a: :ip_lkup, ip: ip})
     end
 
     # This function toggles ipv6 support for a site.
