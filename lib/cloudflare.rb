@@ -101,10 +101,10 @@ class CloudFlare
 
     # This function sets the Basic Security Level to HELP I'M UNDER ATTACK / HIGH / MEDIUM / LOW / ESSENTIALLY OFF.
     #
-    # @param [String] zone the zone you'd like to run CNAMES through CloudFlare for, e.g. +example.com+.
-    # @param [String] value must be one of low|med|high|help|eoff.
+    # @param zone [String]
+    # @param value [String] must be one of low|med|high|help|eoff.
 
-    def set_security_lvl(zone, value)
+    def sec_lvl(zone, value)
         send_req({a: :sec_lvl, z: zone, v: value})
     end
 
