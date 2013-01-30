@@ -92,6 +92,13 @@ class CloudFlare
         send_req({a: :ip_lkup, ip: ip})
     end
 
+    # @param zone [String]
+    # @return [Hash] all current settings for a given domain
+
+    def zone_settings(zone)
+        send_req({a: :zone_settings, z: zone})
+    end
+
     # This function sets the Basic Security Level to HELP I'M UNDER ATTACK / HIGH / MEDIUM / LOW / ESSENTIALLY OFF.
     #
     # @param [String] zone the zone you'd like to run CNAMES through CloudFlare for, e.g. +example.com+.
