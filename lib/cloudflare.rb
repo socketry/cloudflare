@@ -85,7 +85,7 @@ class CloudFlare
     #
     # @note scores are logarithmically increasing, like the Richter scale.
     #
-    # @param ip [Fixnum] IP address to check.
+    # @param ip [String] IP address to check.
     # @return [Array] the current threat score for a given IP.
 
     def ip_lkup(ip)
@@ -160,18 +160,52 @@ class CloudFlare
 
     # This function adds an IP address to your white lists.
     #
-    # @param address The address you wish to set a rule for.
+    # @param address [String] the address you wish to set a rule for.
 
     def whitelist(address)
         send_req({a: :wl, key: address})
     end
 
+
     # This function adds an IP address to your black lists.
     #
-    # @param address The address you wish to set a rule for.
+    # @param address [String] the address you wish to set a rule for.
 
     def blacklist(address)
         send_req({a: :ban, key: address})
+    end
+
+    # This function remove the IP from whitelist or blacklist
+    #
+    # @param address [String] the address you wish to set a rule for.
+
+    def remove_ip(address)
+        send_req({a: :nul, key: address})
+    end
+
+    # @param zone [String]
+    # @param value [Boolean] true or false
+
+    def ipv46(zone, value)
+        send_req({a: :ipv46, z: zone, v: value ? 1 : 0})
+    end
+
+    # This function changes Rocket Loader setting
+    #
+    # @param zone [String]
+    # @param value [Integer or String] 0 - off, a - automatic, m - manual
+
+    def async(zone, value)
+        send_req({a: :async, z: zone, v: value})
+    end
+
+    # This function changes minification settings.
+    #
+    # @param zone [String]
+    # @param value [Integer] 0 - off, 1 - JS only, 2 - CSS only, 3 - JS and CSS, 4 - HTML only, 5 - JS and HTML, 6 - CSS and HTML, 7 - CSS, JS and HTML
+
+    def minify(zone, value)
+        send_req({a: :minify, z: zone, v: value})
     end
 
     # This function creates a new DNS record for your site. This can be either a CNAME or A record.
