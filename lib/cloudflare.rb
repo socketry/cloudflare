@@ -121,12 +121,12 @@ class CloudFlare
     #
     # @note Development mode will expire on "expires_on" (3 hours from when it is toggled on). Development mode can be toggled off immediately by setting +value+ to 0.
     #
-    # @param zone The zone you'd like to run CNAMES through CloudFlare for, e.g. +example.com+
-    # @param value May be set to true (on) or false (off).
-    # @return (Hash) expires_on
+    # @param zone [String]
+    # @param value [Boolean] may be set to true (on) or false (off).
+    # @return [Hash] expires_on
 
     def devmode(zone, value)
-        send_req({a: :devmode, z: zone, v: value == true ? 1 : 0})
+        send_req({a: :devmode, z: zone, v: value ? 1 : 0})
     end
 
     # This function will purge CloudFlare of any cached files. It may take up to 48 hours for the cache to rebuild and optimum performance to be achieved so this function should be used sparingly.
