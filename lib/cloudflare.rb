@@ -131,12 +131,10 @@ class CloudFlare
 
     # This function will purge CloudFlare of any cached files. It may take up to 48 hours for the cache to rebuild and optimum performance to be achieved so this function should be used sparingly.
     #
-    # @param zone The zone you'd like to run CNAMES through CloudFlare for, e.g. +example.com+.
-    # @return (Hash) fpurge_ts, cooldawn
-    # @return *fpurge_ts* - Time at which cache was purged.
-    # @return *cooldown* - Number of seconds before the next time this call is allowed again.
+    # @param zone [String]
+    # @return [Hash] expires_on, zone
 
-    def purge_cache(zone)
+    def fpurge_ts(zone)
         send_req({a: :fpurge_ts, z: zone, v: 1})
     end
 
