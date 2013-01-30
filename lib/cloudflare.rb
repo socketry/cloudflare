@@ -148,13 +148,13 @@ class CloudFlare
         send_req({a: :zone_file_purge, z: zone, url: url})
     end
 
-    # This functions updates the snapshot of your site for CloudFlare's challenge page.
+    # This function updates the snapshot of your site for CloudFlare's challenge page.
     #
-    # @note Yhis call is rate limited to once per zone per day. Also the new image may take up to 1 hour to appear.
+    # @note This API call can by used once per day.
     #
-    # @param zoneid Id of the zone you would like to check.
+    # @param zoneid [Integer] id of the zone you would like to check.
 
-    def update_image(zoneid)
+    def zone_grab(zoneid)
         send_req({a: :zone_grab, zid: zoneid})
     end
 
