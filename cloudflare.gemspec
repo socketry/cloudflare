@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.summary     = "A Ruby wrapper for the CloudFlare API."
   s.authors     = ["Marcin 'B4k3r' Prokop"]
   s.email       = 'marcin@prokop.co'
-  s.homepage    = 'http://b4k3r.github.com/cloudflare/'
+  s.homepage    = 'https://github.com/B4k3r/cloudflare'
 
   s.files            = ['Rakefile', 'lib/cloudflare.rb', 'test/test_cloudflare.rb', 'README.md', 'LICENSE']
   s.test_files       = ['test/test_cloudflare.rb']
