@@ -210,53 +210,81 @@ class CloudFlare
 
     # This function creates a new DNS record for your site. This can be either a CNAME or A record.
     #
-    # @param zone The zone you'd like to run CNAMES through CloudFlare for, e.g. +example.com+.
-    # @param type Type of record - CNAME or A.
-    # @param content The value of the cname or IP address (the destination).
-    # @param name The name of the record you wish to create.
-    # @param mode False or true. false means CloudFlare is off (grey cloud) for the new zone, while true means a happy orange cloud.
+    # @param zone [String]
+    # @param type [String] type of dns record. Values include: [A/CNAME/MX/TXT/SPF/AAAA/NS/SRV/LOC].
+    # @param name [String] the name of the record you wish to create.
+    # @param content [String] the value of the cname or IP address (the destination).
+    # @param ttl [String] TTL of record in seconds. 1 = Automatic, otherwise, value must in between 120 and 4,294,967,295 seconds.
+    # @param prio [Integer] (applies to MX/SRV)  MX record priority.
+    # @param service [String] (applies to SRV) for SRV record
+    # @param srvname [String] (applies to SRV) Service Name for SRV record
+    # @param protocol [Integer] (applies to SRV) for SRV record. Values include: [_tcp/_udp/_tls].
+    # @param weight [Intger] (applies to SRV) for SRV record.
+    # @param port [Integer] (applies to SRV) for SRV record
+    # @param target [String] (applies to SRV) for SRV record
+    # @return [Hash] data with a new created DNS record
 
-    def add_rec(zone, type, content, name, mode)
-        send_req({a: :rec_set, zone: zone, type: type, content: content, name: name, mode: mode == true ? 1 : 0})
+    def rec_new(zone, type, name, content, ttl, prio = nil, service = nil, srvname = nil, protocol = nil, weight = nil, port = nil, target = nil)
+        send_req({
+            a: :rec_new,
+            type: type,
+            name: name.
+            content: content,
+            ttl: ttl,
+            prio: prio,
+            service: service,
+            srvname: srvname,
+            protocol: protocol,
+            weight: weight,
+            port: port,
+            target: target
+        })
     end
 
-    # This function deletes a DNS record.
+    # This function edits a DNS record for a zone.
     #
-    # @note All records of the given name will be deleted. For this reason, you must pass in the full DNS name of the record you wish to remove. For +example+, +sub.foo.com+, as opposed to just sub.
-    #
-    # @param zone
-    # @param name The name of the record you wish to remove.
+    # @param zone [String]
+    # @param type [String] type of dns record. Values include: [A/CNAME/MX/TXT/SPF/AAAA/NS/SRV/LOC].
+    # @param idzone [Integer] DNS Record ID
+    # @param name [String] the name of the record you wish to create.
+    # @param content [String] the value of the cname or IP address (the destination).
+    # @param ttl [String] TTL of record in seconds. 1 = Automatic, otherwise, value must in between 120 and 4,294,967,295 seconds.
+    # @param service_mode [Boolean] (applies to A/AAAA/CNAME) status of CloudFlare Proxy, 1 = orange cloud, 0 = grey cloud.
+    # @param prio [Integer] (applies to MX/SRV)  MX record priority.
+    # @param service [String] (applies to SRV) for SRV record
+    # @param srvname [String] (applies to SRV) Service Name for SRV record
+    # @param protocol [Integer] (applies to SRV) for SRV record. Values include: [_tcp/_udp/_tls].
+    # @param weight [Intger] (applies to SRV) for SRV record.
+    # @param port [Integer] (applies to SRV) for SRV record
+    # @param target [String] (applies to SRV) for SRV record
+    # @return [Hash] data with a new created DNS record
 
-    def del_rec(zone, name)
-        send_req({a: :rec_del, zone: zone, name: name})
+    def rec_edit(idzone, type, idzone, name, content, ttl, service_mode = nil, prio = nil, service = nil, srvname = nil, protocol = nil, weight = nil, port = nil, target = nil)
+        send_req({
+            a: :rec_new,
+            type: type,
+            id: idzone,
+            name: name.
+            content: content,
+            ttl: ttl,
+            service_mode: service_mode,
+            prio: prio,
+            service: service,
+            srvname: srvname,
+            protocol: protocol,
+            weight: weight,
+            port: port,
+            target: target
+        })
     end
 
-    # This function purges the preloader's cache.
+    # This functon delete a record for a domain.
     #
-    # @note Can take up to an hour for this to take effect.
-    #
-    # @param ip The value of the IP address.
+    # @param zone [String]
+    # @param idzone [Integer] DNS Record ID
 
-    def pre_purge(ip)
-        send_req({a: :pre_purge, zone_name: ip})
-    end
-
-    # This function updates a DNS record for your site. This needs to be an A record.
-    #
-    # @param ip The value of the IP address (the destination).
-    # @param hosts The name of the record you wish to adjust.
-
-    def update_rec(ip, hosts)
-        send_req({a: :DIUP, ip: ip, hosts: hosts})
-    end
-
-    # This function toggles ipv6 support for a site.
-    #
-    # @param zone
-    # @param value False disables, true enables support.
-
-    def toggle_ipv6(zone, value)
-        send_req({a: :ipv46, z: zone, v: value ? 1 : 0})
+    def rec_delete(zone, idzone)
+        send_req({a: :rec_delete, z: zone, id: idzone})
     end
 
     # HOST
