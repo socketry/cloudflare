@@ -460,7 +460,7 @@ class CloudFlare
     # @param id [Integer] child_id
 
     def host_child_stop(id)
-        send_req({act: host_child_stop, child_id: id})
+        send_req({act: :host_child_stop, child_id: id})
     end
 
     # This function lists the domains currently active on CloudFlare for the given host.
