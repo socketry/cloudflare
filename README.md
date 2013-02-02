@@ -1,3 +1,15 @@
+NOTICE
+======
+
+In version v1.1.0 I renamed some functions in Client API.
+
+-	threat_score -> ip_lkup
+-	set_cache_lvl -> cache_lvl
+-	set_security_lvl -> sec_lvl
+- 	purge_cache -> fpurge_ts
+-	update_image -> zone_grab
+
+
 CloudFlare
 ==========
 
@@ -37,7 +49,7 @@ output = cf.add_rec('domain.com', 'A', '212.11.6.211', 'subdomain.domain.com', t
 if output['result'] == 'success'
   	puts 'Successfuly added DNS record'
 else
-	puts output['msg'] // error message
+	puts output['msg'] # error message
 end
 ```
 
