@@ -5,7 +5,7 @@ class HostTest < Test::Unit::TestCase
 
   def test_client_connection
     cf = CloudFlare.new('example_api', 'example@example.com')
-    assert_equal('E_UNAUTH', cf.toggle_ipv6('example.com', true)['err_code'])
+    assert_equal('E_UNAUTH', cf.ipv46('example.com', true)['err_code'])
   end
 
   def test_host_connection
