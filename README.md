@@ -1,13 +1,7 @@
 NOTICE
-======
+------
 
-In version v1.1.0 I renamed some functions in Client API.
-
--	threat_score -> ip_lkup
--	set_cache_lvl -> cache_lvl
--	set_security_lvl -> sec_lvl
-- 	purge_cache -> fpurge_ts
--	update_image -> zone_grab
+In version 1.1.0 some functions were renamed. Please see documentation.
 
 
 CloudFlare
