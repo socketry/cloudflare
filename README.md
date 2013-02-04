@@ -1,7 +1,7 @@
 NOTICE
 ------
 
-In version 1.1.0 some functions were renamed. Please see documentation.
+In version 1.1.x some functions were renamed. Please see documentation.
 
 
 CloudFlare
@@ -38,7 +38,7 @@ Usage
 require 'cloudflare'
 
 cf = CloudFlare.new('user_api_key', 'user_email')
-output = cf.add_rec('domain.com', 'A', '212.11.6.211', 'subdomain.domain.com', true)
+output = cf.rec_new('domain.com', 'A', '212.11.6.211', 'subdomain.domain.com', true)
 
 if output['result'] == 'success'
   	puts 'Successfuly added DNS record'
