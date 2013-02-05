@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'cloudflare'
-  s.version     = '1.1.1'
+  s.version     = '1.1.2'
 
   s.description = "A Ruby wrapper for the CloudFlare API."
   s.summary     = "A Ruby wrapper for the CloudFlare API."
