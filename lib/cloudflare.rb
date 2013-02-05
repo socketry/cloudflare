@@ -291,7 +291,7 @@ class CloudFlare
 
     def rec_edit(zone, type, zoneid, name, content, ttl, service_mode = nil, prio = nil, service = nil, srvname = nil, protocol = nil, weight = nil, port = nil, target = nil)
         send_req({
-            a: :rec_new,
+            a: :rec_edit,  
             z: zone,
             type: type,
             id: zoneid,
