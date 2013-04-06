@@ -109,7 +109,7 @@ class CloudFlare
 
     # This function sets the Basic Security Level to HELP I'M UNDER ATTACK / HIGH / MEDIUM / LOW / ESSENTIALLY OFF.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#4.1
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.1
     #
     # @param zone [String]
     # @param value [String] values: low|med|high|help|eoff
@@ -120,7 +120,7 @@ class CloudFlare
 
     # This function sets the Caching Level to Aggressive or Basic.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#4.2
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.2
     #
     # @param zone [String]
     # @param value [String] values: agg|basic
@@ -131,7 +131,7 @@ class CloudFlare
 
     # This function allows you to toggle Development Mode on or off for a particular domain.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#4.3
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.3
     #
     # @param zone [String]
     # @param value [Boolean] 
@@ -142,7 +142,7 @@ class CloudFlare
 
     # This function will purge CloudFlare of any cached files.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#4.4
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.4
     #
     # @param zone [String]
 
@@ -152,7 +152,7 @@ class CloudFlare
 
     # This function will purge a single file from CloudFlare's cache.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#4.5
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.5
     #
     # @param zone [String]
     # @param url [String]
@@ -163,7 +163,7 @@ class CloudFlare
 
     # This function updates the snapshot of your site for CloudFlare's challenge page.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#4.6
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.6
     #
     # @param zoneid [Integer]
 
@@ -173,7 +173,7 @@ class CloudFlare
 
     # This function adds an IP address to your white lists.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#4.7
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.7
     #
     # @param ip [String]
 
@@ -184,7 +184,7 @@ class CloudFlare
 
     # This function adds an IP address to your black lists.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#4.7
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.7
     #
     # @param ip [String]
 
@@ -194,7 +194,7 @@ class CloudFlare
 
     # This function removes the IP from whitelist or blacklist.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#4.7
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.7
     #
     # @param ip [String]
 
@@ -204,7 +204,7 @@ class CloudFlare
 
     # This function toggles IPv6 support.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#4.8
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.8
     #
     # @param zone [String]
     # @param value [Boolean] 
