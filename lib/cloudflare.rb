@@ -255,7 +255,7 @@ class CloudFlare
     def rec_new(zone, type, name, content, ttl, prio = nil, service = nil, srvname = nil, protocol = nil, weight = nil, port = nil, target = nil)
         send_req({
             a: :rec_new,
-            zone: zone,
+            z: zone,
             type: type,
             name: name,
             content: content,
