@@ -38,7 +38,7 @@ Usage
 require 'cloudflare'
 
 cf = CloudFlare.new('user_api_key', 'user_email')
-output = cf.rec_new('domain.com', 'A', '212.11.6.211', 'subdomain.domain.com', true)
+output = cf.rec_new('domain.com', 'A', 'subdomain', '212.11.6.211', 1)
 
 if output['result'] == 'success'
   	puts 'Successfuly added DNS record'
