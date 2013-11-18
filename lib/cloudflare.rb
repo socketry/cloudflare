@@ -276,7 +276,7 @@ class CloudFlare
     #
     # @param zone [String]
     # @param type [String] values: A|CNAME|MX|TXT|SPF|AAAA|NS|SRV|LOC
-    # @param zoneid [Integer]
+    # @param record_id [Integer]
     # @param name [String]
     # @param content [String]
     # @param ttl [Integer] values: 1|120...4294967295
@@ -289,12 +289,12 @@ class CloudFlare
     # @param port [Integer] (applies to SRV)
     # @param target [String] (applies to SRV)
 
-    def rec_edit(zone, type, zoneid, name, content, ttl, service_mode = nil, prio = nil, service = nil, srvname = nil, protocol = nil, weight = nil, port = nil, target = nil)
+    def rec_edit(zone, type, record_id, name, content, ttl, service_mode = nil, prio = nil, service = nil, srvname = nil, protocol = nil, weight = nil, port = nil, target = nil)
         send_req({
             a: :rec_edit,  
             z: zone,
             type: type,
-            id: zoneid,
+            id: record_id,
             name: name,
             content: content,
             ttl: ttl,
