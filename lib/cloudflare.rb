@@ -266,7 +266,8 @@ class CloudFlare
             protocol: protocol,
             weight: weight,
             port: port,
-            target: target
+            target: target,
+            service_mode: "1"
         })
     end
 
