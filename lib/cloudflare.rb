@@ -226,13 +226,25 @@ class CloudFlare
 
     # This function changes minification settings.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#s4.9
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.10
     #
     # @param zone [String]
     # @param value [Integer] values: 0|2|3|4|5|6|7
 
     def minify(zone, value)
         send_req({a: :minify, z: zone, v: value})
+    end
+
+
+    # This function changes mirage2 settings.
+    #
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.11
+    #
+    # @param zone [String]
+    # @param value [Integer] values: 0|1
+
+    def mirage2(zone, value)
+        send_req({a: :mirage2, z: zone, v: value})
     end
 
     # This function creates a new DNS record for your site. This can be either a CNAME or A record.
