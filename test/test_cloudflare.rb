@@ -2,15 +2,23 @@ require 'test/unit'
 require 'cloudflare'
 
 class HostTest < Test::Unit::TestCase
-
   def test_client_connection
-    cf = CloudFlare.new('example_api', 'example@example.com')
-    assert_equal('E_UNAUTH', cf.ipv46('example.com', true)['err_code'])
+    cf = CloudFlare::connection('example_api', 'example@example.com')
+		
+		info = assert_raise RuntimeError, "as" do
+		 	cf.ipv46('example.com', true)
+		end
+
+		assert info, 'No or invalid host_key.'
   end
 
   def test_host_connection
-    cf = CloudFlare.new('example_api')
-    assert_equal(100, cf.user_auth('example.com', 'password')['err_code'])
-  end
+    cf = CloudFlare::connection('example_api')
 
+    info = assert_raise RuntimeError do 
+			cf.user_auth('example.com', 'password')
+		end
+
+		assert info, 'No or invalid host_key.'
+  end
 end

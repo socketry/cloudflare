@@ -1,15 +1,9 @@
-NOTICE
-------
-
-In version 1.1.x some functions were renamed. Please see documentation.
-
-
 CloudFlare
 ==========
 
 It is a Ruby wrapper for the CloudFlare API.
 
-Official home page is [here](https://github.com/B4k3r/cloudflare). The complete [RDoc](http://rdoc.info/github/B4k3r/cloudflare/) is online.
+Official home page is [here](https://github.com/b4k3r/cloudflare). The complete [RDoc](http://rdoc.info/github/b4k3r/cloudflare/) is online.
 
 Visit also a CloudFlare API documentation:
 
@@ -37,13 +31,14 @@ Usage
 ```
 require 'cloudflare'
 
-cf = CloudFlare.new('user_api_key', 'user_email')
-output = cf.rec_new('domain.com', 'A', 'subdomain', '212.11.6.211', 1)
+cf = CloudFlare::connection('user_api_key', 'user_email')
 
-if output['result'] == 'success'
-  	puts 'Successfuly added DNS record'
+begin
+	cf.rec_new('domain.com', 'A', 'subdomain', '212.11.6.211', 1)
+rescue Exception => e
+	puts e.message # error message
 else
-	puts output['msg'] # error message
+  puts 'Successfuly added DNS record'
 end
 ```
 
@@ -52,24 +47,20 @@ end
 ```
 require 'cloudflare'
 
-cf = CloudFlare.new('host_api_key')
-output = cf.create_user('john@example.com', 'secret', 'john')
+cf = CloudFlare::connection('host_api_key')
 
-if output['result'] == 'success'
-  	puts output['msg']
-  	puts "Your login is #{output['response']['cloudflare_username']}" # => john
+begin
+	output = cf.create_user('john@example.com', 'secret', 'john')
+rescue Exception => e
+	puts e.message # error message
 else
-  	puts output['msg'] # error message
+	puts output['msg']
+	puts "Your login is #{output['response']['cloudflare_username']}" # => john
 end
 ```
 
 License
 -------
 
-Copyright &copy; 2012 - 2013. It is free software, and may be redistributed under the terms specified in the MIT-LICENSE file.
-
-
-
-
-
+Copyright &copy; 2012 - 2014. It is free software, and may be redistributed under the terms specified in the MIT-LICENSE file.
 
