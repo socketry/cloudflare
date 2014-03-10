@@ -2,7 +2,7 @@
 
 It is a Ruby wrapper for the CloudFlare API.
 
-[![Build Status](https://secure.travis-ci.org/b4k3r/build-graph.png)](http://travis-ci.org/b4k3r/build-graph)
+[![Build Status](https://travis-ci.org/b4k3r/cloudflare.png?branch=master)](https://travis-ci.org/b4k3r/cloudflare)
 
 Official home page is [here](https://github.com/b4k3r/cloudflare). The complete [RDoc](http://rdoc.info/github/b4k3r/cloudflare/) is online.
 
