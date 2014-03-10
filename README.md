@@ -68,7 +68,7 @@ Or install it yourself as:
 
 Released under the MIT license.
 
-Copyright, 2012, 2014, by [Marcin Prokop](https://github.com/b4k3r).
+Copyright, 2012, 2014, by [Marcin Prokop](https://github.com/b4k3r).  
 Copyright, 2014, by [Samuel G. D. Williams](http://www.codeotaku.com/samuel-williams).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
