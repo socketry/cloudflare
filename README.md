@@ -35,7 +35,7 @@ cf = CloudFlare::connection('user_api_key', 'user_email')
 
 begin
 	cf.rec_new('domain.com', 'A', 'subdomain', '212.11.6.211', 1)
-rescue Exception => e
+rescue => e
 	puts e.message # error message
 else
   puts 'Successfuly added DNS record'
@@ -51,7 +51,7 @@ cf = CloudFlare::connection('host_api_key')
 
 begin
 	output = cf.create_user('john@example.com', 'secret', 'john')
-rescue Exception => e
+rescue => e
 	puts e.message # error message
 else
 	puts output['msg']
