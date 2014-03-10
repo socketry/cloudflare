@@ -6,8 +6,17 @@ require 'json'
 # - http://www.cloudflare.com/docs/host-api.html
 #
 module CloudFlare
+	class RequestError < StandardError
+		def initialize(what, response)
+			super(what)
+			
+			@response = response
+		end
+		
+		attr :response
+	end
+	
 	class Connection
-
 		# URL for Client and Host API
 		URL_API = {
 			client: 'https://www.cloudflare.com/api_json.html',
@@ -514,10 +523,11 @@ module CloudFlare
 			res = http.request(req)
 			out = JSON.parse(res.body)
 
+			# If there is an error, raise an exception:
 			if out['result'] == 'error'
-				raise out['msg']
+				raise RequestError.new(out['msg'], out)
 			else
-				out
+				return out
 			end
 		end
 	end
