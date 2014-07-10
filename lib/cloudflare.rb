@@ -60,8 +60,8 @@ class CloudFlare
     #
     # @param zone [String]
 
-    def rec_load_all(zone)
-        send_req({a: :rec_load_all, z: zone})
+    def rec_load_all(zone, offset = 0)
+        send_req({a: :rec_load_all, z: zone, o: offset})
     end
 
     # This function checks whether one or more websites/domains are active under an account and return the zone ids (zids) for these.
