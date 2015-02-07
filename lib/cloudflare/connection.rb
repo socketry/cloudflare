@@ -535,7 +535,7 @@ module CloudFlare
       end
 
       req = Net::HTTP::Post.new(uri.path)
-      req.set_form_data(params)
+      req.set_form_data(params.reject{|k, v| v.nil?})
 
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
