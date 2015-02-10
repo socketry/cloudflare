@@ -289,8 +289,9 @@ module CloudFlare
     # @param weight [Intger] (applies to SRV)
     # @param port [Integer] (applies to SRV)
     # @param target [String] (applies to SRV)
+    # @param service_mode [String]
 
-    def rec_new(zone, type, name, content, ttl, prio = nil, service = nil, srvname = nil, protocol = nil, weight = nil, port = nil, target = nil)
+    def rec_new(zone, type, name, content, ttl, prio = nil, service = nil, srvname = nil, protocol = nil, weight = nil, port = nil, target = nil, service_mode = '1')
       send_req({
         a: :rec_new,
         z: zone,
@@ -305,7 +306,7 @@ module CloudFlare
         weight: weight,
         port: port,
         target: target,
-        service_mode: '1'
+        service_mode: service_mode
       })
     end
 
