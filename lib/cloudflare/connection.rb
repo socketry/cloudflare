@@ -56,7 +56,6 @@ module CloudFlare
         @params[:api_key] = api_key
         @params[:email] = email
       end
-
     end
 
     # CLIENT
@@ -100,6 +99,7 @@ module CloudFlare
       send_req({a: :zone_check, zones: zones.kind_of?(Array) ? zones.join(',') : zones})
     end
 
+    # DEPRECATED!
     # This function pulls recent IPs hitting your site.
     #
     # @see http://www.cloudflare.com/docs/client-api.html#s3.5
@@ -110,6 +110,7 @@ module CloudFlare
     # @param geo [Fixnum] (optional)
 
     def zone_ips(zone, classification = nil, hours = 24, geo = 1)
+      puts 'Warning! This method is deprecated.'
       send_req({a: :zone_ips, z: zone, hours: hours, "class" => classification, geo: geo})
     end
 
@@ -187,19 +188,9 @@ module CloudFlare
       send_req({a: :zone_file_purge, z: zone, url: url})
     end
 
-    # This function updates the snapshot of your site for CloudFlare's challenge page.
-    #
-    # @see http://www.cloudflare.com/docs/client-api.html#s4.6
-    #
-    # @param zoneid [Integer]
-
-    def zone_grab(zoneid)
-      send_req({a: :zone_grab, zid: zoneid})
-    end
-
     # This function adds an IP address to your white lists.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#s4.7
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.6
     #
     # @param ip [String]
 
@@ -210,7 +201,7 @@ module CloudFlare
 
     # This function adds an IP address to your black lists.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#s4.7
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.6
     #
     # @param ip [String]
 
@@ -220,7 +211,7 @@ module CloudFlare
 
     # This function removes the IP from whitelist or blacklist.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#s4.7
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.6
     #
     # @param ip [String]
 
@@ -230,7 +221,7 @@ module CloudFlare
 
     # This function toggles IPv6 support.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#s4.8
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.7
     #
     # @param zone [String]
     # @param value [Boolean]
@@ -241,7 +232,7 @@ module CloudFlare
 
     # This function changes Rocket Loader setting.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#s4.9
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.8
     #
     # @param zone [String]
     # @param value [Integer or String] values: 0|a|m
@@ -252,7 +243,7 @@ module CloudFlare
 
     # This function changes minification settings.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#s4.10
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.9
     #
     # @param zone [String]
     # @param value [Integer] values: 0|2|3|4|5|6|7
@@ -264,7 +255,7 @@ module CloudFlare
 
     # This function changes mirage2 settings.
     #
-    # @see http://www.cloudflare.com/docs/client-api.html#s4.11
+    # @see http://www.cloudflare.com/docs/client-api.html#s4.10
     #
     # @param zone [String]
     # @param value [Integer] values: 0|1
@@ -289,9 +280,9 @@ module CloudFlare
     # @param weight [Intger] (applies to SRV)
     # @param port [Integer] (applies to SRV)
     # @param target [String] (applies to SRV)
-    # @param service_mode [String]
+    # @param service_mode [Boolean] (applies to A/AAAA/CNAME)
 
-    def rec_new(zone, type, name, content, ttl, prio = nil, service = nil, srvname = nil, protocol = nil, weight = nil, port = nil, target = nil, service_mode = '1')
+    def rec_new(zone, type, name, content, ttl, prio = nil, service = nil, srvname = nil, protocol = nil, weight = nil, port = nil, target = nil, service_mode = true)
       send_req({
         a: :rec_new,
         z: zone,
@@ -306,7 +297,7 @@ module CloudFlare
         weight: weight,
         port: port,
         target: target,
-        service_mode: service_mode
+        service_mode: service_mode ? 1 : 0,
       })
     end
 
@@ -320,7 +311,6 @@ module CloudFlare
     # @param name [String]
     # @param content [String]
     # @param ttl [Integer] values: 1|120...4294967295
-    # @param service_mode [Boolean] (applies to A/AAAA/CNAME)
     # @param prio [Integer] (applies to MX/SRV)
     # @param service [String] (applies to SRV)
     # @param srvname [String] (applies to SRV)
@@ -328,8 +318,9 @@ module CloudFlare
     # @param weight [Intger] (applies to SRV)
     # @param port [Integer] (applies to SRV)
     # @param target [String] (applies to SRV)
+    # @param service_mode [Boolean] (applies to A/AAAA/CNAME)
 
-    def rec_edit(zone, type, record_id, name, content, ttl, service_mode = nil, prio = nil, service = nil, srvname = nil, protocol = nil, weight = nil, port = nil, target = nil)
+    def rec_edit(zone, type, record_id, name, content, ttl, prio = nil, service = nil, srvname = nil, protocol = nil, weight = nil, port = nil, target = nil, service_mode = true)
       send_req({
         a: :rec_edit,
         z: zone,
@@ -338,14 +329,14 @@ module CloudFlare
         name: name,
         content: content,
         ttl: ttl,
-        service_mode: service_mode ? 1 : 0,
         prio: prio,
         service: service,
         srvname: srvname,
         protocol: protocol,
         weight: weight,
         port: port,
-        target: target
+        target: target,
+        service_mode: service_mode ? 1 : 0,
       })
     end
 
@@ -402,9 +393,24 @@ module CloudFlare
       })
     end
 
-    # This function lookups a user's CloudFlare account information.
+    # This function adds a zone using the full setup.
     #
     # @see http://www.cloudflare.com/docs/host-api.html#s3.2.3
+    #
+    # @param user_key [String]
+    # @param zone [String]
+
+    def add_full_zone(user_key, zone)
+      send_req({
+        act: :full_zone_set,
+        user_key: user_key,
+        zone_name: zone
+      })
+    end
+
+    # This function lookups a user's CloudFlare account information.
+    #
+    # @see http://www.cloudflare.com/docs/host-api.html#s3.2.4
     #
     # *Example:*
     #
@@ -426,7 +432,7 @@ module CloudFlare
 
     # This function authorizes access to a user's existing CloudFlare account.
     #
-    # @see http://www.cloudflare.com/docs/host-api.html#s3.2.4
+    # @see http://www.cloudflare.com/docs/host-api.html#s3.2.5
     #
     # @param email [String]
     # @param pass [String]
@@ -445,7 +451,7 @@ module CloudFlare
 
     # This function lookups a specific user's zone.
     #
-    # @see http://www.cloudflare.com/docs/host-api.html#s3.2.5
+    # @see http://www.cloudflare.com/docs/host-api.html#s3.2.6
     #
     # @param user_key [String]
     # @param zone [String]
@@ -456,33 +462,13 @@ module CloudFlare
 
     # This function deletes a specific zone on behalf of a user.
     #
-    # @see http://www.cloudflare.com/docs/host-api.html#s3.2.6
+    # @see http://www.cloudflare.com/docs/host-api.html#s3.2.7
     #
     # @param user_key [String]
     # @param zone [String]
 
     def del_zone(user_key, zone)
       send_req({act: :zone_delete, user_key: user_key, zone_name: zone})
-    end
-
-    # This function creates a new child host provider.
-    #
-    # @see http://www.cloudflare.com/docs/host-api.html#s3.2.7
-    #
-    # @param host_name [String]
-    # @param pub_name [String]
-    # @param prefix [String]
-    # @param website [String]
-    # @param email [String]
-
-    def host_child_new(host_name, pub_name, prefix, website, email)
-      send_req({
-        act: :host_child_new,
-        pub_name: pub_name,
-        prefix: prefix,
-        website: website,
-        email: email
-      })
     end
 
     # This function regenerates your host key.
@@ -512,14 +498,16 @@ module CloudFlare
     # @param name [String] (optional) zone_name
     # @param sub_id [Integer] (optional) sub_id
     # @param status [String] (optional) values: V|D|ALL
+    # @param sub_status [String] (optional) values: V|CNL|ALL
 
-    def zone_list(limit = 100, offset = 0, name = nil, sub_id = nil, status = nil)
+    def zone_list(limit = 100, offset = 0, name = nil, sub_id = nil, status = nil, sub_status = nil)
       send_req({
         act: :zone_list,
         offset: offset,
         zone_name: name,
         sub_id: sub_id,
-        zone_status: status
+        zone_status: status,
+        sub_status: sub_status
       })
     end
 
