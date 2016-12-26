@@ -20,6 +20,5 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ['README.md', 'LICENSE']
 
   s.required_ruby_version = '>= 1.9.0'
-  s.add_runtime_dependency 'json', '~> 1'
   s.add_development_dependency 'rake'
 end
