@@ -18,6 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-module CloudFlare
-  VERSION = '2.1.0'
+module Cloudflare
+  VERSION = '3.0.0'
 end

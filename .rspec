@@ -1,0 +1,5 @@
+--color
+--format documentation
+--backtrace
+--warnings
+--require spec_helper

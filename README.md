@@ -1,60 +1,59 @@
-# CloudFlare
+# Cloudflare
 
-It is a Ruby wrapper for the CloudFlare API.
+It is a Ruby wrapper for the Cloudflare API.
 
-[![Build Status](https://travis-ci.org/b4k3r/cloudflare.png?branch=master)](https://travis-ci.org/b4k3r/cloudflare)
-
-Official home page is [here](https://github.com/b4k3r/cloudflare). The complete [RDoc](http://rdoc.info/github/b4k3r/cloudflare/) is online.
-
-Visit also a CloudFlare API documentation:
-
--    [Client](http://www.cloudflare.com/docs/client-api.html)
--    [Host](http://www.cloudflare.com/docs/host-api.html)
+[![Build Status](https://secure.travis-ci.org/b4k3r/cloudflare.svg)](http://travis-ci.org/b4k3r/cloudflare)
+[![Code Climate](https://codeclimate.com/github/b4k3r/cloudflare.svg)](https://codeclimate.com/github/b4k3r/cloudflare)
+[![Coverage Status](https://coveralls.io/repos/b4k3r/cloudflare/badge.svg)](https://coveralls.io/r/b4k3r/cloudflare)
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'cloudflare'
+  gem 'cloudflare'
 
 And then execute:
 
-    $ bundle
+  $ bundle
 
 Or install it yourself as:
 
-    $ gem install cloudflare
+  $ gem install cloudflare
 
 ## Usage
 
+The complete [RDoc](http://rdoc.info/github/b4k3r/cloudflare/) is online.
+
+Visit also a [Cloudflare API documentation](https://api.cloudflare.com).
+
 **Example for Client API:**
 
-	require 'cloudflare'
+  require 'cloudflare'
 
-	cf = CloudFlare::connection('user_api_key', 'user_email')
+  cf = Cloudflare::connection('user_api_key', 'user_email')
 
-	begin
-		cf.rec_new('domain.com', 'A', 'subdomain', '212.11.6.211', 1)
-	rescue => e
-		puts e.message # error message
-	else
-	  puts 'Successfuly added DNS record'
-	end
+  begin
+    cf.rec_new('domain.com', 'A', 'subdomain', '212.11.6.211', 1)
+  rescue => e
+    puts e.message # error message
+  else
+    puts 'Successfuly added DNS record'
+  end
 
 **Example for Host API:**
 
-	require 'cloudflare'
+  require 'cloudflare'
 
-	cf = CloudFlare::connection('host_api_key')
+  cf = Cloudflare::connection('host_api_key')
 
-	begin
-		output = cf.create_user('john@example.com', 'secret', 'john')
-	rescue => e
-		puts e.message # error message
-	else
-		puts output['msg']
-		puts "Your login is #{output['response']['cloudflare_username']}" # => john
-	end
+  begin
+    output = cf.create_user('john@example.com', 'secret', 'john')
+  rescue => e
+    puts e.message # error message
+  else
+    puts output['msg']
+    puts "Your login is #{output['response']['cloudflare_username']}" # => john
+  end
 
 ## Contributing
 

@@ -25,7 +25,7 @@ require 'json'
 # - http://www.cloudflare.com/docs/client-api.html
 # - http://www.cloudflare.com/docs/host-api.html
 #
-module CloudFlare
+module Cloudflare
   class RequestError < StandardError
     def initialize(what, response)
       super(what)
@@ -71,7 +71,7 @@ module CloudFlare
       send_req({a: :stats, z: zone, interval: interval})
     end
 
-    # This function lists all domains in a CloudFlare account along with other data.
+    # This function lists all domains in a Cloudflare account along with other data.
     #
     # @see http://www.cloudflare.com/docs/client-api.html#s3.2
 
@@ -79,7 +79,7 @@ module CloudFlare
       send_req(a: :zone_load_multi)
     end
 
-    # This function lists all of the DNS records from a particular domain in a CloudFlare account.
+    # This function lists all of the DNS records from a particular domain in a Cloudflare account.
     #
     # @see http://www.cloudflare.com/docs/client-api.html#s3.3
     #
@@ -167,7 +167,7 @@ module CloudFlare
       send_req({a: :devmode, z: zone, v: value ? 1 : 0})
     end
 
-    # This function will purge CloudFlare of any cached files.
+    # This function will purge Cloudflare of any cached files.
     #
     # @see http://www.cloudflare.com/docs/client-api.html#s4.4
     #
@@ -177,7 +177,7 @@ module CloudFlare
       send_req({a: :fpurge_ts, z: zone, v: 1})
     end
 
-    # This function will purge a single file from CloudFlare's cache.
+    # This function will purge a single file from Cloudflare's cache.
     #
     # @see http://www.cloudflare.com/docs/client-api.html#s4.5
     #
@@ -353,7 +353,7 @@ module CloudFlare
 
     # HOST
 
-    # This function creates a CloudFlare account mapped to your user.
+    # This function creates a Cloudflare account mapped to your user.
     #
     # @see http://www.cloudflare.com/docs/host-api.html#s3.2.1
     #
@@ -408,13 +408,13 @@ module CloudFlare
       })
     end
 
-    # This function lookups a user's CloudFlare account information.
+    # This function lookups a user's Cloudflare account information.
     #
     # @see http://www.cloudflare.com/docs/host-api.html#s3.2.4
     #
     # *Example:*
     #
-    #   cf = CloudFlare('your_host_key')
+    #   cf = Cloudflare('your_host_key')
     #   cf.user_lookup('unique_id', true)
     #
     # If +id+ is set to true, email is a unique_id.
@@ -430,7 +430,7 @@ module CloudFlare
       end
     end
 
-    # This function authorizes access to a user's existing CloudFlare account.
+    # This function authorizes access to a user's existing Cloudflare account.
     #
     # @see http://www.cloudflare.com/docs/host-api.html#s3.2.5
     #
@@ -489,7 +489,7 @@ module CloudFlare
       send_req({act: :host_child_stop, child_id: id})
     end
 
-    # This function lists the domains currently active on CloudFlare for the given host.
+    # This function lists the domains currently active on Cloudflare for the given host.
     #
     # @see http://www.cloudflare.com/docs/host-api.html#s3.2.10
     #

@@ -20,7 +20,7 @@
 
 require 'cloudflare/connection'
 
-module CloudFlare
+module Cloudflare
   def self.connection(api_key, email = nil)
     Connection.new(api_key, email)
   end
