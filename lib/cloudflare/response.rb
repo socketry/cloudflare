@@ -19,6 +19,34 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+require 'json'
+
 module Cloudflare
-  VERSION = '3.0.0'
+	class Response
+		def initialize(content)
+			@body = JSON.parse(content, symbolize_names: true)
+		end
+		
+		attr :body
+		
+		def result
+			body[:result].first
+		end
+
+		def results
+			body[:result]
+		end
+
+		def successful?
+			body[:success]
+		end
+
+		def errors
+			body[:errors]
+		end
+
+		def messages
+			body[:messages]
+		end
+	end
 end

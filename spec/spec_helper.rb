@@ -19,6 +19,12 @@ end
 require "bundler/setup"
 require "cloudflare"
 
+RSpec.shared_context Cloudflare::Connection do
+	let(:email) {ENV['CLOUDFLARE_EMAIL']}
+	let(:key) {ENV['CLOUDFLARE_KEY']}
+	let(:connection) {Cloudflare::Connection.new(key: key, email: email)}
+end
+
 RSpec.configure do |config|
 	# Enable flags like --only-failures and --next-failure
 	config.example_status_persistence_file_path = ".rspec_status"
