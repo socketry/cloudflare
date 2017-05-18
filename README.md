@@ -10,15 +10,15 @@ It is a Ruby wrapper for the Cloudflare API.
 
 Add this line to your application's Gemfile:
 
-  gem 'cloudflare'
+  `gem 'cloudflare'`
 
 And then execute:
 
-  $ bundle
+  `$ bundle`
 
 Or install it yourself as:
 
-  $ gem install cloudflare
+  `$ gem install cloudflare`
 
 ## Usage
 
@@ -28,6 +28,7 @@ Visit also a [Cloudflare API documentation](https://api.cloudflare.com).
 
 **Example for Client API:**
 
+```ruby
   require 'cloudflare'
 
   cf = Cloudflare::connection('user_api_key', 'user_email')
@@ -39,9 +40,11 @@ Visit also a [Cloudflare API documentation](https://api.cloudflare.com).
   else
     puts 'Successfuly added DNS record'
   end
+```
 
 **Example for Host API:**
 
+```ruby
   require 'cloudflare'
 
   cf = Cloudflare::connection('host_api_key')
@@ -54,6 +57,7 @@ Visit also a [Cloudflare API documentation](https://api.cloudflare.com).
     puts output['msg']
     puts "Your login is #{output['response']['cloudflare_username']}" # => john
   end
+```
 
 ## Contributing
 
