@@ -20,7 +20,8 @@
 # THE SOFTWARE.
 
 require_relative 'cloudflare/connection'
-require_relative 'cloudflare/response'
+require_relative 'cloudflare/zone'
+require_relative 'cloudflare/user'
 
 module Cloudflare
   def self.connection(api_key, email = nil)
