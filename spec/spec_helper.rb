@@ -23,7 +23,8 @@ RSpec.shared_context Cloudflare::Connection do
 	# You must specify these in order for the tests to run.
 	let(:email) {ENV['CLOUDFLARE_EMAIL']}
 	let(:key) {ENV['CLOUDFLARE_KEY']}
-	let(:connection) {Cloudflare::Connection.new(key: key, email: email)}
+	
+	let(:connection) {Cloudflare.connect(key: key, email: email)}
 end
 
 RSpec.configure do |config|

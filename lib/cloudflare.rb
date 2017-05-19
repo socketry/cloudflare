@@ -24,7 +24,7 @@ require_relative 'cloudflare/zone'
 require_relative 'cloudflare/user'
 
 module Cloudflare
-  def self.connection(api_key, email = nil)
-    Connection.new(api_key, email)
+  def self.connect(**options)
+    Connection.new(**options)
   end
 end

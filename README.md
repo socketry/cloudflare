@@ -20,6 +20,19 @@ Or install it yourself as:
 
 ## Usage
 
+Prepare a connection to the remote API:
+
+```ruby
+require 'cloudflare'
+
+# Grab some details from somewhere:
+email = ENV['CLOUDFLARE_EMAIL']
+key = ENV['CLOUDFLARE_KEY']
+
+# Set up the connection:
+connection = Cloudflare.connect(key: key, email: email)
+```
+
 Get all available zones:
 
 ```ruby
