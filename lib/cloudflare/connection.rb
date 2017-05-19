@@ -24,24 +24,16 @@ require 'json'
 
 require 'rest-client'
 
+require_relative 'response'
+
 module Cloudflare
   DEFAULT_URL = "https://api.cloudflare.com/client/v4/"
-  TIMEOUT = 5 # Default is 5 seconds
+  TIMEOUT = 10 # Default is 5 seconds
   
-  class RequestError < StandardError
-    def initialize(what, response)
-      super(what)
-
-      @response = response
-    end
-
-    attr :response
-  end
-
-  class Connection < RestClient::Resource
+  class Resource < RestClient::Resource
     # @param api_key [String] `X-Auth-Key` or `X-Auth-User-Service-Key` if no email provided.
     # @param email [String] `X-Auth-Email`, your email address for the account.
-    def initialize(url = DEFAULT_URL, key: nil, email: nil, **options, &block)
+    def initialize(url = DEFAULT_URL, key: nil, email: nil, **options)
       headers = options[:headers] || {}
       
       if email.nil?
@@ -51,9 +43,13 @@ module Cloudflare
         headers['X-Auth-Email'] = email
       end
       
+      # Convert HTTP API responses to our own internal response class:
       super(url, headers: headers, accept: 'application/json', **options) do |response|
-        Response.new(response.body)
+        Response.new(response.request.url, response.body)
       end
     end
+  end
+  
+  class Connection < Resource
   end
 end

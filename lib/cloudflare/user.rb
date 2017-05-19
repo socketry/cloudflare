@@ -19,51 +19,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require 'json'
+require_relative 'connection'
 
 module Cloudflare
-	class RequestError < StandardError
-		def initialize(what, response)
-			super("#{what}: #{response.errors.join(', ')}")
-			
-			@response = response
-		end
-		
-		attr :response
-	end
-	
-	class Response
-		def initialize(what, content)
-			@what = what
-			
-			@body = JSON.parse(content, symbolize_names: true)
-		end
-		
-		attr :body
+  class Connection < Resource
+    def user
+      @user ||= User.new(concat_urls(url, 'user'), options)
+    end
+  end
 
-		def result
-			unless successful?
-				raise RequestError.new(@what, self)
-			end
-			
-			body[:result]
-		end
-
-		# Treat result as an array (often it is).
-		def results
-			Array(result)
-		end
-
-		def successful?
-			body[:success]
-		end
-
-		def errors
-			body[:errors]
-		end
-
-		def messages
-			body[:messages]
-		end
-	end
+  class User < Resource
+  end
 end
