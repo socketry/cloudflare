@@ -8,15 +8,21 @@ It is a Ruby wrapper for the Cloudflare V4 API. It provides a light weight wrapp
 
 Add this line to your application's Gemfile:
 
-  gem 'cloudflare'
+```ruby
+gem 'cloudflare'
+```
 
 And then execute:
 
-  $ bundle
+```
+$ bundle
+```
 
 Or install it yourself as:
 
-  $ gem install cloudflare
+```
+$ gem install cloudflare
+```
 
 ## Usage
 
