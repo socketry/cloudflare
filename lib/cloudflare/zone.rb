@@ -22,81 +22,81 @@
 require_relative 'connection'
 
 module Cloudflare
-  class Connection < Resource
-    def zones
-      @zones ||= Zones.new(concat_urls(url, 'zones'), options)
-    end
-  end
-  
-  class DNSRecord < Resource
-    def initialize(url, record = nil, **options)
-      super(url, **options)
-      
-      @record = record || self.get.result
-    end
-    
-    attr :record
-    
-    def to_s
-      "#{@record[:name]} #{@record[:type]} #{@record[:content]}"
-    end
-  end
-  
-  class DNSRecords < Resource
-    def initialize(url, zone, **options)
-      super(url, **options)
-      
-      @zone = zone
-    end
-    
-    attr :zone
-    
-    def all
-      self.get.results.map{|record| DNSRecord.new(concat_urls(url, record[:id]), record, **options)}
-    end
-    
-    def find_by_name(name)
-      record = self.get(params: {name: name}).result
-      
-      DNSRecord.new(concat_urls(url, record[:id]), record, **options)
-    end
-    
-    def find_by_id(id)
-      DNSRecord.new(concat_urls(url, id), **options)
-    end
-  end
-  
-  class Zone < Resource
-    def initialize(url, record = nil, **options)
-      super(url, **options)
-      
-      @record = record || self.get.result
-    end
-    
-    attr :record
-    
-    def dns_records
-      @dns_records ||= DNSRecords.new(concat_urls(url, 'dns_records'), self, **options)
-    end
-    
-    def to_s
-      @record[:name]
-    end
-  end
-  
-  class Zones < Resource
-    def all
-      self.get.results.map{|record| Zone.new(concat_urls(url, record[:id]), record, **options)}
-    end
-    
-    def find_by_name(name)
-      record = self.get(params: {name: name}).result
-      
-      Zone.new(concat_urls(url, record[:id]), record, **options)
-    end
-    
-    def find_by_id(id)
-      Zone.new(concat_urls(url, id), **options)
-    end
-  end
+	class Connection < Resource
+		def zones
+			@zones ||= Zones.new(concat_urls(url, 'zones'), options)
+		end
+	end
+	
+	class DNSRecord < Resource
+		def initialize(url, record = nil, **options)
+			super(url, **options)
+			
+			@record = record || self.get.result
+		end
+		
+		attr :record
+		
+		def to_s
+			"#{@record[:name]} #{@record[:type]} #{@record[:content]}"
+		end
+	end
+	
+	class DNSRecords < Resource
+		def initialize(url, zone, **options)
+			super(url, **options)
+			
+			@zone = zone
+		end
+		
+		attr :zone
+		
+		def all
+			self.get.results.map{|record| DNSRecord.new(concat_urls(url, record[:id]), record, **options)}
+		end
+		
+		def find_by_name(name)
+			record = self.get(params: {name: name}).result
+			
+			DNSRecord.new(concat_urls(url, record[:id]), record, **options)
+		end
+		
+		def find_by_id(id)
+			DNSRecord.new(concat_urls(url, id), **options)
+		end
+	end
+	
+	class Zone < Resource
+		def initialize(url, record = nil, **options)
+			super(url, **options)
+			
+			@record = record || self.get.result
+		end
+		
+		attr :record
+		
+		def dns_records
+			@dns_records ||= DNSRecords.new(concat_urls(url, 'dns_records'), self, **options)
+		end
+		
+		def to_s
+			@record[:name]
+		end
+	end
+	
+	class Zones < Resource
+		def all
+			self.get.results.map{|record| Zone.new(concat_urls(url, record[:id]), record, **options)}
+		end
+		
+		def find_by_name(name)
+			record = self.get(params: {name: name}).result
+			
+			Zone.new(concat_urls(url, record[:id]), record, **options)
+		end
+		
+		def find_by_id(id)
+			Zone.new(concat_urls(url, id), **options)
+		end
+	end
 end
