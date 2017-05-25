@@ -3,14 +3,17 @@ sudo: false
 dist: trusty
 cache: bundler
 rvm:
-  - 2.0
-  - 2.1
-  - 2.2
-  - 2.3
-  - 2.4
-  - jruby-head
-  - ruby-head
+- 2.0
+- 2.1
+- 2.2
+- 2.3
+- 2.4
+- jruby-head
+- ruby-head
 matrix:
   allow_failures:
-    - rvm: ruby-head
-    - rvm: jruby-head
+  - rvm: ruby-head
+  - rvm: jruby-head
+env:
+  global:
+    secure: c5yG7N1r9nYuw47Y90jGeoHNvkL59AAC55dtPAhKP+gjXWW8hKbntj3oj+lVkxEqzRpzEQgYZzUElrP+6mJnb20ldclZg03L56243tMtVEcpGOx/MFhnIBkx3kKu1H6ydKKMxieHxjsLQ3vnpcIZ3p0skTQjYbjdu607tjbyg7s=

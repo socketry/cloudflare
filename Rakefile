@@ -1,21 +1,22 @@
 require "bundler/gem_tasks"
-require 'rake/testtask'
+require "rspec/core/rake_task"
 
-Rake::TestTask.new do |t|
-  t.libs << 'test'
-end
+RSpec::Core::RakeTask.new(:test)
 
-desc "Run tests"
 task :default => :test
 
+task :coverage do
+	ENV['COVERAGE'] = 'y'
+end
+
 task :console do
-  require 'cloudflare'
-  require 'pry'
-  
-  email = ENV['CLOUDFLARE_EMAIL']
-  key = ENV['CLOUDFLARE_KEY']
-  
-  connection = Cloudflare::Connection.new(key: key, email: email)
-  
-  binding.pry
+	require 'cloudflare'
+	require 'pry'
+	
+	email = ENV['CLOUDFLARE_EMAIL']
+	key = ENV['CLOUDFLARE_KEY']
+	
+	connection = Cloudflare::Connection.new(key: key, email: email)
+	
+	binding.pry
 end
