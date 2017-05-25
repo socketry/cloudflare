@@ -56,9 +56,13 @@ module Cloudflare
 		end
 		
 		def find_by_name(name)
-			record = self.get(params: {name: name}).result
+			response = self.get(params: {name: name})
 			
-			DNSRecord.new(concat_urls(url, record[:id]), record, **options)
+			unless response.empty?
+				record = response.results.first
+				
+				DNSRecord.new(concat_urls(url, record[:id]), record, **options)
+			end
 		end
 		
 		def find_by_id(id)
@@ -92,7 +96,11 @@ module Cloudflare
 		def find_by_name(name)
 			record = self.get(params: {name: name}).result
 			
-			Zone.new(concat_urls(url, record[:id]), record, **options)
+			unless response.empty?
+				record = response.results.first
+				
+				Zone.new(concat_urls(url, record[:id]), record, **options)
+			end
 		end
 		
 		def find_by_id(id)

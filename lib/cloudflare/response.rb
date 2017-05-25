@@ -54,6 +54,10 @@ module Cloudflare
 			Array(result)
 		end
 
+		def empty?
+			result.empty?
+		end
+
 		def successful?
 			body[:success]
 		end
