@@ -18,7 +18,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-
+# require 'byebug'
 require_relative 'connection'
 
 module Cloudflare
@@ -94,6 +94,8 @@ module Cloudflare
     attr :zone
 
     def all
+      # byebug
+      # ?scope_type=organization&mode=block&per_page=100&page=#{page}\
       self.get.results.map{|record| WAFAccessRule.new(concat_urls(url, record[:id]), record, **options)}
     end
 
@@ -128,7 +130,7 @@ module Cloudflare
     end
 
     def waf_access_rules
-      @waf_access_rules ||= WAFAccessRules.new(concat_urls(url, 'firewall/access_rules/rules'), self, **options)
+      @waf_access_rules ||= WAFAccessRules.new(concat_urls(url, 'firewall/access_rules/rules?scope_type=organization&mode=block&per_page=100'), self, **options)
     end
 
 
