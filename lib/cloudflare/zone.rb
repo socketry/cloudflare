@@ -72,7 +72,7 @@ module Cloudflare
     end
   end
 
-  # Firewall Access Rules
+  # Firewall Rules
   class FirewallRule < Resource
     def initialize(url, record = nil, **options)
       super(url, **options)
@@ -83,7 +83,7 @@ module Cloudflare
     attr :record
 
     def to_s
-      "#{@record[:name]} #{@record[:type]} #{@record[:content]}"
+      "#{@record[:configuration][:value]} - #{@record[:mode]} - #{@record[:notes]}"
     end
   end
 
@@ -128,7 +128,7 @@ module Cloudflare
       @dns_records ||= DNSRecords.new(concat_urls(url, 'dns_records'), self, **options)
     end
 
-    def firewall_blocks
+    def firewall_rules(mode)
       page  = 0
       page_size = 100
       ruleset = nil
@@ -136,7 +136,7 @@ module Cloudflare
       @fw_rules ||= (
         loop do  # fetch and aggregate all pages
           page += 1
-          rules = FirewallRules.new(concat_urls(url, "firewall/access_rules/rules?scope_type=organization&mode=block&per_page=#{page_size}&page=#{page}"), self, **options)
+          rules = FirewallRules.new(concat_urls(url, "firewall/access_rules/rules?scope_type=organization&mode=#{mode}&per_page=#{page_size}&page=#{page}"), self, **options)
           ruleset =
             if ruleset.nil?
               rules
@@ -147,6 +147,10 @@ module Cloudflare
         end
       ruleset
       )
+    end
+
+    def firewalled_ips(mode)
+      firewall_rules(mode).all.collect {|r| r.record[:configuration][:value]}
     end
 
 
