@@ -18,7 +18,9 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-# require 'byebug'
+
+# added firewall rules support: david rosenbloom|davidr@artifactory.com|artifactory
+#
 require_relative 'connection'
 
 module Cloudflare
@@ -69,8 +71,9 @@ module Cloudflare
       DNSRecord.new(concat_urls(url, id), **options)
     end
   end
-#################
-  class WAFRule < Resource
+
+  # Firewall Access Rules
+  class FirewallRule < Resource
     def initialize(url, record = nil, **options)
       super(url, **options)
 
@@ -84,7 +87,7 @@ module Cloudflare
     end
   end
 
-  class WAFRules < Resource
+  class FirewallRules < Resource
     def initialize(url, zone, **options)
       super(url, **options)
 
@@ -94,9 +97,7 @@ module Cloudflare
     attr :zone
 
     def all
-      # byebug
-      # ?scope_type=organization&mode=block&per_page=100&page=#{page}\
-      self.get.results.map{|record| WAFRule.new(concat_urls(url, record[:id]), record, **options)}
+      self.get.results.map{|record| FirewallRule.new(concat_urls(url, record[:id]), record, **options)}
     end
 
     def find_by_name(name)
@@ -105,17 +106,15 @@ module Cloudflare
       unless response.empty?
         record = response.results.first
 
-        WAFRule.new(concat_urls(url, record[:id]), record, **options)
+        FirewallRule.new(concat_urls(url, record[:id]), record, **options)
       end
     end
 
     def find_by_id(id)
-      WAFRule.new(concat_urls(url, id), **options)
+      FirewallRule.new(concat_urls(url, id), **options)
     end
   end
 
-
-##################
   class Zone < Resource
     def initialize(url, record = nil, **options)
       super(url, **options)
@@ -129,20 +128,25 @@ module Cloudflare
       @dns_records ||= DNSRecords.new(concat_urls(url, 'dns_records'), self, **options)
     end
 
-    def waf_rules
+    def firewall_blocks
       page  = 0
-      ruleset  = []
       page_size = 100
+      ruleset = nil
 
-      @waf_rules ||= {
+      @fw_rules ||= (
         loop do  # fetch and aggregate all pages
           page += 1
-          rules = WAFRules.new(concat_urls(url, "firewall/access_rules/rules?scope_type=organization&mode=block&per_page=#{page_size}&page=#{page}"), self, **options)
-          ruleset += rules
-          break if rules.size < page_size
+          rules = FirewallRules.new(concat_urls(url, "firewall/access_rules/rules?scope_type=organization&mode=block&per_page=#{page_size}&page=#{page}"), self, **options)
+          ruleset =
+            if ruleset.nil?
+              rules
+            else
+              ruleset += rules
+            end
+          break if rules.all.size < page_size
         end
       ruleset
-      }
+      )
     end
 
 
