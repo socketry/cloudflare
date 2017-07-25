@@ -2,3 +2,4 @@ t/
 Gemfile*
 *.gem
 tags
+.byebug_history

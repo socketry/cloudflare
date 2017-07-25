@@ -70,7 +70,7 @@ module Cloudflare
     end
   end
 #################
-  class WAFAccessRule < Resource
+  class WAFRule < Resource
     def initialize(url, record = nil, **options)
       super(url, **options)
 
@@ -84,7 +84,7 @@ module Cloudflare
     end
   end
 
-  class WAFAccessRules < Resource
+  class WAFRules < Resource
     def initialize(url, zone, **options)
       super(url, **options)
 
@@ -96,7 +96,7 @@ module Cloudflare
     def all
       # byebug
       # ?scope_type=organization&mode=block&per_page=100&page=#{page}\
-      self.get.results.map{|record| WAFAccessRule.new(concat_urls(url, record[:id]), record, **options)}
+      self.get.results.map{|record| WAFRule.new(concat_urls(url, record[:id]), record, **options)}
     end
 
     def find_by_name(name)
@@ -105,12 +105,12 @@ module Cloudflare
       unless response.empty?
         record = response.results.first
 
-        WAFAccessRule.new(concat_urls(url, record[:id]), record, **options)
+        WAFRule.new(concat_urls(url, record[:id]), record, **options)
       end
     end
 
     def find_by_id(id)
-      WAFAccessRule.new(concat_urls(url, id), **options)
+      WAFRule.new(concat_urls(url, id), **options)
     end
   end
 
@@ -129,8 +129,20 @@ module Cloudflare
       @dns_records ||= DNSRecords.new(concat_urls(url, 'dns_records'), self, **options)
     end
 
-    def waf_access_rules
-      @waf_access_rules ||= WAFAccessRules.new(concat_urls(url, 'firewall/access_rules/rules?scope_type=organization&mode=block&per_page=100'), self, **options)
+    def waf_rules
+      page  = 0
+      ruleset  = []
+      page_size = 100
+
+      @waf_rules ||= {
+        loop do  # fetch and aggregate all pages
+          page += 1
+          rules = WAFRules.new(concat_urls(url, "firewall/access_rules/rules?scope_type=organization&mode=block&per_page=#{page_size}&page=#{page}"), self, **options)
+          ruleset += rules
+          break if rules.size < page_size
+        end
+      ruleset
+      }
     end
 
 
