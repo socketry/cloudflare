@@ -98,34 +98,9 @@ module Cloudflare
 
     attr :zone
 
-  end
-
-  class Zone < Resource
-    def initialize(url, record = nil, **options)
-      # byebug
-      super(url, **options)
-      @record = record || self.get.result
-    end
-
-    attr :record
-
-    def dns_records
-      @dns_records ||= DNSRecords.new(concat_urls(url, 'dns_records'), self, **options)
-    end
-
-    def validate_args(mode, ip)
-      raise "Bad mode arg: #{mode}" if mode and !['block', 'whitelist', 'challenge'].include?(mode)
-      raise "Bad ip arg: #{ip}" if ip and !(ip =~ /[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/)    # TODO: add ranges, e.g. /24
-    end
-
-    def firewall_rules_resource
-      FirewallRules.new(concat_urls(url, "firewall/access_rules/rules?scope_type=organization"), self, **options)
-    end
-
-
-    def firewall_rules(mode = nil, ip = nil, notes = nil)
-      # 4 - rules request
-      validate_args(mode, ip)
+    def all(mode = nil, ip = nil, notes = nil)
+      # although this is within the resource, the initialized resource is not leveraged; rather, new resource instances are created to fetch paginated data.
+      validate_rules_filters(mode, ip)
       fw_url ="firewall/access_rules/rules?scope_type=organization"
       fw_url.concat("&mode=#{mode}") if mode
       fw_url.concat("&configuration_value=#{ip}") if ip
@@ -146,6 +121,30 @@ module Cloudflare
 
     def firewalled_ips(rules)
       rules.collect {|r| r.record[:configuration][:value]}
+    end
+
+    def validate_rules_filters(mode, ip)
+      raise "Bad mode arg: #{mode}" if mode and !['block', 'whitelist', 'challenge'].include?(mode)
+      raise "Bad ip arg: #{ip}" if ip and !(ip =~ /[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/)    # TODO: add ranges, e.g. /24
+    end
+
+  end
+
+  class Zone < Resource
+    def initialize(url, record = nil, **options)
+      # byebug
+      super(url, **options)
+      @record = record || self.get.result
+    end
+
+    attr :record
+
+    def dns_records
+      @dns_records ||= DNSRecords.new(concat_urls(url, 'dns_records'), self, **options)
+    end
+
+    def firewall_rules
+      @firewall_rules ||= FirewallRules.new(concat_urls(url, "firewall/access_rules/rules?scope_type=organization"), self, **options)
     end
 
     def to_s
