@@ -139,8 +139,8 @@ module Cloudflare
       results.map{|record| FirewallRule.new(concat_urls(url, record[:id]), record, **options)}
     end
 
-    def firewalled_ips(mode)
-      firewall_rules(mode).all.collect {|r| r.record[:configuration][:value]}
+    def firewalled_ips(rules)
+      rules.collect {|r| r.record[:configuration][:value]}
     end
 
 
