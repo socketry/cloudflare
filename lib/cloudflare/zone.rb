@@ -118,6 +118,11 @@ module Cloudflare
       raise "Bad ip arg: #{ip}" if ip and !(ip =~ /[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/)    # TODO: add ranges, e.g. /24
     end
 
+    def firewall_rules_resource
+      FirewallRules.new(concat_urls(url, "firewall/access_rules/rules?scope_type=organization"), self, **options)
+    end
+
+
     def firewall_rules(mode = nil, ip = nil, notes = nil)
       # 4 - rules request
       validate_args(mode, ip)
@@ -142,7 +147,6 @@ module Cloudflare
     def firewalled_ips(rules)
       rules.collect {|r| r.record[:configuration][:value]}
     end
-
 
     def to_s
       @record[:name]
