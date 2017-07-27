@@ -22,7 +22,7 @@
 # added firewall rules support: david rosenbloom|davidr@artifactory.com|artifactory
 #
 require_relative 'connection'
-
+require 'byebug'
 module Cloudflare
   class Connection < Resource
     def zones
@@ -72,9 +72,9 @@ module Cloudflare
     end
   end
 
-  # Firewall Rules
   class FirewallRule < Resource
     def initialize(url, record = nil, **options)
+      # 0 - Rule init
       super(url, **options)
 
       @record = record || self.get.result
@@ -89,6 +89,8 @@ module Cloudflare
 
   class FirewallRules < Resource
     def initialize(url, zone, **options)
+      # 1 - Rules init
+      # byebug
       super(url, **options)
 
       @zone = zone
@@ -96,29 +98,12 @@ module Cloudflare
 
     attr :zone
 
-    def all
-      self.get.results.map{|record| FirewallRule.new(concat_urls(url, record[:id]), record, **options)}
-    end
-
-    def find_by_name(name)
-      response = self.get(params: {name: name})
-
-      unless response.empty?
-        record = response.results.first
-
-        FirewallRule.new(concat_urls(url, record[:id]), record, **options)
-      end
-    end
-
-    def find_by_id(id)
-      FirewallRule.new(concat_urls(url, id), **options)
-    end
   end
 
   class Zone < Resource
     def initialize(url, record = nil, **options)
+      # byebug
       super(url, **options)
-
       @record = record || self.get.result
     end
 
@@ -128,25 +113,30 @@ module Cloudflare
       @dns_records ||= DNSRecords.new(concat_urls(url, 'dns_records'), self, **options)
     end
 
-    def firewall_rules(mode)
-      page  = 0
-      page_size = 100
-      ruleset = nil
+    def validate_args(mode, ip)
+      raise "Bad mode arg: #{mode}" if mode and !['block', 'whitelist', 'challenge'].include?(mode)
+      raise "Bad ip arg: #{ip}" if ip and !(ip =~ /[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/)    # TODO: add ranges, e.g. /24
+    end
 
-      @fw_rules ||= (
-        loop do  # fetch and aggregate all pages
-          page += 1
-          rules = FirewallRules.new(concat_urls(url, "firewall/access_rules/rules?scope_type=organization&mode=#{mode}&per_page=#{page_size}&page=#{page}"), self, **options)
-          ruleset =
-            if ruleset.nil?
-              rules
-            else
-              ruleset += rules
-            end
-          break if rules.all.size < page_size
-        end
-      ruleset
-      )
+    def firewall_rules(mode = nil, ip = nil, notes = nil)
+      # 4 - rules request
+      validate_args(mode, ip)
+      fw_url ="firewall/access_rules/rules?scope_type=organization"
+      fw_url.concat("&mode=#{mode}") if mode
+      fw_url.concat("&configuration_value=#{ip}") if ip
+      fw_url.concat("&notes=#{notes}") if notes
+      page = 1
+      page_size = 100
+      results = []
+
+      loop do  # fetch and aggregate all pages
+        rules = FirewallRules.new(concat_urls(url, "#{fw_url}&per_page=#{page_size}&page=#{page}"), self, **options)
+        results += rules.get.results
+        break if results.size % page_size != 0
+        page += 1
+      end
+
+      results.map{|record| FirewallRule.new(concat_urls(url, record[:id]), record, **options)}
     end
 
     def firewalled_ips(mode)
