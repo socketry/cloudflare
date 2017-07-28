@@ -157,7 +157,9 @@ module Cloudflare
 		end
 
 		def find_by_name(name)
-			record = self.get(params: {name: name}).result
+
+			response = self.get(params: {name: name})
+			
 
 			unless response.empty?
 				record = response.results.first
