@@ -27,29 +27,29 @@ require 'rest-client'
 require_relative 'response'
 
 module Cloudflare
-  DEFAULT_URL = "https://api.cloudflare.com/client/v4/"
-  TIMEOUT = 10 # Default is 5 seconds
+	DEFAULT_URL = "https://api.cloudflare.com/client/v4/"
+	TIMEOUT = 10 # Default is 5 seconds
 
-  class Resource < RestClient::Resource
-    # @param api_key [String] `X-Auth-Key` or `X-Auth-User-Service-Key` if no email provided.
-    # @param email [String] `X-Auth-Email`, your email address for the account.
-    def initialize(url = DEFAULT_URL, key: nil, email: nil, **options)
-      headers = options[:headers] || {}
+	class Resource < RestClient::Resource
+		# @param api_key [String] `X-Auth-Key` or `X-Auth-User-Service-Key` if no email provided.
+		# @param email [String] `X-Auth-Email`, your email address for the account.
+		def initialize(url = DEFAULT_URL, key: nil, email: nil, **options)
+			headers = options[:headers] || {}
 
-      if email.nil?
-        headers['X-Auth-User-Service-Key'] = key
-      else
-        headers['X-Auth-Key'] = key
-        headers['X-Auth-Email'] = email
-      end
+			if email.nil?
+				headers['X-Auth-User-Service-Key'] = key
+			else
+				headers['X-Auth-Key'] = key
+				headers['X-Auth-Email'] = email
+			end
 
-      # Convert HTTP API responses to our own internal response class:
-      super(url, headers: headers, accept: 'application/json', **options) do |response|
-        Response.new(response.request.url, response.body)
-      end
-    end
-  end
+			# Convert HTTP API responses to our own internal response class:
+			super(url, headers: headers, accept: 'application/json', **options) do |response|
+				Response.new(response.request.url, response.body)
+			end
+		end
+	end
 
-  class Connection < Resource
-  end
+	class Connection < Resource
+	end
 end

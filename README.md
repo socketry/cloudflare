@@ -106,7 +106,7 @@ response = zones.first.firewall_rules.post(data.to_json, content_type: 'applicat
 
 Released under the MIT license.
 
-Copyright, 2012, 2014, by [Marcin Prokop](https://github.com/b4k3r).  
+Copyright, 2012, 2014, by [Marcin Prokop](https://github.com/b4k3r).	
 Copyright, 2017, by [Samuel G. D. Williams](http://www.codeotaku.com/samuel-williams).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
