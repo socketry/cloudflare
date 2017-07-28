@@ -22,7 +22,6 @@
 # added firewall rules support: david rosenbloom|davidr@artifactory.com|artifactory
 #
 require_relative 'connection'
-require 'byebug'
 module Cloudflare
 	class Connection < Resource
 		def zones
