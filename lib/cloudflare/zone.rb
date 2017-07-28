@@ -73,7 +73,6 @@ module Cloudflare
 
 	class FirewallRule < Resource
 		def initialize(url, record = nil, **options)
-			# 0 - Rule init
 			super(url, **options)
 
 			@record = record || self.get.result
