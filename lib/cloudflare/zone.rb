@@ -88,8 +88,6 @@ module Cloudflare
 
 	class FirewallRules < Resource
 		def initialize(url, zone, **options)
-			# 1 - Rules init
-			# byebug
 			super(url, **options)
 
 			@zone = zone
