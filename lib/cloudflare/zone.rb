@@ -34,7 +34,12 @@ module Cloudflare
 			
 			@record = record || self.get.result
 		end
-		
+
+		def update_content(content)
+			response = self.put({type: @record[:type], name: @record[:name], content: content}.to_json, content_type: 'application/json')
+			response.successful?
+		end
+
 		attr :record
 		
 		def to_s
