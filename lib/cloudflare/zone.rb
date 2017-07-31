@@ -22,6 +22,7 @@
 # added firewall rules support: david rosenbloom|davidr@artifactory.com|artifactory
 #
 require_relative 'connection'
+
 module Cloudflare
 	class Connection < Resource
 		def zones
@@ -121,7 +122,7 @@ module Cloudflare
 
 		def validate_rules_filters(mode, ip)
 			raise "Bad mode arg: #{mode}" if mode and !['block', 'whitelist', 'challenge'].include?(mode)
-			raise "Bad ip arg: #{ip}" if ip and !(ip =~ /[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/)		 # TODO: add ranges, e.g. /24
+			raise "Bad ip arg: #{ip}" if ip and !IPAddr.new(ip).ipv4?
 		end
 
 	end
@@ -156,7 +157,7 @@ module Cloudflare
 		def find_by_name(name)
 
 			response = self.get(params: {name: name})
-			
+
 
 			unless response.empty?
 				record = response.results.first
