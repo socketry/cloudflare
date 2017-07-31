@@ -27,16 +27,11 @@ RSpec.describe "Cloudflare DNS Zones" do
 
       result = response.result
       expect(result).to include(:id, :type, :name, :content, :ttl)
-      puts result.inspect
       record = result
     end
 
     it "should delete dns record" do
-      dns_records = zone.dns_records.all
-      expect(dns_records).to be_any
-      puts dns_records.first.inspect
       dns_record = zone.dns_records.find_by_id(record[:id])
-      puts dns_record
       response = dns_record.delete
       expect(response).to be_successful
     end
