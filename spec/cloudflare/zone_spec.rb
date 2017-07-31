@@ -11,54 +11,69 @@ RSpec.describe "Cloudflare DNS Zones" do
   describe Cloudflare::DNSRecords, order: :defined do
     let(:zone) {connection.zones.all.first}
     let(:name) {"test"}
+    let(:ip) {"123.123.123.123"}
+    record = nil
 
-    # it "should create dns record" do
-    # response = zone.dns_records.post({
-    # type: "A",
-    # name: name,
-    # content: "127.0.0.1",
-    # ttl: 240,
-    # proxied: false
-    # }.to_json, content_type: 'application/json')
+    it "should create dns record" do
+      response = zone.dns_records.post({
+        type: "A",
+        name: name,
+        content: ip,
+        ttl: 240,
+        proxied: false
+      }.to_json, content_type: 'application/json')
 
-    # expect(response).to be_successful
+      expect(response).to be_successful
 
-    # result = response.result
-    # expect(result).to include(:id, :type, :name, :content, :ttl)
-    # end
+      result = response.result
+      expect(result).to include(:id, :type, :name, :content, :ttl)
+      puts result.inspect
+      record = result
+    end
 
-    # it "should delete dns record" do
-    # dns_records = zone.dns_records.all
-
-    # expect(dns_records).to be_any
-
-    # dns_records.each do |record|
-    # response = record.delete
-    # expect(response).to be_successful
-    # end
-    # end
+    it "should delete dns record" do
+      dns_records = zone.dns_records.all
+      expect(dns_records).to be_any
+      puts dns_records.first.inspect
+      dns_record = zone.dns_records.find_by_id(record[:id])
+      puts dns_record
+      response = dns_record.delete
+      expect(response).to be_successful
+    end
   end
 
   describe Cloudflare::FirewallRules, order: :defined do
     let(:zone) {connection.zones.all.first}
     let(:name) {"test"}
+    let(:ip) {'123.123.123.123'}
+    let(:ip2) {'123.123.123.124'}
+    let(:notes) {"gemtest"}
     record = nil
+    before do
+      response = zone.firewall_rules.set('block', ip2, notes)
+    end
 
-    it "should create firewall rules" do
+    it "should create firewall rules for 'block', 'challenge', 'whitelist'" do
 
-      ['block', 'challenge', 'whitelist'].each do |mode|
-        response = zone.firewall_rules.set(mode,'123.123.123.123', "gemtest")
+      [:block, :challenge, :whitelist].each do |mode|
+        response = zone.firewall_rules.set(mode, ip, notes)
         expect(response).to be_successful
 
         result = response.result
         expect(result).to include(:id, :mode, :notes, :configuration)
-        expect(result[:mode]).to eq mode
+        expect(result[:mode]).to eq mode.to_s
         record = result
       end
-      puts record.inspect
     end
-    it "should delete firewall rule" do
-      response = zone.firewall_rules.unset(record)
+
+    it "should delete firewall rule by record" do
+      response = zone.firewall_rules.unset('id', record[:id])
+
+      expect(response).to be_successful
+    end
+
+    it "should delete firewall rule by ip" do
+      response = zone.firewall_rules.unset('ip', ip2)
 
       expect(response).to be_successful
     end

@@ -96,8 +96,6 @@ module Cloudflare
     attr :zone
 
     def all(mode = nil, ip = nil, notes = nil)
-      # although this is within the resource, the initialized resource is not leveraged; rather, new resource instances are created to fetch paginated data.
-      validate_rules_filters(mode, ip)
       fw_url ="firewall/access_rules/rules?scope_type=organization"
       fw_url.concat("&mode=#{mode}") if mode
       fw_url.concat("&configuration_value=#{ip}") if ip
@@ -120,35 +118,32 @@ module Cloudflare
       rules.collect {|r| r.record[:configuration][:value]}
     end
 
-    def validate_rules_filters(mode, ip)
-      raise "Bad mode arg: #{mode}" if mode and !['block', 'whitelist', 'challenge'].include?(mode)
-      raise "Bad ip arg: #{ip}" if ip and !IPAddr.new(ip).ipv4?
-    end
-
     def blocked_ips
       firewalled_ips(all("block"))
     end
 
     def set(mode, ip, note)
-      data = {"mode":"#{mode}","configuration":{"target":"ip","value":"#{ip}"},"notes":"cloudflare gem firewall_rules [#{mode}] #{note} #{Time.now.strftime("%m/%d/%y")} "}
+      data = {"mode":"#{mode.to_s}","configuration":{"target":"ip","value":"#{ip}"},"notes":"cloudflare gem firewall_rules [#{mode}] #{note} #{Time.now.strftime("%m/%d/%y")} "}
       post(data.to_json, content_type: 'application/json')
     end
 
-    def unset(record)
-      puts self.url
-      puts record.inspect
-      rule = find_by_id(record[:id])
+    def unset(mode, value)
+      rule = send("find_by_#{mode}", value)
       rule.delete
     end
 
     def find_by_id(id)
       FirewallRule.new(concat_urls(url, id), **options)
     end
+
+    def find_by_ip(ip)
+      rule = FirewallRule.new(concat_urls(url, "?configuration_value=#{ip}"), **options)
+      FirewallRule.new(concat_urls(url, rule.record.first[:id]), **options)
+    end
   end
 
   class Zone < Resource
     def initialize(url, record = nil, **options)
-      # byebug
       super(url, **options)
       @record = record || self.get.result
     end
@@ -175,9 +170,7 @@ module Cloudflare
     end
 
     def find_by_name(name)
-
       response = self.get(params: {name: name})
-
 
       unless response.empty?
         record = response.results.first
