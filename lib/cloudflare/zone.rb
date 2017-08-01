@@ -54,7 +54,6 @@ module Cloudflare
 		attr :zone
 
 		def all
-			# self.get.results.map{|record| DNSRecord.new(concat_urls(url, record[:id]), record, **options)}
 			dns_url = "?scope_type=organization"
 			page = 1
 			page_size = 100
