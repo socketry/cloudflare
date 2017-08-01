@@ -54,7 +54,21 @@ module Cloudflare
     attr :zone
 
     def all
-      self.get.results.map{|record| DNSRecord.new(concat_urls(url, record[:id]), record, **options)}
+      # self.get.results.map{|record| DNSRecord.new(concat_urls(url, record[:id]), record, **options)}
+      dns_url = "?scope_type=organization"
+      page = 1
+      page_size = 100
+      results = []
+
+      loop do  # fetch and aggregate all pages
+        rules = DNSRecords.new(concat_urls(url, "#{dns_url}&per_page=#{page_size}&page=#{page}"), self, **options)
+        results += rules.get.results
+        break if results.size % page_size != 0
+        page += 1
+      end
+
+      results.map{|record| DNSRecord.new(concat_urls(url, record[:id]), record, **options)}
+
     end
 
     def find_by_name(name)
@@ -96,7 +110,7 @@ module Cloudflare
     attr :zone
 
     def all(mode = nil, ip = nil, notes = nil)
-      fw_url ="firewall/access_rules/rules?scope_type=organization"
+      fw_url = "?scope_type=organization"
       fw_url.concat("&mode=#{mode}") if mode
       fw_url.concat("&configuration_value=#{ip}") if ip
       fw_url.concat("&notes=#{notes}") if notes

@@ -14,6 +14,14 @@ RSpec.describe "Cloudflare DNS Zones" do
     let(:ip) {"123.123.123.123"}
     record = nil
 
+    it "should get all records" do
+        result = zone.dns_records.all
+
+        puts "===> #{result.size} records returned"
+        expect(result.size).to be > 0
+    end
+
+
     it "should create dns record" do
       response = zone.dns_records.post({
         type: "A",
@@ -46,6 +54,13 @@ RSpec.describe "Cloudflare DNS Zones" do
     record = nil
     before do
       response = zone.firewall_rules.set('block', ip2, notes)
+    end
+
+    it "should get all rules" do
+        result = zone.firewall_rules.all
+
+        puts "===> #{result.size} records returned"
+        expect(result.size).to be > 0
     end
 
     it "should create firewall rules for 'block', 'challenge', 'whitelist'" do
