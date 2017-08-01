@@ -169,7 +169,6 @@ module Cloudflare
     end
 
     def firewall_rules
-      # @firewall_rules ||= FirewallRules.new(concat_urls(url, "firewall/access_rules/rules?scope_type=organization"), self, **options)
       @firewall_rules ||= FirewallRules.new(concat_urls(url, "firewall/access_rules/rules"), self, **options)
     end
 
