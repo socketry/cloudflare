@@ -66,6 +66,29 @@ puts records.first.record[:name]
 puts records
 ```
 
+Get firewall rules:
+
+``` ruby
+all_rules =  zones.first.firewall_rules.all
+block_rules = zones.first.firewall_rules.all("block")  # or "whitelist" or "challenge"
+```
+
+Get blocked ips:
+
+``` ruby
+block_rules = zones.first.firewall_rules.all("block") 
+blocked_ips = zones.first.firewall_rules.firewalled_ips(block_rules)
+```
+
+Block an ip:
+
+``` ruby
+# ip = "nnn.nnn.nnn.nnn"
+# note: "some note about the block"
+data = {"mode":"block","configuration":{"target":"ip","value":"#{ip}"},"notes":"#{note} #{Time.now.strftime("%m/%d/%y")} "}
+response = zones.first.firewall_rules.post(data.to_json, content_type: 'application/json')
+
+```
 ## Contributing
 
 1. Fork it
@@ -83,7 +106,7 @@ puts records
 
 Released under the MIT license.
 
-Copyright, 2012, 2014, by [Marcin Prokop](https://github.com/b4k3r).  
+Copyright, 2012, 2014, by [Marcin Prokop](https://github.com/b4k3r).
 Copyright, 2017, by [Samuel G. D. Williams](http://www.codeotaku.com/samuel-williams).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -103,3 +126,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+
+
