@@ -60,20 +60,8 @@ module Cloudflare
 		attr :zone
 
 		def all
-			dns_url = "?scope_type=organization"
-			page = 1
-			page_size = 100
-			results = []
-
-			loop do  # fetch and aggregate all pages
-				rules = DNSRecords.new(concat_urls(url, "#{dns_url}&per_page=#{page_size}&page=#{page}"), self, **options)
-				results += rules.get.results
-				break if results.size % page_size != 0
-				page += 1
-			end
-
+			results = paginate(DNSRecords, url)
 			results.map{|record| DNSRecord.new(concat_urls(url, record[:id]), record, **options)}
-
 		end
 
 		def find_by_name(name)
@@ -115,21 +103,12 @@ module Cloudflare
 		attr :zone
 
 		def all(mode = nil, ip = nil, notes = nil)
-			fw_url = "?scope_type=organization"
-			fw_url.concat("&mode=#{mode}") if mode
-			fw_url.concat("&configuration_value=#{ip}") if ip
-			fw_url.concat("&notes=#{notes}") if notes
-			page = 1
-			page_size = 100
-			results = []
+			url_args = ""
+			url_args.concat("&mode=#{mode}") if mode
+			url_args.concat("&configuration_value=#{ip}") if ip
+			url_args.concat("&notes=#{notes}") if notes
 
-			loop do  # fetch and aggregate all pages
-				rules = FirewallRules.new(concat_urls(url, "#{fw_url}&per_page=#{page_size}&page=#{page}"), self, **options)
-				results += rules.get.results
-				break if results.size % page_size != 0
-				page += 1
-			end
-
+			results = paginate(FirewallRules, url, url_args)
 			results.map{|record| FirewallRule.new(concat_urls(url, record[:id]), record, **options)}
 		end
 
