@@ -31,7 +31,8 @@ module Cloudflare
 	TIMEOUT = 10 # Default is 5 seconds
 
 	class Resource < RestClient::Resource
-    include Enumerable
+		include Enumerable
+		
 		# @param api_key [String] `X-Auth-Key` or `X-Auth-User-Service-Key` if no email provided.
 		# @param email [String] `X-Auth-Email`, your email address for the account.
 		def initialize(url = DEFAULT_URL, key: nil, email: nil, **options)
@@ -50,21 +51,21 @@ module Cloudflare
 			end
 		end
 
-    def paginate(obj, url, url_args = "")
+		def paginate(obj, url, url_args = "")
 			page = 1
 			page_size = 100
 			results = []
 
-			loop do  # fetch and aggregate all pages
+			# fetch and aggregate all pages
+			loop do
 				rules = obj.new(concat_urls(url, "?scope_type=organization#{url_args}&per_page=#{page_size}&page=#{page}"), self, **options)
 				results += rules.get.results
 				break if results.size % page_size != 0
 				page += 1
 			end
-			results
-	end
-
-
+			
+			return results
+		end
 	end
 
 	class Connection < Resource

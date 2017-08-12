@@ -1,5 +1,6 @@
 # Copyright, 2012, by Marcin Prokop.
 # Copyright, 2017, by Samuel G. D. Williams. <http://www.codeotaku.com>
+# Copyright, 2017, by David Rosenbloom. <http://artifactory.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -19,8 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-# added firewall rules support: david rosenbloom|davidr@artifactory.com|artifactory
-#
 require_relative 'connection'
 
 module Cloudflare
@@ -121,7 +120,15 @@ module Cloudflare
 		end
 
 		def set(mode, ip, note)
-			data = {"mode":"#{mode.to_s}","configuration":{"target":"ip","value":"#{ip}"},"notes":"cloudflare gem firewall_rules [#{mode}] #{note} #{Time.now.strftime("%m/%d/%y")} "}
+			data = {
+				mode: mode.to_s,
+				configuration: {
+					target: "ip",
+					value: ip.to_s,
+					notes: "cloudflare gem firewall_rules [#{mode}] #{note} #{Time.now.strftime("%m/%d/%y")}"
+				}
+			}
+			
 			post(data.to_json, content_type: 'application/json')
 		end
 
