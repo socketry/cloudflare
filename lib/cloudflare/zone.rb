@@ -1,5 +1,6 @@
 # Copyright, 2012, by Marcin Prokop.
 # Copyright, 2017, by Samuel G. D. Williams. <http://www.codeotaku.com>
+# Copyright, 2017, by David Rosenbloom. <http://artifactory.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +58,8 @@ module Cloudflare
 		attr :zone
 		
 		def all
-			self.get.results.map{|record| DNSRecord.new(concat_urls(url, record[:id]), record, **options)}
+			results = paginate(DNSRecords, url)
+			results.map{|record| DNSRecord.new(concat_urls(url, record[:id]), record, **options)}
 		end
 		
 		def find_by_name(name)
@@ -75,10 +77,78 @@ module Cloudflare
 		end
 	end
 	
+	class FirewallRule < Resource
+		def initialize(url, record = nil, **options)
+			super(url, **options)
+
+			@record = record || self.get.result
+		end
+
+		attr :record
+
+		def to_s
+			"#{@record[:configuration][:value]} - #{@record[:mode]} - #{@record[:notes]}"
+		end
+	end
+
+	class FirewallRules < Resource
+		def initialize(url, zone, **options)
+			super(url, **options)
+
+			@zone = zone
+		end
+
+		attr :zone
+
+		def all(mode = nil, ip = nil, notes = nil)
+			url_args = ""
+			url_args.concat("&mode=#{mode}") if mode
+			url_args.concat("&configuration_value=#{ip}") if ip
+			url_args.concat("&notes=#{notes}") if notes
+
+			results = paginate(FirewallRules, url, url_args)
+			results.map{|record| FirewallRule.new(concat_urls(url, record[:id]), record, **options)}
+		end
+
+		def firewalled_ips(rules)
+			rules.collect {|r| r.record[:configuration][:value]}
+		end
+
+		def blocked_ips
+			firewalled_ips(all("block"))
+		end
+
+		def set(mode, ip, note)
+			data = {
+				mode: mode.to_s,
+				configuration: {
+					target: "ip",
+					value: ip.to_s,
+					notes: "cloudflare gem firewall_rules [#{mode}] #{note} #{Time.now.strftime("%m/%d/%y")}"
+				}
+			}
+			
+			post(data.to_json, content_type: 'application/json')
+		end
+
+		def unset(mode, value)
+			rule = send("find_by_#{mode}", value)
+			rule.delete
+		end
+
+		def find_by_id(id)
+			FirewallRule.new(concat_urls(url, id), **options)
+		end
+
+		def find_by_ip(ip)
+			rule = FirewallRule.new(concat_urls(url, "?configuration_value=#{ip}"), **options)
+			FirewallRule.new(concat_urls(url, rule.record.first[:id]), **options)
+		end
+	end
+
 	class Zone < Resource
 		def initialize(url, record = nil, **options)
 			super(url, **options)
-			
 			@record = record || self.get.result
 		end
 		
@@ -88,6 +158,10 @@ module Cloudflare
 			@dns_records ||= DNSRecords.new(concat_urls(url, 'dns_records'), self, **options)
 		end
 		
+		def firewall_rules
+			@firewall_rules ||= FirewallRules.new(concat_urls(url, "firewall/access_rules/rules"), self, **options)
+		end
+
 		def to_s
 			@record[:name]
 		end

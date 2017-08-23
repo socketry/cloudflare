@@ -1,0 +1,6 @@
+t/
+Gemfile*
+*.gem
+tags
+.byebug_history
+.rspec_status
