@@ -6,8 +6,6 @@ gemspec
 group :development do
 	gem 'pry'
 	gem 'pry-coolline'
-	
-	gem 'tty-prompt'
 end
 
 group :test do
