@@ -60,7 +60,7 @@ module Cloudflare
 			loop do
 				rules = obj.new(concat_urls(url, "?scope_type=organization#{url_args}&per_page=#{page_size}&page=#{page}"), self, **options)
 				results += rules.get.results
-				break if results.size % page_size != 0
+				break if results.size == 0 || results.size % page_size != 0
 				page += 1
 			end
 			
