@@ -11,4 +11,5 @@ end
 group :test do
   gem 'coveralls', require: false
   gem 'simplecov'
+  gem 'webmock'
 end
