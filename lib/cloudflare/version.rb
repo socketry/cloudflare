@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright, 2012, by Marcin Prokop.
 # Copyright, 2017, by Samuel G. D. Williams. <http://www.codeotaku.com>
 #
@@ -20,5 +22,5 @@
 # THE SOFTWARE.
 
 module Cloudflare
-	VERSION = '3.1.0'
+  VERSION = '3.1.0'
 end

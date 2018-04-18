@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright, 2012, by Marcin Prokop.
 # Copyright, 2017, by Samuel G. D. Williams. <http://www.codeotaku.com>
 #
@@ -22,12 +24,12 @@
 require_relative 'connection'
 
 module Cloudflare
-	class Connection < Resource
-		def user
-			@user ||= User.new(concat_urls(url, 'user'), options)
-		end
-	end
+  class Connection < Resource
+    def user
+      @user ||= User.new(concat_urls(url, 'user'), options)
+    end
+  end
 
-	class User < Resource
-	end
+  class User < Resource
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright, 2012, by Marcin Prokop.
 # Copyright, 2017, by Samuel G. D. Williams. <http://www.codeotaku.com>
 # Copyright, 2017, by David Rosenbloom. <http://artifactory.com>
@@ -23,167 +25,167 @@
 require_relative 'connection'
 
 module Cloudflare
-	class Connection < Resource
-		def zones
-			@zones ||= Zones.new(concat_urls(url, 'zones'), options)
-		end
-	end
-	
-	class DNSRecord < Resource
-		def initialize(url, record = nil, **options)
-			super(url, **options)
-			
-			@record = record || self.get.result
-		end
+  class Connection < Resource
+    def zones
+      @zones ||= Zones.new(concat_urls(url, 'zones'), options)
+    end
+  end
 
-		def update_content(content)
-			response = self.put({type: @record[:type], name: @record[:name], content: content}.to_json, content_type: 'application/json')
-			response.successful?
-		end
+  class DNSRecord < Resource
+    def initialize(url, record = nil, **options)
+      super(url, **options)
 
-		attr :record
-		
-		def to_s
-			"#{@record[:name]} #{@record[:type]} #{@record[:content]}"
-		end
-	end
-	
-	class DNSRecords < Resource
-		def initialize(url, zone, **options)
-			super(url, **options)
-			
-			@zone = zone
-		end
-		
-		attr :zone
-		
-		def all
-			results = paginate(DNSRecords, url)
-			results.map{|record| DNSRecord.new(concat_urls(url, record[:id]), record, **options)}
-		end
-		
-		def find_by_name(name)
-			response = self.get(params: {name: name})
-			
-			unless response.empty?
-				record = response.results.first
-				
-				DNSRecord.new(concat_urls(url, record[:id]), record, **options)
-			end
-		end
-		
-		def find_by_id(id)
-			DNSRecord.new(concat_urls(url, id), **options)
-		end
-	end
-	
-	class FirewallRule < Resource
-		def initialize(url, record = nil, **options)
-			super(url, **options)
+      @record = record || get.result
+    end
 
-			@record = record || self.get.result
-		end
+    def update_content(content)
+      response = put({ type: @record[:type], name: @record[:name], content: content }.to_json, content_type: 'application/json')
+      response.successful?
+    end
 
-		attr :record
+    attr_reader :record
 
-		def to_s
-			"#{@record[:configuration][:value]} - #{@record[:mode]} - #{@record[:notes]}"
-		end
-	end
+    def to_s
+      "#{@record[:name]} #{@record[:type]} #{@record[:content]}"
+    end
+  end
 
-	class FirewallRules < Resource
-		def initialize(url, zone, **options)
-			super(url, **options)
+  class DNSRecords < Resource
+    def initialize(url, zone, **options)
+      super(url, **options)
 
-			@zone = zone
-		end
+      @zone = zone
+    end
 
-		attr :zone
+    attr_reader :zone
 
-		def all(mode = nil, ip = nil, notes = nil)
-			url_args = ""
-			url_args.concat("&mode=#{mode}") if mode
-			url_args.concat("&configuration_value=#{ip}") if ip
-			url_args.concat("&notes=#{notes}") if notes
+    def all
+      results = paginate(DNSRecords, url)
+      results.map { |record| DNSRecord.new(concat_urls(url, record[:id]), record, **options) }
+    end
 
-			results = paginate(FirewallRules, url, url_args)
-			results.map{|record| FirewallRule.new(concat_urls(url, record[:id]), record, **options)}
-		end
+    def find_by_name(name)
+      response = get(params: { name: name })
 
-		def firewalled_ips(rules)
-			rules.collect {|r| r.record[:configuration][:value]}
-		end
+      unless response.empty?
+        record = response.results.first
 
-		def blocked_ips
-			firewalled_ips(all("block"))
-		end
+        DNSRecord.new(concat_urls(url, record[:id]), record, **options)
+      end
+    end
 
-		def set(mode, ip, note)
-			data = {
-				mode: mode.to_s,
-				configuration: {
-					target: "ip",
-					value: ip.to_s,
-					notes: "cloudflare gem firewall_rules [#{mode}] #{note} #{Time.now.strftime("%m/%d/%y")}"
-				}
-			}
-			
-			post(data.to_json, content_type: 'application/json')
-		end
+    def find_by_id(id)
+      DNSRecord.new(concat_urls(url, id), **options)
+    end
+  end
 
-		def unset(mode, value)
-			rule = send("find_by_#{mode}", value)
-			rule.delete
-		end
+  class FirewallRule < Resource
+    def initialize(url, record = nil, **options)
+      super(url, **options)
 
-		def find_by_id(id)
-			FirewallRule.new(concat_urls(url, id), **options)
-		end
+      @record = record || get.result
+    end
 
-		def find_by_ip(ip)
-			rule = FirewallRule.new(concat_urls(url, "?configuration_value=#{ip}"), **options)
-			FirewallRule.new(concat_urls(url, rule.record.first[:id]), **options)
-		end
-	end
+    attr_reader :record
 
-	class Zone < Resource
-		def initialize(url, record = nil, **options)
-			super(url, **options)
-			@record = record || self.get.result
-		end
-		
-		attr :record
-		
-		def dns_records
-			@dns_records ||= DNSRecords.new(concat_urls(url, 'dns_records'), self, **options)
-		end
-		
-		def firewall_rules
-			@firewall_rules ||= FirewallRules.new(concat_urls(url, "firewall/access_rules/rules"), self, **options)
-		end
+    def to_s
+      "#{@record[:configuration][:value]} - #{@record[:mode]} - #{@record[:notes]}"
+    end
+  end
 
-		def to_s
-			@record[:name]
-		end
-	end
-	
-	class Zones < Resource
-		def all
-			self.get.results.map{|record| Zone.new(concat_urls(url, record[:id]), record, **options)}
-		end
-		
-		def find_by_name(name)
-			response = self.get(params: {name: name})
-			
-			unless response.empty?
-				record = response.results.first
-				
-				Zone.new(concat_urls(url, record[:id]), record, **options)
-			end
-		end
-		
-		def find_by_id(id)
-			Zone.new(concat_urls(url, id), **options)
-		end
-	end
+  class FirewallRules < Resource
+    def initialize(url, zone, **options)
+      super(url, **options)
+
+      @zone = zone
+    end
+
+    attr_reader :zone
+
+    def all(mode = nil, ip = nil, notes = nil)
+      url_args = ''
+      url_args.concat("&mode=#{mode}") if mode
+      url_args.concat("&configuration_value=#{ip}") if ip
+      url_args.concat("&notes=#{notes}") if notes
+
+      results = paginate(FirewallRules, url, url_args)
+      results.map { |record| FirewallRule.new(concat_urls(url, record[:id]), record, **options) }
+    end
+
+    def firewalled_ips(rules)
+      rules.collect { |r| r.record[:configuration][:value] }
+    end
+
+    def blocked_ips
+      firewalled_ips(all('block'))
+    end
+
+    def set(mode, ip, note)
+      data = {
+        mode: mode.to_s,
+        configuration: {
+          target: 'ip',
+          value: ip.to_s,
+          notes: "cloudflare gem firewall_rules [#{mode}] #{note} #{Time.now.strftime('%m/%d/%y')}"
+        }
+      }
+
+      post(data.to_json, content_type: 'application/json')
+    end
+
+    def unset(mode, value)
+      rule = send("find_by_#{mode}", value)
+      rule.delete
+    end
+
+    def find_by_id(id)
+      FirewallRule.new(concat_urls(url, id), **options)
+    end
+
+    def find_by_ip(ip)
+      rule = FirewallRule.new(concat_urls(url, "?configuration_value=#{ip}"), **options)
+      FirewallRule.new(concat_urls(url, rule.record.first[:id]), **options)
+    end
+  end
+
+  class Zone < Resource
+    def initialize(url, record = nil, **options)
+      super(url, **options)
+      @record = record || get.result
+    end
+
+    attr_reader :record
+
+    def dns_records
+      @dns_records ||= DNSRecords.new(concat_urls(url, 'dns_records'), self, **options)
+    end
+
+    def firewall_rules
+      @firewall_rules ||= FirewallRules.new(concat_urls(url, 'firewall/access_rules/rules'), self, **options)
+    end
+
+    def to_s
+      @record[:name]
+    end
+  end
+
+  class Zones < Resource
+    def all
+      get.results.map { |record| Zone.new(concat_urls(url, record[:id]), record, **options) }
+    end
+
+    def find_by_name(name)
+      response = get(params: { name: name })
+
+      unless response.empty?
+        record = response.results.first
+
+        Zone.new(concat_urls(url, record[:id]), record, **options)
+      end
+    end
+
+    def find_by_id(id)
+      Zone.new(concat_urls(url, id), **options)
+    end
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright, 2017, by Samuel G. D. Williams. <http://www.codeotaku.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,16 +23,16 @@
 require_relative '../../cloudflare'
 
 module Cloudflare
-	module RSpec
-		module Connection
-		end
-		
-		RSpec.shared_context Connection do
-			# You must specify these in order for the tests to run.
-			let(:email) {ENV['CLOUDFLARE_EMAIL']}
-			let(:key) {ENV['CLOUDFLARE_KEY']}
-			
-			let(:connection) {Cloudflare.connect(key: key, email: email)}
-		end
-	end
+  module RSpec
+    module Connection
+    end
+
+    RSpec.shared_context Connection do
+      # You must specify these in order for the tests to run.
+      let(:email) { 'jake@example.net' }
+      let(:key) { '5up3rS3cr3tAuthK3y' }
+
+      let(:connection) { Cloudflare.connect(key: key, email: email) }
+    end
+  end
 end

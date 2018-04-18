@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 # Specify your gem's dependencies in cloudflare.gemspec
@@ -9,6 +11,7 @@ group :development do
 end
 
 group :test do
+  gem 'sinatra'
   gem 'coveralls', require: false
   gem 'simplecov'
   gem 'webmock'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright, 2012, by Marcin Prokop.
 # Copyright, 2017, by Samuel G. D. Williams. <http://www.codeotaku.com>
 #
@@ -22,52 +24,50 @@
 require 'json'
 
 module Cloudflare
-	class RequestError < StandardError
-		def initialize(what, response)
-			super("#{what}: #{response.errors.join(', ')}")
-			
-			@response = response
-		end
-		
-		attr :response
-	end
-	
-	class Response
-		def initialize(what, content)
-			@what = what
-			
-			@body = JSON.parse(content, symbolize_names: true)
-		end
-		
-		attr :body
+  class RequestError < StandardError
+    def initialize(what, response)
+      super("#{what}: #{response.errors.join(', ')}")
 
-		def result
-			unless successful?
-				raise RequestError.new(@what, self)
-			end
-			
-			body[:result]
-		end
+      @response = response
+    end
 
-		# Treat result as an array (often it is).
-		def results
-			Array(result)
-		end
+    attr_reader :response
+  end
 
-		def empty?
-			result.empty?
-		end
+  class Response
+    def initialize(what, content)
+      @what = what
 
-		def successful?
-			body[:success]
-		end
+      @body = JSON.parse(content, symbolize_names: true)
+    end
 
-		def errors
-			body[:errors]
-		end
+    attr_reader :body
 
-		def messages
-			body[:messages]
-		end
-	end
+    def result
+      raise RequestError.new(@what, self) unless successful?
+
+      body[:result]
+    end
+
+    # Treat result as an array (often it is).
+    def results
+      Array(result)
+    end
+
+    def empty?
+      result.empty?
+    end
+
+    def successful?
+      body[:success]
+    end
+
+    def errors
+      body[:errors]
+    end
+
+    def messages
+      body[:messages]
+    end
+  end
 end
