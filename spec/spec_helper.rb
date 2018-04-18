@@ -18,7 +18,6 @@ if ENV['COVERAGE'] || ENV['TRAVIS']
 end
 
 require 'webmock/rspec'
-include WebMock::API
 WebMock.disable_net_connect!(allow_localhost: true)
 
 require 'bundler/setup'
@@ -30,37 +29,34 @@ def base_url
 end
 
 def zone_id
-  "1337z0n31d3n71f13r"
+  '1337z0n31d3n71f13r'
 end
 
 def stub_get_zones
   stub_request(:get, "#{base_url}/zones")
     .with(cf_headers)
-    .to_return(status: 200, body: cf_results([{ name: 'example.com', ip: '123.123.123.123', id: zone_id }]), headers: {})
+    .to_return(status: 200, body: cf_results([{
+                                               name: 'example.com',
+                                               ip: '123.123.123.123',
+                                               id: zone_id
+                                             }]),
+               headers: {})
 end
 
 def stub_get_dns_records
+  dns_record = {
+    "id": 'b12a037696862c2fc1d45a0e288c82a5',
+    "type": 'A',
+    "name": 'www.example.com',
+    "content": '123.123.123.123',
+    "ttl": 1,
+    "zone_id": zone_id,
+    "zone_name": 'example.com'
+  }
   stub_request(:get, "#{base_url}/zones/#{zone_id}/dns_records/?page=1&per_page=100&scope_type=organization")
     .with(cf_headers)
     .to_return(status: 200,
-               body: cf_results([{
-                                  "id": 'b12a037696862c2fc1d45a0e288c82a5',
-                                  "type": 'A',
-                                  "name": 'www.example.com',
-                                  "content": '123.123.123.123',
-                                  "proxiable": true,
-                                  "proxied": false,
-                                  "ttl": 1,
-                                  "locked": false,
-                                  "zone_id": '',
-                                  "zone_name": 'example.com',
-                                  "modified_on": '2017-10-26T08:15:17.402664Z',
-                                  "created_on": '2017-10-26T08:15:17.402664Z',
-                                  "meta": {
-                                    "auto_added": false,
-                                    "managed_by_apps": false
-                                  }
-                                }]),
+               body: cf_results([dns_record]),
                headers: {})
 end
 
@@ -70,33 +66,57 @@ def stub_create_dns_record
     .with(
       body: hash_including(:type, :name, :content, :ttl, :proxied)
     )
-    .to_return(status: 200, body: cf_results(id: '123231123', type: 'A', name: 'test', content: '123.123.123.123', ttl: 240), headers: {})
+    .to_return(status: 200,
+               body: cf_results(id: '123231123', type: 'A', name: 'test', content: '123.123.123.123', ttl: 240),
+               headers: {})
 end
 
 def stub_find_dns_record_by_id(id)
-  stub_request(:get, 'https://api.cloudflare.com/client/v4/zones/#{zone_id}/dns_records')
+  stub_request(:get, "#{base_url}/zones/#{zone_id}/dns_records")
     .with(query: { id: id })
-    .with(cf_headers).to_return(status: 200, body: cf_results(id: '123231123', type: 'A', name: 'test', content: '123.123.123.123', ttl: 240), headers: {})
+    .with(cf_headers)
+    .to_return(status: 200,
+               body: cf_results(
+                 id: '123231123',
+                 type: 'A',
+                 name: 'test',
+                 content: '123.123.123.123',
+                 ttl: 240
+               ),
+               headers: {})
 end
 
 def stub_get_dns_record(id)
-  stub_request(:get, "https://api.cloudflare.com/client/v4/zones/#{zone_id}/dns_records/#{id}")
-    .with(cf_headers).to_return(status: 200, body: cf_results(id: '123231123', type: 'A', name: 'test', content: '123.123.123.123', ttl: 240), headers: {})
+  stub_request(:get, "#{base_url}/zones/#{zone_id}/dns_records/#{id}")
+    .with(cf_headers)
+    .to_return(status: 200,
+               body: cf_results(
+                 id: '123231123',
+                 type: 'A',
+                 name: 'test',
+                 content: '123.123.123.123',
+                 ttl: 240
+               ),
+               headers: {})
 end
 
 def stub_delete_dns_record(id)
-  stub_request(:delete, "https://api.cloudflare.com/client/v4/zones/#{zone_id}/dns_records/#{id}")
-    .with(cf_headers).to_return(status: 200, body: cf_results(id: id), headers: {})
+  stub_request(:delete, "#{base_url}/zones/#{zone_id}/dns_records/#{id}")
+    .with(cf_headers)
+    .to_return(status: 200, body: cf_results(id: id), headers: {})
 end
 
 def stub_find_rule_by_value(ip:)
   stub_request(:get, "#{base_url}/zones/#{zone_id}/firewall/access_rules/rules/?configuration_value=#{ip}")
     .with(cf_headers)
-    .to_return(status: 200, body: cf_results([cf_access_rule('block', '123.123.123.124', 'gemtest')]), headers: {})
+    .to_return(status: 200,
+               body: cf_results([cf_access_rule('block', '123.123.123.124', 'gemtest')]),
+               headers: {})
 end
 
 def stub_list_access_rules(page, rules)
-  stub_request(:get, "#{base_url}/zones/#{zone_id}/firewall/access_rules/rules/?page=#{page}&per_page=100&scope_type=organization")
+  query = URI.encode_www_form(page: page, per_page: 100, scope_type: :organization)
+  stub_request(:get, "#{base_url}/zones/#{zone_id}/firewall/access_rules/rules/?#{query}")
     .with(cf_headers)
     .to_return(status: 200, body: cf_results(rules), headers: {})
 end
@@ -104,7 +124,9 @@ end
 def stub_get_access_rule(id)
   stub_request(:get, "#{base_url}/zones/#{zone_id}/firewall/access_rules/rules/#{id}")
     .with(cf_headers)
-    .to_return(status: 200, body: cf_results(cf_access_rule('whitelist', '123.123.123.124', 'gemtest', id)), headers: {})
+    .to_return(status: 200,
+               body: cf_results(cf_access_rule('whitelist', '123.123.123.124', 'gemtest', id)),
+               headers: {})
 end
 
 def stub_delete_access_rule(id: nil)

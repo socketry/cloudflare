@@ -1,26 +1,27 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 RSpec.describe 'Cloudflare DNS Zones' do
   include_context Cloudflare::RSpec::Connection
 
-  before(:each) {stub_get_zones}
+  before(:each) { stub_get_zones }
   it 'should list zones' do
     zones = connection.zones.all
     expect(zones).to be_any
   end
 
   describe Cloudflare::DNSRecords, order: :defined do
-    before(:each) {
+    before(:each) do
       stub_get_zones
       stub_get_dns_records
       stub_create_dns_record
       stub_delete_dns_record '123123123'
       stub_find_dns_record_by_id '123123123'
-    }
-    let(:zone) {connection.zones.all.first}
+    end
+    let(:zone) { connection.zones.all.first }
 
-    let(:name) {'test'}
-    let(:ip) {'123.123.123.123'}
+    let(:name) { 'test' }
+    let(:ip) { '123.123.123.123' }
 
     it 'should get all records' do
       result = zone.dns_records.all
@@ -29,12 +30,12 @@ RSpec.describe 'Cloudflare DNS Zones' do
 
     it 'should create dns record' do
       response = zone.dns_records.post({
-                                           type: 'A',
-                                           name: name,
-                                           content: ip,
-                                           ttl: 240,
-                                           proxied: false
-                                       }.to_json, content_type: 'application/json')
+        type: 'A',
+        name: name,
+        content: ip,
+        ttl: 240,
+        proxied: false
+      }.to_json, content_type: 'application/json')
 
       expect(response).to be_successful
 
@@ -54,11 +55,11 @@ RSpec.describe 'Cloudflare DNS Zones' do
   end
 
   describe Cloudflare::FirewallRules, order: :defined do
-    let(:zone) {connection.zones.all.first}
-    let(:name) {'test'}
-    let(:ip) {'123.123.123.123'}
-    let(:ip2) {'123.123.123.124'}
-    let(:notes) {'gemtest'}
+    let(:zone) { connection.zones.all.first }
+    let(:name) { 'test' }
+    let(:ip) { '123.123.123.123' }
+    let(:ip2) { '123.123.123.124' }
+    let(:notes) { 'gemtest' }
     before do
       stub_get_zones
       stub_create_rule 'block', ip2, notes
@@ -107,3 +108,4 @@ RSpec.describe 'Cloudflare DNS Zones' do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

@@ -25,6 +25,7 @@ require 'net/http'
 require 'json'
 
 require 'rest-client'
+require 'URI'
 
 require_relative 'response'
 
@@ -60,12 +61,12 @@ module Cloudflare
 
       # fetch and aggregate all pages
       loop do
-        rules = obj.new(concat_urls(url, "?scope_type=organization#{url_args}&per_page=#{page_size}&page=#{page}"), self, **options)
+        query = URI.encode_www_form scope_type: :organization, per_page: page_size, page: page
+        rules = obj.new(concat_urls(url, "?#{query}#{url_args}"), self, **options)
         results += rules.get.results
-        break if results.size == 0 || results.size % page_size != 0
+        break if results.empty? || results.size % page_size != 0
         page += 1
       end
-
       results
     end
   end

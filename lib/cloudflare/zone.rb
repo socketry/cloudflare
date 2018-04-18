@@ -39,7 +39,10 @@ module Cloudflare
     end
 
     def update_content(content)
-      response = put({ type: @record[:type], name: @record[:name], content: content }.to_json, content_type: 'application/json')
+      response = put({ type: @record[:type],
+                       name: @record[:name],
+                       content: content }.to_json,
+                     content_type: 'application/json')
       response.successful?
     end
 
@@ -67,11 +70,10 @@ module Cloudflare
     def find_by_name(name)
       response = get(params: { name: name })
 
-      unless response.empty?
-        record = response.results.first
+      return if response.empty?
+      record = response.results.first
 
-        DNSRecord.new(concat_urls(url, record[:id]), record, **options)
-      end
+      DNSRecord.new(concat_urls(url, record[:id]), record, **options)
     end
 
     def find_by_id(id)
@@ -177,11 +179,10 @@ module Cloudflare
     def find_by_name(name)
       response = get(params: { name: name })
 
-      unless response.empty?
-        record = response.results.first
+      return if response.empty?
+      record = response.results.first
 
-        Zone.new(concat_urls(url, record[:id]), record, **options)
-      end
+      Zone.new(concat_urls(url, record[:id]), record, **options)
     end
 
     def find_by_id(id)

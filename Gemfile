@@ -11,8 +11,8 @@ group :development do
 end
 
 group :test do
-  gem 'sinatra'
   gem 'coveralls', require: false
   gem 'simplecov'
+  gem 'sinatra'
   gem 'webmock'
 end
