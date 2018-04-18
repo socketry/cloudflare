@@ -7,11 +7,6 @@ if ENV['COVERAGE'] || ENV['TRAVIS']
     SimpleCov.start do
       add_filter '/spec/'
     end
-
-    if ENV['TRAVIS']
-      require 'coveralls'
-      Coveralls.wear!
-    end
   rescue LoadError
     warn "Could not load simplecov: #{$ERROR_INFO}"
   end
