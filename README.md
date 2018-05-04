@@ -89,6 +89,14 @@ data = {"mode":"block","configuration":{"target":"ip","value":"#{ip}"},"notes":"
 response = zones.first.firewall_rules.post(data.to_json, content_type: 'application/json')
 ```
 
+Add a DNS record dynamically.  Here we add an A record for `batman.example.com`:
+
+```ruby
+client = Cloudflare.connect(key: CF_KEY, email: CF_EMAIL)
+zone = client.zones.find_by_name("example.com")
+zone.dns_records.post({"type":"A","name":"batman","content":"127.0.0.1","proxied":false}.to_json, :content_type => "application/json")
+```
+
 ## Contributing
 
 1. Fork it
