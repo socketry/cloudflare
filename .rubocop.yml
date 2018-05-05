@@ -1,0 +1,19 @@
+Naming/UncommunicativeMethodParamName:
+  AllowedNames:
+  - ip
+  - id
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/MethodLength:
+  Max: 20
+
+Lint/Debugger:
+  Enabled: false
+
+Gemspec/RequiredRubyVersion:
+  Enabled: false

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright, 2012, by Marcin Prokop.
 # Copyright, 2017, by Samuel G. D. Williams. <http://www.codeotaku.com>
 #
@@ -24,7 +26,7 @@ require_relative 'cloudflare/zone'
 require_relative 'cloudflare/user'
 
 module Cloudflare
-	def self.connect(**options)
-		Connection.new(**options)
-	end
+  def self.connect(**options)
+    Connection.new(**options)
+  end
 end
