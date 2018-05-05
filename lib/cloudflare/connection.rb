@@ -25,7 +25,7 @@ require 'net/http'
 require 'json'
 
 require 'rest-client'
-require 'URI'
+require 'uri'
 
 require_relative 'response'
 
