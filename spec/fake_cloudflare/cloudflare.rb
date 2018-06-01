@@ -3,7 +3,7 @@
 require 'sinatra/base'
 
 class FakeCloudFlare < Sinatra::Base
-  get '/zones/:id/dns_records/?page=1&per_page=100&scope_type=organization' do
+  get '/zones/:id/dns_records/?page=1&per_page=50&scope_type=organization' do
     json_response 200, 'get_all_zones.json'
   end
 

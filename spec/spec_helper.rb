@@ -48,7 +48,7 @@ def stub_get_dns_records
       "zone_id": zone_id,
       "zone_name": 'example.com'
   }
-  stub_request(:get, "#{base_url}/zones/#{zone_id}/dns_records/?page=1&per_page=100&scope_type=organization")
+  stub_request(:get, "#{base_url}/zones/#{zone_id}/dns_records/?page=1&per_page=50&scope_type=organization")
       .with(cf_headers)
       .to_return(status: 200,
                  body: cf_results([dns_record]),
@@ -110,7 +110,7 @@ def stub_find_rule_by_value(ip:)
 end
 
 def stub_list_access_rules(page, rules)
-  query = URI.encode_www_form(page: page, per_page: 100, scope_type: :organization)
+  query = URI.encode_www_form(page: page, per_page: 50, scope_type: :organization)
   stub_request(:get, "#{base_url}/zones/#{zone_id}/firewall/access_rules/rules/?#{query}")
       .with(cf_headers)
       .to_return(status: 200, body: cf_results(rules), headers: {})
