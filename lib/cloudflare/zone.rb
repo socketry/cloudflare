@@ -151,9 +151,13 @@ module Cloudflare
   end
 
   class Zone < Resource
-    def initialize(url, record = nil, **options)
+    DEFAULT_PURGE_CACHE_PARAMS = {
+      purge_everything: true
+    }.freeze
+
+    def initialize(url, record = nil, preload = false, **options)
       super(url, **options)
-      @record = record || get.result
+      @record = record || get.result if preload
     end
 
     attr_reader :record
@@ -166,6 +170,11 @@ module Cloudflare
       @firewall_rules ||= FirewallRules.new(concat_urls(url, 'firewall/access_rules/rules'), self, **options)
     end
 
+    def purge_cache(params = DEFAULT_PURGE_CACHE_PARAMS)
+      response = self['purge_cache'].post(params&.to_json || {})
+      response.successful?
+    end
+
     def to_s
       @record[:name]
     end
@@ -173,7 +182,7 @@ module Cloudflare
 
   class Zones < Resource
     def all
-      get.results.map { |record| Zone.new(concat_urls(url, record[:id]), record, **options) }
+      get.results.map { |record| Zone.new(concat_urls(url, record[:id]), record, true, **options) }
     end
 
     def find_by_name(name)
@@ -182,7 +191,7 @@ module Cloudflare
       return if response.empty?
       record = response.results.first
 
-      Zone.new(concat_urls(url, record[:id]), record, **options)
+      Zone.new(concat_urls(url, record[:id]), record, true, **options)
     end
 
     def find_by_id(id)
