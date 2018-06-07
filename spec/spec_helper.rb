@@ -28,7 +28,7 @@ def zone_id
 end
 
 def stub_get_zones
-  stub_request(:get, "#{base_url}/zones")
+  stub_request(:get, "#{base_url}/zones/?page=1&per_page=50&scope_type=organization")
       .with(cf_headers)
       .to_return(status: 200, body: cf_results([{
                                                     name: 'example.com',
