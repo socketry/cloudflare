@@ -142,6 +142,12 @@ def stub_create_rule(mode, ip, note)
       .to_return(status: 200, body: cf_results(cf_access_rule(mode, ip, notes)), headers: {})
 end
 
+def stub_purge_cache
+  stub_request(:post, "#{base_url}/zones/#{zone_id}/purge_cache")
+      .with(cf_headers)
+      .to_return(status: 200, body: cf_results(id: zone_id), headers: {})
+end
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = '.rspec_status'

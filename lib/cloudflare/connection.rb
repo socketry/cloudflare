@@ -32,6 +32,7 @@ require_relative 'response'
 module Cloudflare
   DEFAULT_URL = 'https://api.cloudflare.com/client/v4/'
   TIMEOUT = 10 # Default is 5 seconds
+  DEFAULT_HEADERS = { 'Content-Type' => 'application/json' }.freeze
 
   class Resource < RestClient::Resource
     include Enumerable
@@ -39,7 +40,7 @@ module Cloudflare
     # @param api_key [String] `X-Auth-Key` or `X-Auth-User-Service-Key` if no email provided.
     # @param email [String] `X-Auth-Email`, your email address for the account.
     def initialize(url = DEFAULT_URL, key: nil, email: nil, **options)
-      headers = options[:headers] || {}
+      headers = options[:headers] || DEFAULT_HEADERS.dup
 
       if email.nil?
         headers['X-Auth-User-Service-Key'] = key

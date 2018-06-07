@@ -10,6 +10,21 @@ RSpec.describe 'Cloudflare DNS Zones' do
     expect(zones).to be_any
   end
 
+  describe Cloudflare::Zone, order: :defined do
+    before(:each) do
+      stub_get_zones
+      stub_purge_cache
+    end
+
+    let(:zone) { connection.zones.all.first }
+
+    describe '#purge_cache' do
+      it 'should purge cache' do
+        expect(zone.purge_cache).to eq(true)
+      end
+    end
+  end
+
   describe Cloudflare::DNSRecords, order: :defined do
     before(:each) do
       stub_get_zones
