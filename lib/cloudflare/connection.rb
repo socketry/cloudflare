@@ -57,7 +57,7 @@ module Cloudflare
 
     def paginate(obj, url, url_args = '')
       page = 1
-      page_size = 100
+      page_size = 50
       results = []
 
       # fetch and aggregate all pages

@@ -182,7 +182,8 @@ module Cloudflare
 
   class Zones < Resource
     def all
-      get.results.map { |record| Zone.new(concat_urls(url, record[:id]), record, true, **options) }
+      results = paginate(Zone, url)
+      results.map { |record| Zone.new(concat_urls(url, record[:id]), record, **options) }
     end
 
     def find_by_name(name)
