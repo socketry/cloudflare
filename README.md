@@ -69,8 +69,8 @@ puts records
 Get firewall rules:
 
 ```ruby
-all_rules =  zones.first.firewall_rules.all
-block_rules = zones.first.firewall_rules.all("block")  # or "whitelist" or "challenge"
+all_rules = zones.first.firewall_rules.all
+block_rules = zones.first.firewall_rules.all("block") # or "whitelist" or "challenge"
 ```
 
 Get blocked ips:
@@ -89,7 +89,7 @@ data = {"mode":"block","configuration":{"target":"ip","value":"#{ip}"},"notes":"
 response = zones.first.firewall_rules.post(data.to_json, content_type: 'application/json')
 ```
 
-Add a DNS record dynamically.  Here we add an A record for `batman.example.com`:
+Add a DNS record dynamically. Here we add an A record for `batman.example.com`:
 
 ```ruby
 client = Cloudflare.connect(key: CF_KEY, email: CF_EMAIL)
@@ -114,9 +114,9 @@ zone.dns_records.post({"type":"A","name":"batman","content":"127.0.0.1","proxied
 
 Released under the MIT license.
 
-Copyright, 2012, 2014, by [Marcin Prokop](https://github.com/b4k3r).  
-Copyright, 2017, by [Samuel G. D. Williams](http://www.codeotaku.com/samuel-williams).  
+Copyright, 2018, by [Samuel G. D. Williams](http://www.codeotaku.com/samuel-williams).  
 Copyright, 2017, by [David Rosenbloom](http://artifactory.com).  
+Copyright, 2012, 2014, by [Marcin Prokop](https://github.com/b4k3r).  
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

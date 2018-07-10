@@ -26,7 +26,7 @@ require_relative 'cloudflare/zone'
 require_relative 'cloudflare/user'
 
 module Cloudflare
-  def self.connect(**options)
-    Connection.new(**options)
-  end
+	def self.connect(**options)
+		Connection.new(**options)
+	end
 end

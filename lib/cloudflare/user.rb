@@ -24,12 +24,12 @@
 require_relative 'connection'
 
 module Cloudflare
-  class Connection < Resource
-    def user
-      @user ||= User.new(concat_urls(url, 'user'), options)
-    end
-  end
+	class Connection < Resource
+		def user
+			@user ||= User.new(concat_urls(url, 'user'), options)
+		end
+	end
 
-  class User < Resource
-  end
+	class User < Resource
+	end
 end

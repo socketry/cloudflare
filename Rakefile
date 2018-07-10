@@ -8,17 +8,17 @@ RSpec::Core::RakeTask.new(:test)
 task default: :test
 
 task :coverage do
-  ENV['COVERAGE'] = 'y'
+	ENV['COVERAGE'] = 'y'
 end
 
 task :console do
-  require 'cloudflare'
-  require 'pry'
+	require 'cloudflare'
+	require 'pry'
 
-  email = ENV['CLOUDFLARE_EMAIL']
-  key = ENV['CLOUDFLARE_KEY']
+	email = ENV['CLOUDFLARE_EMAIL']
+	key = ENV['CLOUDFLARE_KEY']
 
-  connection = Cloudflare::Connection.new(key: key, email: email)
+	connection = Cloudflare::Connection.new(key: key, email: email)
 
-  binding.pry
+	binding.pry
 end

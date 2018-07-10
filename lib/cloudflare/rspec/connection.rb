@@ -23,16 +23,16 @@
 require_relative '../../cloudflare'
 
 module Cloudflare
-  module RSpec
-    module Connection
-    end
+	module RSpec
+		module Connection
+		end
 
-    RSpec.shared_context Connection do
-      # You must specify these in order for the tests to run.
-      let(:email) { 'jake@example.net' }
-      let(:key) { '5up3rS3cr3tAuthK3y' }
+		RSpec.shared_context Connection do
+			# You must specify these in order for the tests to run.
+			let(:email) { 'jake@example.net' }
+			let(:key) { '5up3rS3cr3tAuthK3y' }
 
-      let(:connection) { Cloudflare.connect(key: key, email: email) }
-    end
-  end
+			let(:connection) { Cloudflare.connect(key: key, email: email) }
+		end
+	end
 end

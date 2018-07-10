@@ -6,13 +6,13 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'pry'
-  gem 'pry-coolline'
+	gem 'pry'
+	gem 'pry-coolline'
 end
 
 group :test do
-  gem 'coveralls', require: false
-  gem 'simplecov'
-  gem 'sinatra'
-  gem 'webmock'
+	gem 'coveralls', require: false
+	gem 'simplecov'
+	gem 'sinatra'
+	gem 'webmock'
 end

@@ -30,48 +30,48 @@ require 'uri'
 require_relative 'response'
 
 module Cloudflare
-  DEFAULT_URL = 'https://api.cloudflare.com/client/v4/'
-  TIMEOUT = 10 # Default is 5 seconds
-  DEFAULT_HEADERS = { 'Content-Type' => 'application/json' }.freeze
+	DEFAULT_URL = 'https://api.cloudflare.com/client/v4/'
+	TIMEOUT = 10 # Default is 5 seconds
+	DEFAULT_HEADERS = { 'Content-Type' => 'application/json' }.freeze
 
-  class Resource < RestClient::Resource
-    include Enumerable
+	class Resource < RestClient::Resource
+		include Enumerable
 
-    # @param api_key [String] `X-Auth-Key` or `X-Auth-User-Service-Key` if no email provided.
-    # @param email [String] `X-Auth-Email`, your email address for the account.
-    def initialize(url = DEFAULT_URL, key: nil, email: nil, **options)
-      headers = options[:headers] || DEFAULT_HEADERS.dup
+		# @param api_key [String] `X-Auth-Key` or `X-Auth-User-Service-Key` if no email provided.
+		# @param email [String] `X-Auth-Email`, your email address for the account.
+		def initialize(url = DEFAULT_URL, key: nil, email: nil, **options)
+			headers = options[:headers] || DEFAULT_HEADERS.dup
 
-      if email.nil?
-        headers['X-Auth-User-Service-Key'] = key
-      else
-        headers['X-Auth-Key'] = key
-        headers['X-Auth-Email'] = email
-      end
+			if email.nil?
+				headers['X-Auth-User-Service-Key'] = key
+			else
+				headers['X-Auth-Key'] = key
+				headers['X-Auth-Email'] = email
+			end
 
-      # Convert HTTP API responses to our own internal response class:
-      super(url, headers: headers, accept: 'application/json', **options) do |response|
-        Response.new(response.request.url, response.body)
-      end
-    end
+			# Convert HTTP API responses to our own internal response class:
+			super(url, headers: headers, accept: 'application/json', **options) do |response|
+				Response.new(response.request.url, response.body)
+			end
+		end
 
-    def paginate(obj, url, url_args = '')
-      page = 1
-      page_size = 50
-      results = []
+		def paginate(obj, url, url_args = '')
+			page = 1
+			page_size = 50
+			results = []
 
-      # fetch and aggregate all pages
-      loop do
-        query = URI.encode_www_form scope_type: :organization, per_page: page_size, page: page
-        rules = obj.new(concat_urls(url, "?#{query}#{url_args}"), self, **options)
-        results += rules.get.results
-        break if results.empty? || results.size % page_size != 0
-        page += 1
-      end
-      results
-    end
-  end
+			# fetch and aggregate all pages
+			loop do
+				query = URI.encode_www_form scope_type: :organization, per_page: page_size, page: page
+				rules = obj.new(concat_urls(url, "?#{query}#{url_args}"), self, **options)
+				results += rules.get.results
+				break if results.empty? || results.size % page_size != 0
+				page += 1
+			end
+			results
+		end
+	end
 
-  class Connection < Resource
-  end
+	class Connection < Resource
+	end
 end
