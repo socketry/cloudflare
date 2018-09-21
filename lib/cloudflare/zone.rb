@@ -86,6 +86,61 @@ module Cloudflare
 		end
 	end
 
+	class CustomHostname < Resource
+		def initialize(url, record = nil, **options)
+			super(url, **options)
+
+			@record = record || get.result
+		end
+
+		def update_content(content)
+			response = put(
+				{
+					type: @record[:type],
+					hostname: @record[:hostname],
+					content: content
+				}.to_json,
+				content_type: 'application/json'
+			)
+
+			response.successful?
+		end
+
+		attr_reader :record
+
+		def to_s
+			"#{@record[:name]} #{@record[:type]} #{@record[:content]}"
+		end
+	end
+
+	class CustomHostnames < Resource
+		def initialize(url, zone, **options)
+			super(url, **options)
+
+			@zone = zone
+		end
+
+		attr_reader :zone
+
+		def all
+			results = paginate(CustomHostnames, url)
+			results.map {|record| CustomHostname.new(concat_urls(url, record[:id]), record, **options)}
+		end
+
+		def find_by_name(name)
+			response = get(params: {hostname: name})
+
+			return if response.empty?
+			record = response.results.first
+
+			CustomHostname.new(concat_urls(url, record[:id]), record, **options)
+		end
+
+		def find_by_id(id)
+			CustomHostname.new(concat_urls(url, id), **options)
+		end
+	end
+
 	class FirewallRule < Resource
 		def initialize(url, record = nil, **options)
 			super(url, **options)
@@ -169,6 +224,10 @@ module Cloudflare
 
 		def dns_records
 			@dns_records ||= DNSRecords.new(concat_urls(url, 'dns_records'), self, **options)
+		end
+
+		def custom_hostnames
+			@custom_hostnames ||= CustomHostnames.new(concat_urls(url, 'custom_hostnames'), self, **options)
 		end
 
 		def firewall_rules

@@ -63,12 +63,16 @@ module Cloudflare
 			# fetch and aggregate all pages
 			loop do
 				query = URI.encode_www_form scope_type: :organization, per_page: page_size, page: page
-				rules = obj.new(concat_urls(url, "?#{query}#{url_args}"), self, **options)
+				rules = obj.new(build_url(url, "?#{query}#{url_args}"), self, **options)
 				results += rules.get.results
 				break if results.empty? || results.size % page_size != 0
 				page += 1
 			end
 			results
+		end
+
+		def build_url(base, *items)
+			URI::join(base, *items).to_s
 		end
 	end
 
