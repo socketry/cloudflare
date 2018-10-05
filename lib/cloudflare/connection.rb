@@ -51,6 +51,7 @@ module Cloudflare
 
 			# Convert HTTP API responses to our own internal response class:
 			super(url, headers: headers, accept: 'application/json', **options) do |response|
+				options[:response] = response
 				Response.new(response.request.url, response.body, **options)
 			end
 		end
