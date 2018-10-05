@@ -155,6 +155,43 @@ module Cloudflare
 		end
 	end
 
+	class Log < Resource
+
+		def initialize(url, record = nil, preload = false, **options)
+			super(url, **options)
+			@record = record || get.results if preload
+		end
+
+		attr_reader :record
+
+		def to_s
+			"#{@record[:rayid]}-#{@record[:ClientRequestURI]}"
+		end
+	end
+
+	class Logs < Resource
+		def initialize(url, zone, **options)
+			super(url, **options)
+			self.options[:headers]["Content-Type"] = "text/plain"
+			self.options[:accept] = "text/plain"
+			@zone = zone
+		end
+
+		def all(preload = false)
+			results = paginate(Log, url)
+			results.map {|record| Log.new(concat_urls(url, record[:id]), record, preload, **options)}
+		end
+
+		def between(from, to, **options)
+			response = get( "Content-Type".to_sym => 'text/plain' ,params: { start: from, end: to})
+
+			return if response.empty?
+			logs = response.results
+			logs.map! {|log| JSON.parse(log)}
+		end
+
+	end
+
 	class Zone < Resource
 		DEFAULT_PURGE_CACHE_PARAMS = {
 			purge_everything: true
@@ -178,6 +215,10 @@ module Cloudflare
 		def purge_cache(params = DEFAULT_PURGE_CACHE_PARAMS)
 			response = self['purge_cache'].post(params.to_json)
 			response.successful?
+		end
+
+		def logs
+			@logs ||= Logs.new(concat_urls(url, 'logs/received'), self, **options)
 		end
 
 		def to_s

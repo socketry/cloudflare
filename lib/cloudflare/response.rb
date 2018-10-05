@@ -35,10 +35,22 @@ module Cloudflare
 	end
 
 	class Response
-		def initialize(what, content)
+		def initialize(what, content, **options)
 			@what = what
 
-			@body = JSON.parse(content, symbolize_names: true)
+			if options[:headers]["Content-Type"].eql? "application/json"
+				@body = JSON.parse(content, symbolize_names: true)
+			else
+				begin
+					@body = {}
+					@body[:result] = content.lines
+					@body[:success] = true
+				rescue Exception => e
+					@body = {}
+					@body[:success] = false
+					@body[:errors] = e.to_s
+				end
+			end
 		end
 
 		attr_reader :body
