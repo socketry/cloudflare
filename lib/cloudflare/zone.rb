@@ -47,7 +47,7 @@ module Cloudflare
 				}.to_json,
 				content_type: 'application/json'
 			)
-			
+
 			response.successful?
 		end
 
@@ -166,6 +166,14 @@ module Cloudflare
 		end
 
 		attr_reader :record
+
+		def update(content)
+			response = patch(
+				content.to_json,
+				content_type: 'application/json'
+			)
+			response.successful?
+		end
 
 		def dns_records
 			@dns_records ||= DNSRecords.new(concat_urls(url, 'dns_records'), self, **options)
