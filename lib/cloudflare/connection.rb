@@ -66,7 +66,7 @@ module Cloudflare
 				rules = obj.new(concat_urls(url, "?#{query}#{url_args}"), self, **options)
 				page_results = rules.get.results
 				results += page_results
-				break if page_results.empty? || page_results.size % page_size != 0
+				break if page_results.size < page_size
 				page += 1
 			end
 			results
