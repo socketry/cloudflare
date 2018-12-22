@@ -64,8 +64,9 @@ module Cloudflare
 			loop do
 				query = URI.encode_www_form scope_type: :organization, per_page: page_size, page: page
 				rules = obj.new(concat_urls(url, "?#{query}#{url_args}"), self, **options)
-				results += rules.get.results
-				break if results.empty? || results.size % page_size != 0
+				page_results = rules.get.results
+				results += page_results
+				break if page_results.empty? || page_results.size % page_size != 0
 				page += 1
 			end
 			results
