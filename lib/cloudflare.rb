@@ -21,12 +21,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+require 'async'
 require_relative 'cloudflare/connection'
-require_relative 'cloudflare/zone'
-require_relative 'cloudflare/user'
 
 module Cloudflare
-	def self.connect(**options)
-		Connection.new(**options)
+	DEFAULT_URL = 'https://api.cloudflare.com/client/v4'
+	
+	def self.connect(key: nil, email: nil)
+		representation = Connection.for(DEFAULT_URL)
+		
+		if key
+			representation = representation.authenticated(key, email)
+		end
+		
+		return representation unless block_given?
+		
+		Async.run do
+			begin
+				yield representation
+			ensure
+				representation.close
+			end
+		end
 	end
 end

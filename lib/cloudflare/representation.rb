@@ -21,6 +21,74 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+require 'json'
+
+require 'async/rest/representation'
+
 module Cloudflare
-	VERSION = '4.0.0'
+	class RequestError < StandardError
+		def initialize(resource, errors)
+			super("#{resource}: #{errors.map{|attributes| attributes[:message]}.join(', ')}")
+			
+			@representation = representation
+		end
+		
+		attr_reader :representation
+	end
+	
+	class Message
+		def initialize(response)
+			@response = response
+			@body = response.read
+		end
+		
+		attr :response
+		attr :body
+		
+		def headers
+			@response.headers
+		end
+		
+		def result
+			@body[:result]
+		end
+		
+		def read
+			@body[:result]
+		end
+		
+		def results
+			Array(result)
+		end
+		
+		def errors
+			@body[:errors]
+		end
+		
+		def messages
+			@body[:messages]
+		end
+		
+		def success?
+			@body[:success]
+		end
+	end
+	
+	class Representation < Async::REST::Representation
+		def process_response(*)
+			message = Message.new(super)
+			
+			unless message.success?
+				raise RequestError.new(@resource, message.errors)
+			end
+			
+			return message
+		end
+		
+		def to_hash
+			if value.is_a?(Hash)
+				return value
+			end
+		end
+	end
 end

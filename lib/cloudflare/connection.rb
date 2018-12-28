@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-# Copyright, 2012, by Marcin Prokop.
-# Copyright, 2017, by Samuel G. D. Williams. <http://www.codeotaku.com>
+# Copyright, 2018, by Samuel G. D. Williams. <http://www.codeotaku.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,57 +20,32 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require 'net/http'
-require 'json'
+require_relative 'representation'
 
-require 'rest-client'
-require 'uri'
-
-require_relative 'response'
+require_relative 'zones'
+require_relative 'accounts'
 
 module Cloudflare
-	DEFAULT_URL = 'https://api.cloudflare.com/client/v4/'
-	TIMEOUT = 10 # Default is 5 seconds
-	DEFAULT_HEADERS = { 'Content-Type' => 'application/json' }.freeze
-
-	class Resource < RestClient::Resource
-		include Enumerable
-
-		# @param api_key [String] `X-Auth-Key` or `X-Auth-User-Service-Key` if no email provided.
-		# @param email [String] `X-Auth-Email`, your email address for the account.
-		def initialize(url = DEFAULT_URL, key: nil, email: nil, **options)
-			headers = options[:headers] || DEFAULT_HEADERS.dup
-
+	class Connection < Representation
+		def authenticated(key, email = nil)
+			headers = {}
+			
 			if email.nil?
 				headers['X-Auth-User-Service-Key'] = key
 			else
 				headers['X-Auth-Key'] = key
 				headers['X-Auth-Email'] = email
 			end
-
-			# Convert HTTP API responses to our own internal response class:
-			super(url, headers: headers, accept: 'application/json', **options) do |response|
-				Response.new(response.request.url, response.body)
-			end
+			
+			self.class.new(@resource.with(headers: headers))
 		end
-
-		def paginate(obj, url, url_args = '')
-			page = 1
-			page_size = 50
-			results = []
-
-			# fetch and aggregate all pages
-			loop do
-				query = URI.encode_www_form scope_type: :organization, per_page: page_size, page: page
-				rules = obj.new(concat_urls(url, "?#{query}#{url_args}"), self, **options)
-				results += rules.get.results
-				break if results.empty? || results.size % page_size != 0
-				page += 1
-			end
-			results
+		
+		def zones
+			Zones.new(@resource.with(path: 'zones'))
 		end
-	end
-
-	class Connection < Resource
+		
+		def accounts
+			Accounts.new(@resource.with(path: 'accounts'))
+		end
 	end
 end

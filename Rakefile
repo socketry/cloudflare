@@ -12,13 +12,15 @@ task :coverage do
 end
 
 task :console do
-	require 'cloudflare'
+	require_relative 'lib/cloudflare'
 	require 'pry'
 
-	email = ENV['CLOUDFLARE_EMAIL']
-	key = ENV['CLOUDFLARE_KEY']
+	email = ENV.fetch('CLOUDFLARE_EMAIL')
+	key = ENV.fetch('CLOUDFLARE_KEY')
 
-	connection = Cloudflare::Connection.new(key: key, email: email)
-
-	binding.pry
+	Async.run do
+		connection = Cloudflare.connect(key: key, email: email)
+		
+		binding.pry
+	end
 end

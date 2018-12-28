@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+require 'async/rspec'
 require_relative '../../cloudflare'
 
 module Cloudflare
@@ -28,11 +29,17 @@ module Cloudflare
 		end
 
 		RSpec.shared_context Connection do
+			include_context Async::RSpec::Reactor
+			
 			# You must specify these in order for the tests to run.
-			let(:email) { 'jake@example.net' }
-			let(:key) { '5up3rS3cr3tAuthK3y' }
-
-			let(:connection) { Cloudflare.connect(key: key, email: email) }
+			let(:email) {ENV['CLOUDFLARE_EMAIL'])
+			let(:key) {ENV['CLOUDFLARE_KEY'])
+			
+			let(:connection) {@connection = Cloudflare.connect(key: key, email: email)}
+			
+			after do
+				@connection&.close
+			end
 		end
 	end
 end

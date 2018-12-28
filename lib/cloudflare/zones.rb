@@ -2,6 +2,7 @@
 
 # Copyright, 2012, by Marcin Prokop.
 # Copyright, 2017, by Samuel G. D. Williams. <http://www.codeotaku.com>
+# Copyright, 2017, by David Rosenbloom. <http://artifactory.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,53 +22,60 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require 'json'
+require_relative 'representation'
+require_relative 'paginate'
+
+require 'pry'
 
 module Cloudflare
-	class RequestError < StandardError
-		def initialize(what, response)
-			super("#{what}: #{response.errors.join(', ')}")
-
-			@response = response
+	class Zone < Representation
+		include Paginate
+		
+		def dns_records
+			DNSRecords.with(self, path: 'dns_records')
 		end
-
-		attr_reader :response
+		
+		def firewall_rules
+			FirewallRules.with(self, path: 'firewall/access_rules/rules')
+		end
+		
+		DEFAULT_PURGE_CACHE_PARAMS = {
+			purge_everything: true
+		}.freeze
+		
+		def purge_cache(parameters = DEFAULT_PURGE_CACHE_PARAMS)
+			message = self.with(path: 'purge_cache').post(parameters)
+			
+			return message.success?
+		end
+		
+		def name
+			value[:name]
+		end
 	end
-
-	class Response
-		def initialize(what, content)
-			@what = what
-
-			@body = JSON.parse(content, symbolize_names: true)
+	
+	class Zones < Representation
+		include Paginate
+		
+		def representation
+			Zone
+		end
+		
+		def create(name, account, jump_start = false)
+			message = self.post(name: name, account: account.to_hash, jump_start: jump_start)
+			
+			id = message.result[:id]
+			resource = @resource.with(path: id)
+			
+			return representation.new(resource, metadata: message.headers, value: message.result)
+		end
+		
+		def find_by_name(name)
+			self.class.new(@resource.with(parameters: {name: name})).first
 		end
 
-		attr_reader :body
-
-		def result
-			raise RequestError.new(@what, self) unless successful?
-
-			body[:result]
-		end
-
-		# Treat result as an array (often it is).
-		def results
-			Array(result)
-		end
-
-		def empty?
-			result.empty?
-		end
-
-		def successful?
-			body[:success]
-		end
-
-		def errors
-			body[:errors]
-		end
-
-		def messages
-			body[:messages]
+		def find_by_id(id)
+			Zone.new(@resource.with(path: id))
 		end
 	end
 end

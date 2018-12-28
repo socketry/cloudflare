@@ -2,6 +2,7 @@
 
 # Copyright, 2012, by Marcin Prokop.
 # Copyright, 2017, by Samuel G. D. Williams. <http://www.codeotaku.com>
+# Copyright, 2017, by David Rosenbloom. <http://artifactory.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +22,32 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+require_relative 'representation'
+require_relative 'paginate'
+
+require 'pry'
+
 module Cloudflare
-	VERSION = '4.0.0'
+	class Account < Representation
+	end
+	
+	class Accounts < Representation
+		include Paginate
+		
+		def represent(metadata, attributes)
+			resource = @resource.with(path: attributes[:id])
+			
+			return Account.new(resource, metadata: metadata, value: attributes)
+		end
+		
+		def create(name)
+			response = self.post(name: name)
+			
+			return represent(response.headers, response.read)
+		end
+		
+		def find_by_id(id)
+			Zone.new(@resource.with(path: id))
+		end
+	end
 end
