@@ -32,8 +32,8 @@ module Cloudflare
 			include_context Async::RSpec::Reactor
 			
 			# You must specify these in order for the tests to run.
-			let(:email) {ENV['CLOUDFLARE_EMAIL'])
-			let(:key) {ENV['CLOUDFLARE_KEY'])
+			let(:email) {ENV['CLOUDFLARE_EMAIL']}
+			let(:key) {ENV['CLOUDFLARE_KEY']}
 			
 			let(:connection) {@connection = Cloudflare.connect(key: key, email: email)}
 			
