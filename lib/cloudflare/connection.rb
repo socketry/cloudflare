@@ -24,6 +24,7 @@ require_relative 'representation'
 
 require_relative 'zones'
 require_relative 'accounts'
+require_relative 'user'
 
 module Cloudflare
 	class Connection < Representation
@@ -46,6 +47,10 @@ module Cloudflare
 		
 		def accounts
 			Accounts.new(@resource.with(path: 'accounts'))
+		end
+		
+		def user
+			User.new(@resource.with(path: 'user'))
 		end
 	end
 end

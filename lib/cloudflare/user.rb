@@ -21,15 +21,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require_relative 'connection'
+require_relative 'representation'
 
 module Cloudflare
-	class Connection < Resource
-		def user
-			@user ||= User.new(concat_urls(url, 'user'), options)
+	class User < Representation
+		def id
+			value[:id]
 		end
-	end
-
-	class User < Resource
+		
+		def email
+			value[:email]
+		end
 	end
 end

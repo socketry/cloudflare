@@ -26,13 +26,29 @@ require_relative 'paginate'
 module Cloudflare
 	module Firewall
 		class Rule < Representation
+			def mode
+				value[:mode]
+			end
+			
+			def notes
+				value[:notes]
+			end
+			
+			def configuration
+				value[:configuration]
+			end
+			
 			def to_s
-				"#{value[:configuration][:value]} - #{value[:mode]} - #{value[:notes]}"
+				"#{configuration[:value]} - #{mode} - #{notes}"
 			end
 		end
 
 		class Rules < Representation
 			include Paginate
+			
+			def representation
+				Rule
+			end
 			
 			def where(mode: nil, ip: nil, notes: nil)
 				filter = {}
@@ -48,15 +64,22 @@ module Cloudflare
 				self.where(mode: mode).collect{|r| r.record[:configuration][:value]}
 			end
 			
-			def set(mode, ip, note)
-				self.post({
+			def set(mode, value, notes: nil, target: 'ip')
+				notes ||= "cloudflare gem [#{mode}] #{Time.now.strftime('%m/%d/%y')}"
+				
+				message = self.post({
 					mode: mode.to_s,
+					notes: notes,
 					configuration: {
-						target: 'ip',
-						value: ip.to_s,
-						notes: "cloudflare gem [#{mode}] #{note} #{Time.now.strftime('%m/%d/%y')}"
+						target: target,
+						value: value.to_s,
 					}
 				})
+				
+				id = message.result[:id]
+				resource = @resource.with(path: id)
+				
+				return representation.new(resource, metadata: message.headers, value: message.result)
 			end
 			
 			def find_by_id(id)

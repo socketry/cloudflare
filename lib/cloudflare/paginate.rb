@@ -30,11 +30,11 @@ module Cloudflare
 			Representation
 		end
 		
-		def each(page: 1, per_page: 50)
-			return to_enum(:each, page: page, per_page: per_page) unless block_given?
+		def each(page: 1, per_page: 50, **parameters)
+			return to_enum(:each, page: page, per_page: per_page, **parameters) unless block_given?
 			
 			while true
-				zones = @resource.get(self.class, page: page, per_page: per_page)
+				zones = @resource.get(self.class, page: page, per_page: per_page, **parameters)
 				
 				break if zones.empty?
 				

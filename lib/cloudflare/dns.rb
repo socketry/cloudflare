@@ -80,7 +80,7 @@ module Cloudflare
 			end
 			
 			def find_by_name(name)
-				self.class.new(@resource.with(parameters: {name: name})).first
+				each(name: name).first
 			end
 			
 			def find_by_id(id)

@@ -27,6 +27,7 @@ require_relative 'paginate'
 
 require_relative 'firewall'
 require_relative 'dns'
+require_relative 'logs'
 
 module Cloudflare
 	class Zone < Representation
@@ -36,6 +37,10 @@ module Cloudflare
 		
 		def firewall_rules
 			Firewall::Rules.new(@resource.with(path: 'firewall/access_rules/rules'))
+		end
+		
+		def logs
+			Logs::Received.new(@resource.with(path: 'logs/received'))
 		end
 		
 		DEFAULT_PURGE_CACHE_PARAMS = {
@@ -70,7 +75,7 @@ module Cloudflare
 		end
 		
 		def find_by_name(name)
-			self.class.new(@resource.with(parameters: {name: name})).first
+			each(name: name).first
 		end
 
 		def find_by_id(id)
