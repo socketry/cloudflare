@@ -36,7 +36,7 @@ module Cloudflare
 		
 		return representation unless block_given?
 		
-		Async.run do
+		Async do
 			begin
 				yield representation
 			ensure

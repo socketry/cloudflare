@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-# Copyright, 2012, by Marcin Prokop.
-# Copyright, 2017, by Samuel G. D. Williams. <http://www.codeotaku.com>
-# Copyright, 2017, by David Rosenbloom. <http://artifactory.com>
+# Copyright, 2018, by Samuel G. D. Williams. <http://www.codeotaku.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,26 +24,48 @@ require_relative 'representation'
 require_relative 'paginate'
 
 module Cloudflare
-	class Account < Representation
-	end
-	
-	class Accounts < Representation
-		include Paginate
-		
-		def represent(metadata, attributes)
-			resource = @resource.with(path: attributes[:id])
-			
-			return Account.new(resource, metadata: metadata, value: attributes)
+	module Firewall
+		class Rule < Representation
+			def to_s
+				"#{value[:configuration][:value]} - #{value[:mode]} - #{value[:notes]}"
+			end
 		end
-		
-		def create(name)
-			response = self.post(name: name)
+
+		class Rules < Representation
+			include Paginate
 			
-			return represent(response.headers, response.read)
-		end
-		
-		def find_by_id(id)
-			Zone.new(@resource.with(path: id))
+			def where(mode: nil, ip: nil, notes: nil)
+				filter = {}
+				
+				filter[:mode] = mode if mode
+				filter[:configuration_value] = ip if ip
+				filter[:notes] = nodes if notes
+				
+				self.class.new(@resource.with(parameters: filter))
+			end
+
+			def ips(mode: 'block')
+				self.where(mode: mode).collect{|r| r.record[:configuration][:value]}
+			end
+			
+			def set(mode, ip, note)
+				self.post({
+					mode: mode.to_s,
+					configuration: {
+						target: 'ip',
+						value: ip.to_s,
+						notes: "cloudflare gem [#{mode}] #{note} #{Time.now.strftime('%m/%d/%y')}"
+					}
+				})
+			end
+			
+			def find_by_id(id)
+				Rule.new(@resource.with(path: id))
+			end
+			
+			def find_by_ip(ip)
+				self.class.new(@resource.with(parameters: {configuration_value: ip}))
+			end
 		end
 	end
 end

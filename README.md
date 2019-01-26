@@ -42,7 +42,7 @@ connection = Cloudflare.connect(key: key, email: email)
 Get all available zones:
 
 ```ruby
-zones = connection.zones.all
+zones = connection.zones
 ```
 
 Get a specific zone:
@@ -55,7 +55,7 @@ zone = connection.zones.find_by_name("example.com")
 Get DNS records for a given zone:
 
 ```ruby
-dns_records = zones.first.dns_records.all
+dns_records = zones.first.dns_records
 ```
 
 Show some details of the DNS record:
@@ -69,14 +69,14 @@ puts records
 Get firewall rules:
 
 ```ruby
-all_rules = zones.first.firewall_rules.all
-block_rules = zones.first.firewall_rules.all("block") # or "whitelist" or "challenge"
+all_rules = zones.first.firewall_rules
+block_rules = zones.first.firewall_rules("block") # or "whitelist" or "challenge"
 ```
 
 Get blocked ips:
 
 ```ruby
-block_rules = zones.first.firewall_rules.all("block") 
+block_rules = zones.first.firewall_rules("block") 
 blocked_ips = zones.first.firewall_rules.firewalled_ips(block_rules)
 ```
 

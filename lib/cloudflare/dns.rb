@@ -25,56 +25,67 @@
 require_relative 'representation'
 require_relative 'paginate'
 
-require_relative 'firewall'
-require_relative 'dns'
-
 module Cloudflare
-	class Zone < Representation
-		def dns_records
-			DNS::Records.new(@resource.with(path: 'dns_records'))
-		end
-		
-		def firewall_rules
-			Firewall::Rules.new(@resource.with(path: 'firewall/access_rules/rules'))
-		end
-		
-		DEFAULT_PURGE_CACHE_PARAMS = {
-			purge_everything: true
-		}.freeze
-		
-		def purge_cache(parameters = DEFAULT_PURGE_CACHE_PARAMS)
-			message = self.with(path: 'purge_cache').post(parameters)
+	module DNS
+		class Record < Representation
+			def initialize(url, record = nil, **options)
+				super(url, **options)
+
+				@record = record || get.result
+			end
+
+			def update_content(content)
+				response = put(
+					type: @record[:type],
+					name: @record[:name],
+					content: content
+				)
+				
+				@value = response.result
+			end
 			
-			return message.success?
-		end
-		
-		def name
-			value[:name]
-		end
-	end
-	
-	class Zones < Representation
-		include Paginate
-		
-		def representation
-			Zone
-		end
-		
-		def create(name, account, jump_start = false)
-			message = self.post(name: name, account: account.to_hash, jump_start: jump_start)
+			def type
+				value[:type]
+			end
 			
-			id = message.result[:id]
-			resource = @resource.with(path: id)
+			def name
+				value[:name]
+			end
 			
-			return representation.new(resource, metadata: message.headers, value: message.result)
-		end
-		
-		def find_by_name(name)
-			self.class.new(@resource.with(parameters: {name: name})).first
+			def content
+				value[:content]
+			end
+			
+			def to_s
+				"#{@record[:name]} #{@record[:type]} #{@record[:content]}"
+			end
 		end
 
-		def find_by_id(id)
-			Zone.new(@resource.with(path: id))
+		class Records < Representation
+			include Paginate
+			
+			def representation
+				Record
+			end
+			
+			TTL_AUTO = 1
+			
+			def create(type, name, content, **options)
+				message = self.post(type: type, name: name, content: content, **options)
+				
+				id = message.result[:id]
+				resource = @resource.with(path: id)
+				
+				return representation.new(resource, metadata: message.headers, value: message.result)
+			end
+			
+			def find_by_name(name)
+				self.class.new(@resource.with(parameters: {name: name})).first
+			end
+			
+			def find_by_id(id)
+				Record.new(@resource.with(path: id))
+			end
 		end
 	end
 end
