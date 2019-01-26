@@ -50,20 +50,6 @@ module Cloudflare
 				Rule
 			end
 			
-			def where(mode: nil, ip: nil, notes: nil)
-				filter = {}
-				
-				filter[:mode] = mode if mode
-				filter[:configuration_value] = ip if ip
-				filter[:notes] = nodes if notes
-				
-				self.class.new(@resource.with(parameters: filter))
-			end
-
-			def ips(mode: 'block')
-				self.where(mode: mode).collect{|r| r.record[:configuration][:value]}
-			end
-			
 			def set(mode, value, notes: nil, target: 'ip')
 				notes ||= "cloudflare gem [#{mode}] #{Time.now.strftime('%m/%d/%y')}"
 				
