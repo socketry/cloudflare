@@ -7,7 +7,9 @@ require 'cloudflare/zones'
 RSpec.shared_context Cloudflare::Zone do
 	include_context Cloudflare::RSpec::Connection
 	
-	let(:name) {"testing.com"}
+	let(:job_id) {ENV.fetch('TRAVIS_JOB_ID', 0).to_i}
+	let(:names) {['testing', 'horse', 'cat', 'dog', 'fish', 'dolphin', 'lion', 'tiger']}
+	let(:name) {"#{names[job_id % names.size]}.com"}
 	
 	let(:account) {connection.accounts.first}
 	let(:zones) {connection.zones}
