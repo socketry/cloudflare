@@ -24,6 +24,12 @@ RSpec.describe Cloudflare::Firewall, order: :defined, timeout: 30 do
 			
 			expect(rules.size).to be >= 2
 		end
+		
+		it 'should get rules with specific value' do
+			rules = zone.firewall_rules.each_by_value(allow_ip).to_a
+			
+			expect(rules.size).to be == 1
+		end
 	end
 	
 	%w[block challenge whitelist].each_with_index do |mode, index|

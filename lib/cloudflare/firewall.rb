@@ -86,8 +86,8 @@ module Cloudflare
 				Rule.new(@resource.with(path: id))
 			end
 			
-			def find_by_ip(ip)
-				self.class.new(@resource.with(parameters: {configuration_value: ip}))
+			def each_by_value(value, &block)
+				each(configuration_value: value, &block)
 			end
 		end
 	end
