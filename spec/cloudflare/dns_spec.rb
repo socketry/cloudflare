@@ -4,7 +4,7 @@ require 'cloudflare/rspec/connection'
 RSpec.describe Cloudflare::DNS, order: :defined, timeout: 30 do
 	include_context Cloudflare::Zone
 	
-	let(:subdomain) {"dyndns#{Time.now.to_i}"}
+	let(:subdomain) {"www#{ENV['TRAVIS_JOB_ID']}"}
 	
 	let(:record) {@record = zone.dns_records.create("A", subdomain, "1.2.3.4")}
 	
