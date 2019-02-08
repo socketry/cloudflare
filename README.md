@@ -3,6 +3,7 @@
 It is a Ruby wrapper for the Cloudflare V4 API. It provides a light weight wrapper using `RestClient::Resource`. The wrapper functionality is limited to zones and DNS records at this time, *PRs welcome*.
 
 [![Build Status](https://secure.travis-ci.org/socketry/cloudflare.svg)](http://travis-ci.org/socketry/cloudflare)
+[![Coverage Status](https://coveralls.io/repos/socketry/cloudflare/badge.svg)](https://coveralls.io/r/socketry/cloudflare)
 
 ## Installation
 

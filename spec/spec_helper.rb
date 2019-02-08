@@ -1,4 +1,5 @@
 
+require 'covered/rspec'
 require 'async/rspec'
 
 require 'cloudflare/rspec/connection'
