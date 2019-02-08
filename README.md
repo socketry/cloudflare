@@ -26,7 +26,7 @@ $ gem install cloudflare
 
 ## Usage
 
-Prepare a connection to the remote API:
+Here are some basic examples. For more details, refer to the code and specs.
 
 ```ruby
 require 'cloudflare'
@@ -35,66 +35,31 @@ require 'cloudflare'
 email = ENV['CLOUDFLARE_EMAIL']
 key = ENV['CLOUDFLARE_KEY']
 
-# Set up the connection:
-connection = Cloudflare.connect(key: key, email: email)
-```
-
-Get all available zones:
-
-```ruby
-zones = connection.zones
-```
-
-Get a specific zone:
-
-```ruby
-zone = connection.zones.find_by_id("...")
-zone = connection.zones.find_by_name("example.com")
-```
-
-Get DNS records for a given zone:
-
-```ruby
-dns_records = zones.first.dns_records
-```
-
-Show some details of the DNS record:
-
-```ruby
-dns_record = records.first
-puts records.first.record[:name]
-puts records
-```
-
-Get firewall rules:
-
-```ruby
-all_rules = zones.first.firewall_rules
-block_rules = zones.first.firewall_rules("block") # or "whitelist" or "challenge"
-```
-
-Get blocked ips:
-
-```ruby
-block_rules = zones.first.firewall_rules("block") 
-blocked_ips = zones.first.firewall_rules.firewalled_ips(block_rules)
-```
-
-Block an ip:
-
-```ruby
-# ip = "nnn.nnn.nnn.nnn"
-# note: "some note about the block"
-data = {"mode":"block","configuration":{"target":"ip","value":"#{ip}"},"notes":"#{note} #{Time.now.strftime("%m/%d/%y")} "}
-response = zones.first.firewall_rules.post(data.to_json, content_type: 'application/json')
-```
-
-Add a DNS record dynamically. Here we add an A record for `batman.example.com`:
-
-```ruby
-client = Cloudflare.connect(key: CF_KEY, email: CF_EMAIL)
-zone = client.zones.find_by_name("example.com")
-zone.dns_records.post({"type":"A","name":"batman","content":"127.0.0.1","proxied":false}.to_json, :content_type => "application/json")
+Cloudflare.connect(key: key, email: email) do
+	# Get all available zones:
+	zones = connection.zones
+	
+	# Get a specific zone:
+	zone = connection.zones.find_by_id("...")
+	zone = connection.zones.find_by_name("example.com")
+	
+	# Get DNS records for a given zone:
+	dns_records = zone.dns_records
+	
+	# Show some details of the DNS record:
+	dns_record = dns_records.first
+	puts dns_record.name
+	
+	# Add a DNS record. Here we add an A record for `batman.example.com`:
+	zone = zones.find_by_name("example.com")
+	zone.dns_records.create('A', 'batman', '1.2.3.4', proxied: false)
+	
+	# Get firewall rules:
+	all_rules = zone.firewall_rules
+	
+	# Block an ip:
+	rule = zone.firewall_rules.set('block', '1.2.3.4', notes: "ssh dictionary attack")
+end
 ```
 
 ## Contributing
