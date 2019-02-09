@@ -56,6 +56,8 @@ module Cloudflare
 		def name
 			value[:name]
 		end
+		
+		alias to_s name
 	end
 	
 	class Zones < Representation
