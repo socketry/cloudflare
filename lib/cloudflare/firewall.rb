@@ -29,15 +29,15 @@ module Cloudflare
 			def mode
 				value[:mode]
 			end
-			
+
 			def notes
 				value[:notes]
 			end
-			
+
 			def configuration
 				value[:configuration]
 			end
-			
+
 			def to_s
 				"#{configuration[:value]} - #{mode} - #{notes}"
 			end
@@ -45,14 +45,14 @@ module Cloudflare
 
 		class Rules < Representation
 			include Paginate
-			
+
 			def representation
 				Rule
 			end
-			
+
 			def set(mode, value, notes: nil, target: 'ip')
 				notes ||= "cloudflare gem [#{mode}] #{Time.now.strftime('%m/%d/%y')}"
-				
+
 				message = self.post({
 					mode: mode.to_s,
 					notes: notes,
@@ -61,17 +61,10 @@ module Cloudflare
 						value: value.to_s,
 					}
 				})
-				
-				id = message.result[:id]
-				resource = @resource.with(path: id)
-				
-				return representation.new(resource, metadata: message.headers, value: message.result)
+
+				represent(message.headers, message.result)
 			end
-			
-			def find_by_id(id)
-				Rule.new(@resource.with(path: id))
-			end
-			
+
 			def each_by_value(value, &block)
 				each(configuration_value: value, &block)
 			end

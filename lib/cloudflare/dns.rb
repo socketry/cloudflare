@@ -72,19 +72,12 @@ module Cloudflare
 			
 			def create(type, name, content, **options)
 				message = self.post(type: type, name: name, content: content, **options)
-				
-				id = message.result[:id]
-				resource = @resource.with(path: id)
-				
-				return representation.new(resource, metadata: message.headers, value: message.result)
+
+				represent(message.headers, message.result)
 			end
 			
 			def find_by_name(name)
 				each(name: name).first
-			end
-			
-			def find_by_id(id)
-				Record.new(@resource.with(path: id))
 			end
 		end
 	end

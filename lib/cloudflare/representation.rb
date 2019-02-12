@@ -84,7 +84,17 @@ module Cloudflare
 			
 			return message
 		end
-		
+
+		def representation
+			Representation
+		end
+
+		def represent(metadata, attributes)
+			resource = @resource.with(path: attributes[:id])
+
+			representation.new(resource, metadata: metadata, value: attributes)
+		end
+
 		def to_hash
 			if value.is_a?(Hash)
 				return value
