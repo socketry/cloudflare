@@ -69,19 +69,12 @@ module Cloudflare
 		
 		def create(name, account, jump_start = false)
 			message = self.post(name: name, account: account.to_hash, jump_start: jump_start)
-			
-			id = message.result[:id]
-			resource = @resource.with(path: id)
-			
-			return representation.new(resource, metadata: message.headers, value: message.result)
-		end
-		
-		def find_by_name(name)
-			each(name: name).first
+
+			represent(message.headers,message.result)
 		end
 
-		def find_by_id(id)
-			Zone.new(@resource.with(path: id))
+		def find_by_name(name)
+			each(name: name).first
 		end
 	end
 end

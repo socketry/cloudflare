@@ -28,24 +28,19 @@ require_relative 'paginate'
 module Cloudflare
 	class Account < Representation
 	end
-	
+
 	class Accounts < Representation
 		include Paginate
-		
-		def represent(metadata, attributes)
-			resource = @resource.with(path: attributes[:id])
-			
-			return Account.new(resource, metadata: metadata, value: attributes)
+
+		def representation
+			Account
 		end
-		
+
 		def create(name)
 			response = self.post(name: name)
-			
-			return represent(response.headers, response.read)
+
+			represent(response.headers, response.read)
 		end
-		
-		def find_by_id(id)
-			Zone.new(@resource.with(path: id))
-		end
+
 	end
 end
