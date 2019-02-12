@@ -25,12 +25,17 @@
 require_relative 'representation'
 require_relative 'paginate'
 
+require_relative 'custom_hostnames'
 require_relative 'firewall'
 require_relative 'dns'
 require_relative 'logs'
 
 module Cloudflare
 	class Zone < Representation
+		def custom_hostnames
+			CustomHostnames.new(@resource.with(path: 'custom_hostnames'))
+		end
+
 		def dns_records
 			DNS::Records.new(@resource.with(path: 'dns_records'))
 		end
