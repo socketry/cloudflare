@@ -4,9 +4,9 @@ module Cloudflare
 
   class CustomHostname < Representation
 
-    class SSLParams
+    class SSLAttribute
 
-      class SSLSettings
+      class Settings
 
         def initialize(settings)
           @settings = settings
@@ -71,54 +71,6 @@ module Cloudflare
         end
 
       end
-
-      def initialize(params)
-        @params = params
-      end
-
-      def active?
-        status == 'active'
-      end
-
-      def cname
-        @params[:cname]
-      end
-
-      def cname_target
-        @params[:cname_target]
-      end
-
-      def http_body
-        @params[:http_body]
-      end
-
-      def http_url
-        @params[:http_url]
-      end
-
-      def method
-        @params[:method]
-      end
-
-      # Wraps the settings hash if it exists or initializes the settings hash and then wraps it
-      def settings
-        @settings ||= SSLSettings.new(@params[:settings] ||= {})
-      end
-
-      def status
-        @params[:status]
-      end
-
-      def to_h
-        @params
-      end
-
-      def validation_errors
-        @params[:validation_errors]
-      end
-
     end
-
   end
-
 end

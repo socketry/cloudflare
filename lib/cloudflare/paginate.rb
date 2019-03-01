@@ -31,9 +31,7 @@ module Cloudflare
 				break if zones.empty?
 
 				Array(zones.value).each do |attributes|
-					resource = @resource.with(path: attributes[:id])
-
-					yield representation.new(resource, metadata: zones.metadata, value: attributes)
+					yield represent(zones.metadata, attributes)
 				end
 
 				page += 1
