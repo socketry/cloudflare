@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'custom_hostname/ssl_params'
+require_relative 'custom_hostname/ssl_attribute'
 require_relative 'paginate'
 require_relative 'representation'
 
@@ -22,23 +22,40 @@ module Cloudflare
       value[:hostname]
     end
 
-    def ssl
-      @ssl ||= SSLParams.new(value[:ssl])
+    def id
+      value[:id]
     end
 
-    def update_settings(metadata: nil, origin: nil, ssl_settings: nil)
-      attrs = { ssl: ssl.to_h }
-      attrs[:ssl][:settings].merge!(ssl_settings) if ssl_settings
+    def ssl
+      @ssl ||= SSLAttribute.new(value[:ssl])
+    end
+
+    # Check if the cert has been validated
+    # passing true will send a request to Cloudflare to try to validate the cert
+    def ssl_active?(force_update = false)
+      send_patch(ssl: { method: ssl.method, type: ssl.type }) if force_update && ssl.pending_validation?
+      ssl.active?
+    end
+
+    def update_settings(metadata: nil, origin: nil, ssl: nil)
+      attrs = {}
       attrs[:custom_metadata] = metadata if metadata
       attrs[:custom_origin_server] = origin if origin
+      attrs[:ssl] = ssl if ssl
 
-      response = patch(attrs)
+      send_patch(attrs)
+    end
+
+    alias :to_s :hostname
+
+    private
+
+    def send_patch(data)
+      response = patch(data)
 
       @ssl = nil # Kill off our cached version of the ssl object so it will be regenerated from the response
       @value = response.result
     end
-
-    alias :to_s :hostname
 
   end
 
@@ -61,10 +78,6 @@ module Cloudflare
 
     def find_by_hostname(hostname)
       each(hostname: hostname).first
-    end
-
-    def find_by_ssl_state(enabled: true)
-      each(ssl: enabled ? 1 : 0).first
     end
 
   end

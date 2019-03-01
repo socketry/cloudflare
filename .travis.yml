@@ -21,4 +21,5 @@ matrix:
 
 env:
   global:
+    CLOUDFLARE_TEST_ZONE_MANAGEMENT: 'true'
     secure: c5yG7N1r9nYuw47Y90jGeoHNvkL59AAC55dtPAhKP+gjXWW8hKbntj3oj+lVkxEqzRpzEQgYZzUElrP+6mJnb20ldclZg03L56243tMtVEcpGOx/MFhnIBkx3kKu1H6ydKKMxieHxjsLQ3vnpcIZ3p0skTQjYbjdu607tjbyg7s=
