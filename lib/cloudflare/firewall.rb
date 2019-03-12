@@ -62,7 +62,7 @@ module Cloudflare
 					}
 				})
 
-				represent(message.headers, message.result)
+				represent_message(message)
 			end
 
 			def each_by_value(value, &block)

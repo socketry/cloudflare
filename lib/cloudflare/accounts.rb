@@ -37,9 +37,7 @@ module Cloudflare
 		end
 
 		def create(name)
-			response = self.post(name: name)
-
-			represent(response.headers, response.read)
+			represent_message(self.post(name: name))
 		end
 
 	end
