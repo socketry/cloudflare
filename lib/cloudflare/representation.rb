@@ -95,6 +95,10 @@ module Cloudflare
 			representation.new(resource, metadata: metadata, value: attributes)
 		end
 
+		def represent_message(message)
+			represent(message.headers, message.result)
+		end
+
 		def to_hash
 			if value.is_a?(Hash)
 				return value

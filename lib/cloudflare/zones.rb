@@ -71,11 +71,9 @@ module Cloudflare
 		def representation
 			Zone
 		end
-		
-		def create(name, account, jump_start = false)
-			message = self.post(name: name, account: account.to_hash, jump_start: jump_start)
 
-			represent(message.headers,message.result)
+		def create(name, account, jump_start = false)
+			represent_message(self.post(name: name, account: account.to_hash, jump_start: jump_start))
 		end
 
 		def find_by_name(name)

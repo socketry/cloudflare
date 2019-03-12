@@ -72,8 +72,7 @@ module Cloudflare
       attrs[:custom_metadata] = metadata if metadata
       attrs[:custom_origin_server] = origin if origin
 
-      message = self.post(attrs)
-      represent(message.headers, message.result)
+      represent_message(self.post(attrs))
     end
 
     def find_by_hostname(hostname)

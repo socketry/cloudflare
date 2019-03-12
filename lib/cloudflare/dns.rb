@@ -40,22 +40,22 @@ module Cloudflare
 					name: @record[:name],
 					content: content
 				)
-				
+
 				@value = response.result
 			end
-			
+
 			def type
 				value[:type]
 			end
-			
+
 			def name
 				value[:name]
 			end
-			
+
 			def content
 				value[:content]
 			end
-			
+
 			def to_s
 				"#{@record[:name]} #{@record[:type]} #{@record[:content]}"
 			end
@@ -63,19 +63,17 @@ module Cloudflare
 
 		class Records < Representation
 			include Paginate
-			
+
 			def representation
 				Record
 			end
-			
+
 			TTL_AUTO = 1
 			
 			def create(type, name, content, **options)
-				message = self.post(type: type, name: name, content: content, **options)
-
-				represent(message.headers, message.result)
+				represent_message(self.post(type: type, name: name, content: content, **options))
 			end
-			
+
 			def find_by_name(name)
 				each(name: name).first
 			end
