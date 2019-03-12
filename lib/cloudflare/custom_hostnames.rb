@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# This implements the Custom Hostname API
+# https://api.cloudflare.com/#custom-hostname-for-a-zone-properties
+
 require_relative 'custom_hostname/ssl_attribute'
 require_relative 'paginate'
 require_relative 'representation'
