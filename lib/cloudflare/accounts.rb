@@ -24,9 +24,19 @@
 
 require_relative 'representation'
 require_relative 'paginate'
+require_relative 'kv/namespaces'
 
 module Cloudflare
 	class Account < Representation
+
+		def id
+			value[:id]
+		end
+
+		def kv_namespaces
+			KV::Namespaces.new(@resource.with(path: 'storage/kv/namespaces'))
+		end
+
 	end
 
 	class Accounts < Representation
@@ -34,10 +44,6 @@ module Cloudflare
 
 		def representation
 			Account
-		end
-
-		def create(name)
-			represent_message(self.post(name: name))
 		end
 
 	end
