@@ -29,59 +29,62 @@ module Cloudflare
 	class RequestError < StandardError
 		def initialize(resource, errors)
 			super("#{resource}: #{errors.map{|attributes| attributes[:message]}.join(', ')}")
-			
+
 			@representation = representation
 		end
-		
+
 		attr_reader :representation
 	end
-	
+
 	class Message
 		def initialize(response)
 			@response = response
 			@body = response.read
+
+			# Some endpoints return the value instead of a message object (like KV reads)
+			@body = { success: true, result: @body } unless @body.is_a?(Hash)
 		end
-		
+
 		attr :response
 		attr :body
-		
+
 		def headers
 			@response.headers
 		end
-		
+
 		def result
 			@body[:result]
 		end
-		
+
 		def read
 			@body[:result]
 		end
-		
+
 		def results
 			Array(result)
 		end
-		
+
 		def errors
 			@body[:errors]
 		end
-		
+
 		def messages
 			@body[:messages]
 		end
-		
+
 		def success?
 			@body[:success]
 		end
 	end
-	
+
 	class Representation < Async::REST::Representation
 		def process_response(*)
 			message = Message.new(super)
-			
+
 			unless message.success?
 				raise RequestError.new(@resource, message.errors)
 			end
-			
+
 			return message
 		end
 
