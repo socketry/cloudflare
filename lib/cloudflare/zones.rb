@@ -49,7 +49,8 @@ module Cloudflare
 		
 		def purge_cache(parameters = DEFAULT_PURGE_CACHE_PARAMS)
 			Zone.new(@resource.with(path: 'purge_cache')).post(parameters)
-			self
+			
+			return self
 		end
 		
 		def name
