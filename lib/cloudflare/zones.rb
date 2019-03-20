@@ -48,9 +48,9 @@ module Cloudflare
 		}.freeze
 		
 		def purge_cache(parameters = DEFAULT_PURGE_CACHE_PARAMS)
-			message = self.with(path: 'purge_cache').post(parameters)
+			Zone.new(@resource.with(path: 'purge_cache')).post(parameters)
 			
-			return message.success?
+			return self
 		end
 		
 		def name
