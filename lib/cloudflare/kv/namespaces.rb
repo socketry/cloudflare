@@ -7,79 +7,79 @@ require_relative '../paginate'
 require_relative '../representation'
 
 module Cloudflare
-  module KV
+	module KV
 
-    class Key < Representation
+		class Key < Representation
 
-      def name
-        value[:name]
-      end
+			def name
+				value[:name]
+			end
 
-    end
+		end
 
-    class Keys < Representation
-      include Paginate
+		class Keys < Representation
+			include Paginate
 
-      def representation
-        Key
-      end
+			def representation
+				Key
+			end
 
-    end
+		end
 
-    class Namespace < Representation
+		class Namespace < Representation
 
-      def delete_value(name)
-        value_representation(name).delete.success?
-      end
+			def delete_value(name)
+				value_representation(name).delete.success?
+			end
 
-      def id
-        value[:id]
-      end
+			def id
+				value[:id]
+			end
 
-      def keys
-        Keys.new(@resource.with(path: 'keys'))
-      end
+			def keys
+				Keys.new(@resource.with(path: 'keys'))
+			end
 
-      def read_value(name)
-        value_representation(name).value
-      end
+			def read_value(name)
+				value_representation(name).value
+			end
 
-      def rename(new_title)
-        put(title: new_title)
-        value[:title] = new_title
-      end
+			def rename(new_title)
+				put(title: new_title)
+				value[:title] = new_title
+			end
 
-      def title
-        value[:title]
-      end
+			def title
+				value[:title]
+			end
 
-      def write_value(name, value)
-        value_representation(name).put(value).success?
-      end
+			def write_value(name, value)
+				value_representation(name).put(value).success?
+			end
 
-      private
+			private
 
-      def value_representation(name)
-        Representation.new(@resource.with(path: "values/#{name}"))
-      end
+			def value_representation(name)
+				Representation.new(@resource.with(path: "values/#{name}"))
+			end
 
-    end
+		end
 
-    class Namespaces < Representation
-      include Paginate
+		class Namespaces < Representation
+			include Paginate
 
-      def representation
-        Namespace
-      end
+			def representation
+				Namespace
+			end
 
-      def create(title)
-        represent_message(post(title: title))
-      end
+			def create(title)
+				represent_message(post(title: title))
+			end
 
-      def find_by_title(title)
-        each.find {|ns| ns.title == title }
-      end
+			def find_by_title(title)
+				each.find {|ns| ns.title == title }
+			end
 
-    end
-  end
+		end
+	end
 end
