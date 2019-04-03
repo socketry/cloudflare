@@ -8,13 +8,10 @@ require_relative '../representation'
 
 module Cloudflare
 	module KV
-
 		class Key < Representation
-
 			def name
 				value[:name]
 			end
-
 		end
 
 		class Keys < Representation
@@ -23,11 +20,9 @@ module Cloudflare
 			def representation
 				Key
 			end
-
 		end
 
 		class Namespace < Representation
-
 			def delete_value(name)
 				value_representation(name).delete.success?
 			end
@@ -62,7 +57,6 @@ module Cloudflare
 			def value_representation(name)
 				Representation.new(@resource.with(path: "values/#{name}"))
 			end
-
 		end
 
 		class Namespaces < Representation
@@ -77,9 +71,8 @@ module Cloudflare
 			end
 
 			def find_by_title(title)
-				each.find {|ns| ns.title == title }
+				each.find {|namespace| namespace.title == title }
 			end
-
 		end
 	end
 end

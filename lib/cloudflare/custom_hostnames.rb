@@ -8,9 +8,7 @@ require_relative 'paginate'
 require_relative 'representation'
 
 module Cloudflare
-
 	class CustomHostname < Representation
-
 		# Only available if enabled for your zone
 		def custom_origin
 			value[:custom_origin_server]
@@ -59,7 +57,6 @@ module Cloudflare
 			@ssl = nil # Kill off our cached version of the ssl object so it will be regenerated from the response
 			@value = response.result
 		end
-
 	end
 
 	class CustomHostnames < Representation
@@ -81,7 +78,5 @@ module Cloudflare
 		def find_by_hostname(hostname)
 			each(hostname: hostname).first
 		end
-
 	end
-
 end

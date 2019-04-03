@@ -3,11 +3,8 @@
 require_relative './ssl_attribute/settings'
 
 module Cloudflare
-
 	class CustomHostname < Representation
-
 		class SSLAttribute
-
 			def initialize(params)
 				@params = params
 			end
@@ -60,9 +57,6 @@ module Cloudflare
 			def validation_errors
 				@params[:validation_errors]
 			end
-
 		end
-
 	end
-
 end

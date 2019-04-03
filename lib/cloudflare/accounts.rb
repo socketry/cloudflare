@@ -28,7 +28,6 @@ require_relative 'kv/namespaces'
 
 module Cloudflare
 	class Account < Representation
-
 		def id
 			value[:id]
 		end
@@ -36,7 +35,6 @@ module Cloudflare
 		def kv_namespaces
 			KV::Namespaces.new(@resource.with(path: 'storage/kv/namespaces'))
 		end
-
 	end
 
 	class Accounts < Representation
@@ -45,6 +43,5 @@ module Cloudflare
 		def representation
 			Account
 		end
-
 	end
 end

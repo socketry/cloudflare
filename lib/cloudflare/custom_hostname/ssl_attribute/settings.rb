@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 
 module Cloudflare
-
 	class CustomHostname < Representation
-
 		class SSLAttribute
-
 			class Settings
-
 				def initialize(settings)
 					@settings = settings
 				end
@@ -69,7 +65,6 @@ module Cloudflare
 						@settings[key] = !value || value == 'off' ? 'off' : 'on'
 					end
 				end
-
 			end
 		end
 	end
