@@ -36,7 +36,7 @@ require 'cloudflare'
 email = ENV['CLOUDFLARE_EMAIL']
 key = ENV['CLOUDFLARE_KEY']
 
-Cloudflare.connect(key: key, email: email) do
+Cloudflare.connect(key: key, email: email) do |connection|
 	# Get all available zones:
 	zones = connection.zones
 	
