@@ -34,11 +34,12 @@ module Cloudflare
 				@record = record || get.result
 			end
 
-			def update_content(content)
+			def update_content(content, **options)
 				response = put(
 					type: @record[:type],
 					name: @record[:name],
-					content: content
+					content: content,
+                                        **options
 				)
 
 				@value = response.result
@@ -54,6 +55,10 @@ module Cloudflare
 
 			def content
 				value[:content]
+			end
+
+			def proxied
+				value[:proxied]
 			end
 
 			def to_s
