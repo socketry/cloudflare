@@ -1,5 +1,5 @@
 
-RSpec.describe Cloudflare::CustomHostnames, order: :defined, timeout: 30 do
+RSpec.xdescribe Cloudflare::CustomHostnames, order: :defined, timeout: 30 do
 	include_context Cloudflare::Zone
 
 	let(:domain) { "www#{ENV['TRAVIS_JOB_ID'] || rand(1..5)}.ourtest.com" }
