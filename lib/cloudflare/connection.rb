@@ -38,19 +38,19 @@ module Cloudflare
 				headers['X-Auth-Email'] = email
 			end
 			
-			self.class.new(@resource.with(headers: headers))
+			self.with(headers: headers)
 		end
 		
 		def zones
-			Zones.new(@resource.with(path: 'zones'))
+			self.with(Zones, path: 'zones')
 		end
 		
 		def accounts
-			Accounts.new(@resource.with(path: 'accounts'))
+			self.with(Accounts, path: 'accounts')
 		end
 		
 		def user
-			User.new(@resource.with(path: 'user'))
+			self.with(User, path: 'user')
 		end
 	end
 end

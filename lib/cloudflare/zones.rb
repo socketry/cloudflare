@@ -33,19 +33,19 @@ require_relative 'logs'
 module Cloudflare
 	class Zone < Representation
 		def custom_hostnames
-			CustomHostnames.new(@resource.with(path: 'custom_hostnames'))
+			self.with(CustomHostnames, path: 'custom_hostnames')
 		end
 
 		def dns_records
-			DNS::Records.new(@resource.with(path: 'dns_records'))
+			self.with(DNS::Records, path: 'dns_records')
 		end
 		
 		def firewall_rules
-			Firewall::Rules.new(@resource.with(path: 'firewall/access_rules/rules'))
+			self.with(Firewall::Rules, path: 'firewall/access_rules/rules')
 		end
 		
 		def logs
-			Logs::Received.new(@resource.with(path: 'logs/received'))
+			self.with(Logs::Received, path: 'logs/received')
 		end
 		
 		DEFAULT_PURGE_CACHE_PARAMS = {
@@ -53,7 +53,7 @@ module Cloudflare
 		}.freeze
 		
 		def purge_cache(parameters = DEFAULT_PURGE_CACHE_PARAMS)
-			Zone.new(@resource.with(path: 'purge_cache')).post(parameters)
+			self.with(Zone, path: 'purge_cache').post(parameters)
 			
 			return self
 		end

@@ -33,7 +33,7 @@ module Cloudflare
 		end
 
 		def kv_namespaces
-			KV::Namespaces.new(@resource.with(path: 'storage/kv/namespaces'))
+			self.with(KV::Namespaces, path: 'storage/kv/namespaces')
 		end
 	end
 

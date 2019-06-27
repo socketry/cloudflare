@@ -32,7 +32,7 @@ module Cloudflare
 			end
 
 			def keys
-				Keys.new(@resource.with(path: 'keys'))
+				self.with(Keys, path: 'keys')
 			end
 
 			def read_value(name)
@@ -55,7 +55,7 @@ module Cloudflare
 			private
 
 			def value_representation(name)
-				Representation.new(@resource.with(path: "values/#{name}"))
+				self.with(Representation, path: "values/#{name}")
 			end
 		end
 
