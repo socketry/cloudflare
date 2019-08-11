@@ -37,7 +37,7 @@ module Cloudflare
 				page += 1
 
 				# Was this the last page?
-				break if zones.value.count < per_page
+				break if zones.value.size < per_page
 			end
 		end
 
