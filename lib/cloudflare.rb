@@ -25,10 +25,10 @@ require 'async'
 require_relative 'cloudflare/connection'
 
 module Cloudflare
-	DEFAULT_URL = 'https://api.cloudflare.com/client/v4'
+	DEFAULT_ENDPOINT = Async::HTTP::Endpoint.parse('https://api.cloudflare.com/client/v4')
 	
-	def self.connect(key: nil, email: nil)
-		representation = Connection.for(DEFAULT_URL)
+	def self.connect(endpoint = DEFAULT_ENDPOINT, key: nil, email: nil)
+		representation = Connection.for(endpoint)
 		
 		if key
 			representation = representation.authenticated(key, email)

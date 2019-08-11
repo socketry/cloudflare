@@ -21,6 +21,8 @@
 # THE SOFTWARE.
 
 require 'async/rspec'
+require 'async/http/proxy'
+
 require_relative '../../cloudflare'
 
 module Cloudflare
@@ -35,10 +37,20 @@ module Cloudflare
 			let(:email) {ENV['CLOUDFLARE_EMAIL']}
 			let(:key) {ENV['CLOUDFLARE_KEY']}
 			
-			let(:connection) {@connection = Cloudflare.connect(key: key, email: email)}
+			let(:connection) do
+				if proxy_url = ENV['CLOUDFLARE_PROXY']
+					proxy_endpoint = Async::HTTP::Endpoint.parse(proxy_url)
+					@proxy = Async::HTTP::Proxy.new(proxy_endpoint)
+					@connection = Cloudflare.connect(proxy.endpoint(DEFAULT_ENDPOINT.url), key: key, email: email)
+				else
+					@proxy = nil
+					@connection = Cloudflare.connect(key: key, email: email)
+				end
+			end
 			
 			after do
 				@connection&.close
+				@proxy&.close
 			end
 		end
 	end

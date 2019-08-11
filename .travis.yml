@@ -2,6 +2,11 @@ language: ruby
 dist: xenial
 cache: bundler
 
+addons:
+  apt:
+    packages:
+    - squid
+
 matrix:
   include:
     - rvm: 2.4
@@ -13,6 +18,9 @@ matrix:
       env: JRUBY_OPTS="--debug -X+O"
     - rvm: truffleruby
     - rvm: ruby-head
+    - rvm: 2.6
+      env: CLOUDFLARE_PROXY=http://localhost:3128
+      before_script: sudo service squid start
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
