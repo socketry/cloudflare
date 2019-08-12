@@ -40,17 +40,17 @@ module Cloudflare
 			let(:connection) do
 				if proxy_url = ENV['CLOUDFLARE_PROXY']
 					proxy_endpoint = Async::HTTP::Endpoint.parse(proxy_url)
-					@proxy = Async::HTTP::Proxy.new(proxy_endpoint)
-					@connection = Cloudflare.connect(proxy.endpoint(DEFAULT_ENDPOINT.url), key: key, email: email)
+					@client = Async::HTTP::Client.new(proxy_endpoint)
+					@connection = Cloudflare.connect(@client.proxy_for(DEFAULT_ENDPOINT), key: key, email: email)
 				else
-					@proxy = nil
+					@client = nil
 					@connection = Cloudflare.connect(key: key, email: email)
 				end
 			end
 			
 			after do
 				@connection&.close
-				@proxy&.close
+				@client&.close
 			end
 		end
 	end
