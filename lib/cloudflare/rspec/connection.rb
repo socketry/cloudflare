@@ -41,7 +41,7 @@ module Cloudflare
 				if proxy_url = ENV['CLOUDFLARE_PROXY']
 					proxy_endpoint = Async::HTTP::Endpoint.parse(proxy_url)
 					@client = Async::HTTP::Client.new(proxy_endpoint)
-					@connection = Cloudflare.connect(@client.proxy_for(DEFAULT_ENDPOINT), key: key, email: email)
+					@connection = Cloudflare.connect(@client.proxied_endpoint(DEFAULT_ENDPOINT), key: key, email: email)
 				else
 					@client = nil
 					@connection = Cloudflare.connect(key: key, email: email)
