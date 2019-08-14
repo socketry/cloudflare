@@ -72,7 +72,7 @@ RSpec.configure do |config|
 			end
 			account.kv_namespaces.to_a
 		rescue Cloudflare::RequestError => e
-			if e.message.include?('your account is not permitted')
+			if e.message.include?('your account is not entitled')
 				puts 'Disabling KV specs due to no access'
 				disabled_specs[:kv_spec] = true
 			else
