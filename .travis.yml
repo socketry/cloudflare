@@ -21,6 +21,9 @@ matrix:
     - rvm: 2.6
       env: CLOUDFLARE_PROXY=http://localhost:3128
       before_script: sudo service squid start
+    - rvm: jruby-head
+      env: JRUBY_OPTS="--debug -X+O" CLOUDFLARE_PROXY=http://localhost:3128
+      before_script: sudo service squid start
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
