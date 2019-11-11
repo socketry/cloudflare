@@ -28,14 +28,18 @@ require_relative 'user'
 
 module Cloudflare
 	class Connection < Representation
-		def authenticated(key, email = nil)
+		def authenticated(token: nil, key: nil, email: nil)
 			headers = {}
 			
-			if email.nil?
-				headers['X-Auth-User-Service-Key'] = key
-			else
-				headers['X-Auth-Key'] = key
-				headers['X-Auth-Email'] = email
+			if token
+				headers['Authorization'] = "Bearer #{token}"
+			elsif key
+				if email
+					headers['X-Auth-Key'] = key
+					headers['X-Auth-Email'] = email
+				else
+					headers['X-Auth-User-Service-Key'] = key
+				end
 			end
 			
 			self.with(headers: headers)
