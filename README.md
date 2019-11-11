@@ -63,6 +63,18 @@ Cloudflare.connect(key: key, email: email) do |connection|
 end
 ```
 
+### Using an API Token
+
+```ruby
+require 'cloudflare'
+
+token = 'a_generated_api_token'
+
+Cloudflare.connect(token: token) do |connection|
+    # ...
+end
+```
+
 ## Contributing
 
 1. Fork it
