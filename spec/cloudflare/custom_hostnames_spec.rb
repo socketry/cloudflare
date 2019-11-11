@@ -25,7 +25,7 @@ RSpec.xdescribe Cloudflare::CustomHostnames, order: :defined, timeout: 30 do
 	end
 
 	it 'can create a custom hostname record' do
-    expect(record).to be_kind_of Cloudflare::CustomHostname
+		expect(record).to be_kind_of Cloudflare::CustomHostname
 		expect(record.custom_metadata).to be_nil
 		expect(record.hostname).to eq domain
 		expect(record.custom_origin).to be_nil

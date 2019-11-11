@@ -19,7 +19,7 @@ RSpec.describe Cloudflare::DNS, order: :defined, timeout: 30 do
 			expect(@record.name).to be_start_with subdomain
 			expect(@record.content).to be == "1.2.3.4"
 		end
-                
+		
 		it "can create dns record with proxied option" do
 			@record = zone.dns_records.create("A", subdomain, "1.2.3.4", proxied: true)
 			expect(@record.type).to be == "A"
@@ -38,7 +38,7 @@ RSpec.describe Cloudflare::DNS, order: :defined, timeout: 30 do
 			fetched_record = zone.dns_records.find_by_name(record.name)
 			expect(fetched_record.content).to be == record.content
 		end
-                
+		
 		it "can update dns content with proxied option" do
 			record.update_content("4.3.2.1", proxied: true)
 			expect(record.proxied).to be_truthy

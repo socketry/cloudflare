@@ -12,7 +12,7 @@ RSpec.describe Cloudflare::KV::Namespaces, kv_spec: true, order: :defined, timeo
 	end
 
 	it 'can create a namespace' do
-    expect(namespace).to be_kind_of Cloudflare::KV::Namespace
+		expect(namespace).to be_kind_of Cloudflare::KV::Namespace
 		expect(namespace.id).not_to be_nil
 		expect(namespace.title).to eq namespace_title
 	end

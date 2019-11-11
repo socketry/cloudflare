@@ -39,7 +39,7 @@ module Cloudflare
 					type: @record[:type],
 					name: @record[:name],
 					content: content,
-                                        **options
+					**options
 				)
 
 				@value = response.result
