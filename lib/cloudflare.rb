@@ -27,11 +27,11 @@ require_relative 'cloudflare/connection'
 module Cloudflare
 	DEFAULT_ENDPOINT = Async::HTTP::Endpoint.parse('https://api.cloudflare.com/client/v4')
 	
-	def self.connect(endpoint = DEFAULT_ENDPOINT, key: nil, email: nil)
+	def self.connect(endpoint = DEFAULT_ENDPOINT, **auth_info)
 		representation = Connection.for(endpoint)
 		
-		if key
-			representation = representation.authenticated(key, email)
+		if !auth_info.empty?
+			representation = representation.authenticated(**auth_info)
 		end
 		
 		return representation unless block_given?
