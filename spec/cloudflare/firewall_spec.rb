@@ -34,7 +34,7 @@ RSpec.describe Cloudflare::Firewall, order: :defined, timeout: 30 do
 	
 	%w[block challenge whitelist].each_with_index do |mode, index|
 		it "should create a #{mode} rule" do
-			value = "123.123.123.#{index}"
+			value = "1.2.3.#{index}"
 			rule = zone.firewall_rules.set(mode, value, notes: notes)
 			
 			expect(rule.mode).to be == mode
@@ -42,7 +42,8 @@ RSpec.describe Cloudflare::Firewall, order: :defined, timeout: 30 do
 			expect(rule.configuration[:target]).to be == 'ip'
 			expect(rule.notes).to be == notes
 			
-			rule.delete
+		ensure
+			rule&.delete
 		end
 	end
 end
