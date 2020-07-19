@@ -7,9 +7,11 @@ gemspec
 
 gem 'async-http', '~> 0.48', '>= 0.48.2'
 
-group :development do
-	gem 'pry'
-	gem 'pry-coolline'
+group :maintenance, optional: true do
+	gem "bake-bundler"
+	gem "bake-modernize"
+	
+	gem "utopia-project"
 end
 
 group :test do

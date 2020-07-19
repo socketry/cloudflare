@@ -12,7 +12,7 @@ end
 
 ACCOUNT_ID = ENV['CLOUDFLARE_ACCOUNT_ID']
 NAMES = ['testing', 'horse', 'cat', 'dog', 'fish', 'dolphin', 'lion', 'tiger'].freeze
-JOB_ID = ENV.fetch('TRAVIS_JOB_ID', 0).to_i
+JOB_ID = ENV.fetch('GITHUB_RUN_ID', 0).to_i
 ZONE_NAME = ENV['CLOUDFLARE_ZONE_NAME'] || "#{NAMES[JOB_ID % NAMES.size]}.com"
 
 require 'covered/rspec'

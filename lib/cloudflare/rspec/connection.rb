@@ -29,7 +29,7 @@ module Cloudflare
 	module RSpec
 		module Connection
 		end
-
+		
 		RSpec.shared_context Connection do
 			include_context Async::RSpec::Reactor
 			
