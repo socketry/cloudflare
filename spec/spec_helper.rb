@@ -11,9 +11,11 @@ if AUTH_EMAIL.nil? || AUTH_EMAIL.empty? || AUTH_KEY.nil? || AUTH_KEY.empty?
 end
 
 ACCOUNT_ID = ENV['CLOUDFLARE_ACCOUNT_ID']
-NAMES = ['testing', 'horse', 'cat', 'dog', 'fish', 'dolphin', 'lion', 'tiger'].freeze
-JOB_ID = ENV.fetch('GITHUB_RUN_ID', 0).to_i
+NAMES = %w{alligator ant bear bee bird camel cat cheetah chicken chimpanzee cow crocodile deer dog dolphin duck eagle elephant fish fly fox frog giraffe goat goldfish hamster hippopotamus horse kangaroo kitten lion lobster monkey octopus owl panda pig puppy rabbit rat scorpion seal shark sheep snail snake spider squirrel tiger turtle wolf zebra}
+JOB_ID = ENV.fetch('INVOCATION_ID', 'testing').hash
 ZONE_NAME = ENV['CLOUDFLARE_ZONE_NAME'] || "#{NAMES[JOB_ID % NAMES.size]}.com"
+
+$stderr.puts "Using zone name: #{ZONE_NAME}"
 
 require 'covered/rspec'
 require 'async/rspec'
@@ -31,15 +33,14 @@ RSpec.shared_context Cloudflare::Account do
 			connection.accounts.first
 		end
 	end
-
 end
 
 RSpec.shared_context Cloudflare::Zone do
 	include_context Cloudflare::Account
 
-	let(:job_id) { JOB_ID }
-	let(:names) { NAMES.dup }
-	let(:name) { ZONE_NAME.dup }
+	let(:job_id) {JOB_ID}
+	let(:names) {NAMES.dup}
+	let(:name) {ZONE_NAME.dup}
 
 	let(:zones) {connection.zones}
 
