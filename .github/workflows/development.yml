@@ -48,3 +48,44 @@ jobs:
         CLOUDFLARE_EMAIL: ${{secrets.CLOUDFLARE_EMAIL}}
         CLOUDFLARE_KEY: ${{secrets.CLOUDFLARE_KEY}}
       run: ${{matrix.env}} bundle exec rspec
+  
+  test-with-proxy:
+    runs-on: ${{matrix.os}}-latest
+    continue-on-error: ${{matrix.experimental}}
+    
+    strategy:
+      matrix:
+        os:
+          - ubuntu
+        ruby:
+          - 2.7
+        
+        experimental: [false]
+        env: [""]
+        
+        proxy:
+          - http://localhost:3128
+    
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{matrix.ruby}}
+    
+    - name: Install dependencies
+      run: ${{matrix.env}} bundle install
+    
+    - name: Prepare squid
+      if: matrix.proxy
+      run: |
+        sudo apt-get install squid
+        sudo systemctl start squid
+    
+    - name: Run tests
+      timeout-minutes: 5
+      env:
+        CLOUDFLARE_TEST_ZONE_MANAGEMENT: true
+        CLOUDFLARE_PROXY: ${{matrix.proxy}}
+        CLOUDFLARE_EMAIL: ${{secrets.CLOUDFLARE_EMAIL}}
+        CLOUDFLARE_KEY: ${{secrets.CLOUDFLARE_KEY}}
+      run: ${{matrix.env}} bundle exec rspec
