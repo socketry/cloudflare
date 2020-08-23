@@ -55,6 +55,34 @@ Cloudflare.connect(key: key, email: email) do |connection|
 	
 	# Block an ip:
 	rule = zone.firewall_rules.set('block', '1.2.3.4', notes: "ssh dictionary attack")
+
+	# Create a Page Rule for a Zone
+	targets = [ 
+		{ 
+			"target": "url",
+			"constraint": { 
+				"operator": "matches",
+				"value": "https://www.example.org/*"
+			}
+		}
+	]
+	actions = [
+		{
+			"id": "cache_level",
+			"value": "cache_everything"
+		},
+		{
+			"id": "edge_cache_ttl",
+			"value": 345600
+		},
+		{
+			"id": "browser_cache_ttl",
+			"value": 345600
+		} 
+	]
+	zone.page_rules.create(targets, actions, priority: 1, status: "active")
+	# or edit
+	zone.page_rules.update(targets, actions, priority: 2, status: "disabled")
 end
 ```
 
