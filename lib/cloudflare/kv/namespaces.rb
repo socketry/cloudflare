@@ -5,6 +5,7 @@
 
 require_relative '../paginate'
 require_relative '../representation'
+require_relative 'rest_wrapper'
 
 module Cloudflare
 	module KV
@@ -55,7 +56,8 @@ module Cloudflare
 			private
 
 			def value_representation(name)
-				self.with(Representation, path: "values/#{name}")
+				@representation_class ||= Representation[RESTWrapper]
+				self.with(@representation_class, path: "values/#{name}")
 			end
 		end
 
