@@ -14,9 +14,9 @@ jobs:
           - macos
         
         ruby:
-          - 2.5
-          - 2.6
-          - 2.7
+          - "2.6"
+          - "2.7"
+          - "3.0"
         
         experimental: [false]
         env: [""]
@@ -37,9 +37,7 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{matrix.ruby}}
-    
-    - name: Install dependencies
-      run: ${{matrix.env}} bundle install
+        bundler-cache: true
     
     - name: Run tests
       timeout-minutes: 5
