@@ -40,6 +40,10 @@ module Cloudflare
 			self.with(DNS::Records, path: 'dns_records')
 		end
 		
+		def page_rules
+			self.with(Page::Rules, path: 'pagerules')
+		end
+
 		def firewall_rules
 			self.with(Firewall::Rules, path: 'firewall/access_rules/rules')
 		end
