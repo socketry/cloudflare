@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-# Copyright, 2018, by Samuel G. D. Williams. <http://www.codeotaku.com>
+# Copyright, 2012, by Marcin Prokop.
+# Copyright, 2017, by Samuel G. D. Williams. <http://www.codeotaku.com>
+# Copyright, 2017, by David Rosenbloom. <http://artifactory.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,50 +23,27 @@
 # THE SOFTWARE.
 
 require_relative 'representation'
-
-require_relative 'i_ps'
-require_relative 'zones'
-require_relative 'accounts'
-require_relative 'user'
-require_relative 'certificates'
+require_relative 'paginate'
 
 module Cloudflare
-	class Connection < Representation
-		def authenticated(token: nil, key: nil, email: nil)
-			headers = {}
-			
-			if token
-				headers['Authorization'] = "Bearer #{token}"
-			elsif key
-				if email
-					headers['X-Auth-Key'] = key
-					headers['X-Auth-Email'] = email
-				else
-					headers['X-Auth-User-Service-Key'] = key
-				end
-			end
-			
-			self.with(headers: headers)
+
+	class Certificate < Representation
+    def certificate
+      value[:certificate]
+    end
+	end
+
+	class Certificates < Representation
+		include Paginate
+
+		def representation
+			Certificate
 		end
 
-    def cidrs(ipv: nil)
-      with(IPs, path: 'ips').cidrs(ipv: ipv)
-    end
-		
-		def zones
-			self.with(Zones, path: 'zones')
+		def create(csr_pem, hostnames, request_type = 'origin-rsa', requested_validity = 5475)
+      attrs =
+        {csr: csr_pem, request_type: request_type, hostnames: hostnames, requested_validity: requested_validity}
+			represent_message(self.post(attrs))
 		end
-		
-		def accounts
-			self.with(Accounts, path: 'accounts')
-		end
-		
-		def user
-			self.with(User, path: 'user')
-		end
-
-    def certificates
-      with(Certificates, path: 'certificates')
-    end
 	end
 end
