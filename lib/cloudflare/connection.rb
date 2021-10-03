@@ -22,9 +22,11 @@
 
 require_relative 'representation'
 
+require_relative 'i_ps'
 require_relative 'zones'
 require_relative 'accounts'
 require_relative 'user'
+require_relative 'certificates'
 
 module Cloudflare
 	class Connection < Representation
@@ -44,6 +46,10 @@ module Cloudflare
 			
 			self.with(headers: headers)
 		end
+
+    def cidrs(ipv: nil)
+      with(IPs, path: 'ips').cidrs(ipv: ipv)
+    end
 		
 		def zones
 			self.with(Zones, path: 'zones')
@@ -56,5 +62,9 @@ module Cloudflare
 		def user
 			self.with(User, path: 'user')
 		end
+
+    def certificates
+      with(Certificates, path: 'certificates')
+    end
 	end
 end
