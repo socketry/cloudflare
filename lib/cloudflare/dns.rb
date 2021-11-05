@@ -76,7 +76,11 @@ module Cloudflare
 			TTL_AUTO = 1
 
 			def create(type, name, content, options)
-				params = {type: type, name: name, content: content}.merge(options)
+				params = {
+					type: type,
+					name: name,
+					content: content
+				}.merge(options)
 				represent_message(self.post(params))
 			end
 
