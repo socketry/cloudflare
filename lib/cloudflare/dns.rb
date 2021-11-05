@@ -34,13 +34,13 @@ module Cloudflare
 				@record = record || get.result
 			end
 
-			def update_content(content, **options)
-				response = put(
+			def update_content(content, options)
+				params = {
 					type: @record[:type],
 					name: @record[:name],
-					content: content,
-					**options
-				)
+					content: content
+				}.merge(options)
+				response = put(params)
 
 				@value = response.result
 			end
@@ -74,9 +74,10 @@ module Cloudflare
 			end
 
 			TTL_AUTO = 1
-			
-			def create(type, name, content, **options)
-				represent_message(self.post(type: type, name: name, content: content, **options))
+
+			def create(type, name, content, options)
+				params = {type: type, name: name, content: content}.merge(options)
+				represent_message(self.post(params))
 			end
 
 			def find_by_name(name)
