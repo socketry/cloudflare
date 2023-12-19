@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'dotenv/load'
+
 AUTH_EMAIL = ENV['CLOUDFLARE_EMAIL']
 AUTH_KEY = ENV['CLOUDFLARE_KEY']
 
@@ -19,39 +21,12 @@ $stderr.puts "Using zone name: #{ZONE_NAME}"
 
 require 'covered/rspec'
 require 'async/rspec'
+require 'pry'
 
 require 'cloudflare/rspec/connection'
 require 'cloudflare/zones'
 
-RSpec.shared_context Cloudflare::Account do
-	include_context Cloudflare::RSpec::Connection
-
-	let(:account) do
-		if ACCOUNT_ID
-			connection.accounts.find_by_id(ACCOUNT_ID)
-		else
-			connection.accounts.first
-		end
-	end
-end
-
-RSpec.shared_context Cloudflare::Zone do
-	include_context Cloudflare::Account
-
-	let(:job_id) {JOB_ID}
-	let(:names) {NAMES.dup}
-	let(:name) {ZONE_NAME.dup}
-
-	let(:zones) {connection.zones}
-
-	let(:zone) {@zone = zones.find_by_name(name) || zones.create(name, account)}
-
-	# after do
-	# 	if defined? @zone
-	# 		@zone.delete
-	# 	end
-	# end
-end
+Dir[File.expand_path('../support/**/*.rb', __FILE__)].each{|path| require path}
 
 RSpec.configure do |config|
 	# Enable flags like --only-failures and --next-failure

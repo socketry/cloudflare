@@ -12,7 +12,7 @@ RSpec.describe Cloudflare::DNS, order: :defined, timeout: 30 do
 		end
 	end
 	
-	context "new record" do
+	describe "#create" do
 		it "can create dns record" do
 			@record = zone.dns_records.create("A", subdomain, "1.2.3.4")
 			expect(@record.type).to be == "A"
@@ -29,8 +29,9 @@ RSpec.describe Cloudflare::DNS, order: :defined, timeout: 30 do
 		end
 	end
 	
-	context "with existing record" do
+	describe "#update_content" do
 		let(:record) {@record = zone.dns_records.create("A", subdomain, "1.2.3.4")}
+
 		it "can update dns content" do
 			record.update_content("4.3.2.1")
 			expect(record.content).to be == "4.3.2.1"
@@ -45,6 +46,28 @@ RSpec.describe Cloudflare::DNS, order: :defined, timeout: 30 do
 			
 			fetched_record = zone.dns_records.find_by_name(record.name)
 			expect(fetched_record.proxied).to be_truthy
+		end
+	end
+
+	describe "#update" do
+		let(:subject) { record.update(**new_params)}
+
+		let(:record) { @record = zone.dns_records.create("A", "old", "1.2.3.4", proxied: false) }
+
+		let(:new_params) do
+			{
+				type: "CNAME",
+				name: "new",
+				content: "example.com",
+				proxied: true
+			}
+		end
+
+		it "can update dns record" do
+			expect { subject }.to change { record.name }.to("#{new_params[:name]}.#{zone.name}")
+				.and change { record.type }.to(new_params[:type])
+				.and change { record.content }.to(new_params[:content])
+				.and change { record.proxied }.to(new_params[:proxied])
 		end
 	end
 end

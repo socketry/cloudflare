@@ -45,6 +45,17 @@ module Cloudflare
 				@value = response.result
 			end
 
+			def update(type: nil, name: nil, content: nil, **options)
+				response = put(
+					type: type || @record[:type],
+					name: name || @record[:name],
+					content: content || @record[:content],
+					**options
+				)
+
+				@value = response.result
+			end
+
 			def type
 				value[:type]
 			end

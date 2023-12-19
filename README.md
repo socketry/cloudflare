@@ -49,6 +49,11 @@ Cloudflare.connect(key: key, email: email) do |connection|
 	# Add a DNS record. Here we add an A record for `batman.example.com`:
 	zone = zones.find_by_name("example.com")
 	zone.dns_records.create('A', 'batman', '1.2.3.4', proxied: false)
+
+	# Update a DNS record. Here we update the A record above to be a CNAME record to 'nairobi.kanairo.com'
+	record = zone.dns_records.find_by_name("example.com") }
+	record.update(type: "CNAME", name: "nairobi", content: "kanairo.com", proxied: true)
+
 	
 	# Get firewall rules:
 	all_rules = zone.firewall_rules
@@ -88,9 +93,10 @@ end
 
 1.  Fork it
 2.  Create your feature branch (`git checkout -b my-new-feature`)
-3.  Commit your changes (`git commit -am 'Add some feature'`)
-4.  Push to the branch (`git push origin my-new-feature`)
-5.  Create new Pull Request
+3.  Run `cp .env.example .env` to create a .env file and populate it with the required environment variables. Edit the new file appropriately
+4.  Commit your changes (`git commit -am 'Add some feature'`)
+5.  Push to the branch (`git push origin my-new-feature`)
+6.  Create new Pull Request
 
 ## See Also
 
