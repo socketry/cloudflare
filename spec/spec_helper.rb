@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'dotenv/load'
+
 AUTH_EMAIL = ENV['CLOUDFLARE_EMAIL']
 AUTH_KEY = ENV['CLOUDFLARE_KEY']
 

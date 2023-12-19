@@ -19,4 +19,5 @@ group :test do
 	gem 'simplecov'
 	gem 'sinatra'
 	gem 'webmock'
+	gem 'dotenv'
 end
