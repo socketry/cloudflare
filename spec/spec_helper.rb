@@ -21,6 +21,7 @@ $stderr.puts "Using zone name: #{ZONE_NAME}"
 
 require 'covered/rspec'
 require 'async/rspec'
+require 'pry'
 
 require 'cloudflare/rspec/connection'
 require 'cloudflare/zones'

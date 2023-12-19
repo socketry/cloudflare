@@ -20,4 +20,5 @@ group :test do
 	gem 'sinatra'
 	gem 'webmock'
 	gem 'dotenv'
+	gem 'pry'
 end
