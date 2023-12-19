@@ -49,6 +49,11 @@ Cloudflare.connect(key: key, email: email) do |connection|
 	# Add a DNS record. Here we add an A record for `batman.example.com`:
 	zone = zones.find_by_name("example.com")
 	zone.dns_records.create('A', 'batman', '1.2.3.4', proxied: false)
+
+	# Update a DNS record. Here we update the A record above to be a CNAME record to 'nairobi.kanairo.com'
+	record = zone.dns_records.find_by_name("example.com") }
+	record.update(type: "CNAME", name: "nairobi", content: "kanairo.com", proxied: true)
+
 	
 	# Get firewall rules:
 	all_rules = zone.firewall_rules
