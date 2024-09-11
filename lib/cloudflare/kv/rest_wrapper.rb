@@ -2,6 +2,7 @@
 
 # Released under the MIT License.
 # Copyright, 2021, by Terry Kerr.
+# Copyright, 2024, by Samuel Williams.
 
 require "json"
 

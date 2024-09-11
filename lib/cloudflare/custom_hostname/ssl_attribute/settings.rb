@@ -2,7 +2,7 @@
 
 # Released under the MIT License.
 # Copyright, 2019, by Rob Widmer.
-# Copyright, 2019, by Samuel Williams.
+# Copyright, 2019-2024, by Samuel Williams.
 
 module Cloudflare
 	class CustomHostname < Representation

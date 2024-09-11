@@ -2,33 +2,31 @@
 
 # Released under the MIT License.
 # Copyright, 2012-2016, by Marcin Prokop.
-# Copyright, 2013, by emckay.
+# Copyright, 2013, by Eric McKay.
 # Copyright, 2014, by Jason Green.
-# Copyright, 2014-2019, by Samuel Williams.
+# Copyright, 2014-2024, by Samuel Williams.
 # Copyright, 2014, by Greg Retkowski.
 # Copyright, 2018, by Leonhardt Wille.
-# Copyright, 2019, by Akinori MUSHA.
+# Copyright, 2019, by Akinori Musha.
 
 require "async"
 require_relative "cloudflare/connection"
 
 module Cloudflare
-	DEFAULT_ENDPOINT = Async::HTTP::Endpoint.parse("https://api.cloudflare.com/client/v4/")
-	
-	def self.connect(endpoint = DEFAULT_ENDPOINT, **auth_info)
-		representation = Connection.for(endpoint)
-		
-		if !auth_info.empty?
-			representation = representation.authenticated(**auth_info)
-		end
-		
-		return representation unless block_given?
-		
-		Async do
+	def self.connect(*arguments, **auth_info)
+		Sync do
+			connection = Connection.open(*arguments)
+			
+			if !auth_info.empty?
+				connection = connection.authenticated(**auth_info)
+			end
+			
+			return connection unless block_given?
+			
 			begin
-				yield representation
+				yield connection
 			ensure
-				representation.close
+				connection.close
 			end
 		end
 	end

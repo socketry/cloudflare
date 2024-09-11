@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
 	spec.version = Cloudflare::VERSION
 	
 	spec.summary = "A Ruby wrapper for the Cloudflare API."
-	spec.authors = ["Samuel Williams", "Marcin Prokop", "Leonhardt Wille", "Rob Widmer", "Akinori MUSHA", "Sherman K", "Michael Kalygin", "Denis Sadomowski", "Nazar", "emckay", "Casey Lopez", "David Wegman", "Greg Retkowski", "Guillaume Leseur", "Jason Green", "Kugayama Nana", "Kyle Corbitt", "Mike Perham", "Olle Jonsson", "Terry Kerr", "莫粒"]
+	spec.authors = ["Samuel Williams", "Marcin Prokop", "Leonhardt Wille", "Rob Widmer", "Akinori Musha", "Sherman Koa", "Michael Kalygin", "Denis Sadomowski", "Eric McKay", "Fedishin Nazar", "Casey Lopez", "David Wegman", "Greg Retkowski", "Guillaume Leseur", "Jason Green", "Kugayama Nana", "Kyle Corbitt", "Mike Perham", "Olle Jonsson", "Terry Kerr", "莫粒"]
 	spec.license = "MIT"
 	
 	spec.cert_chain  = ["release.cert"]

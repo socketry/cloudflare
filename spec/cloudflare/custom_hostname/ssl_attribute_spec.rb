@@ -2,6 +2,7 @@
 
 # Released under the MIT License.
 # Copyright, 2019, by Rob Widmer.
+# Copyright, 2024, by Samuel Williams.
 
 RSpec.describe Cloudflare::CustomHostname::SSLAttribute do
 

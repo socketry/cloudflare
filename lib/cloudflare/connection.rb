@@ -2,22 +2,24 @@
 
 # Released under the MIT License.
 # Copyright, 2014-2016, by Marcin Prokop.
-# Copyright, 2014-2019, by Samuel Williams.
+# Copyright, 2014-2024, by Samuel Williams.
 # Copyright, 2015, by Kyle Corbitt.
 # Copyright, 2015, by Guillaume Leseur.
 # Copyright, 2018, by Leonhardt Wille.
 # Copyright, 2018, by Michael Kalygin.
-# Copyright, 2018, by Sherman K.
-# Copyright, 2019, by Akinori MUSHA.
+# Copyright, 2018, by Sherman Koa.
+# Copyright, 2019, by Akinori Musha.
 
-require_relative "representation"
+require "async/rest/resource"
 
 require_relative "zones"
 require_relative "accounts"
 require_relative "user"
 
 module Cloudflare
-	class Connection < Representation
+	class Connection < Async::REST::Resource
+		ENDPOINT = Async::HTTP::Endpoint.parse("https://api.cloudflare.com/client/v4/")
+		
 		def authenticated(token: nil, key: nil, email: nil)
 			headers = {}
 			
@@ -36,15 +38,15 @@ module Cloudflare
 		end
 		
 		def zones
-			self.with(Zones, path: "zones/")
+			Zones.new(self.with(path: "zones/"))
 		end
 		
 		def accounts
-			self.with(Accounts, path: "accounts")
+			Accounts.new(self.with(path: "accounts"))
 		end
 		
 		def user
-			self.with(User, path: "user")
+			User.new(self.with(path: "user"))
 		end
 	end
 end

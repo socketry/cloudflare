@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2017-2019, by Samuel Williams.
+# Copyright, 2017-2024, by Samuel Williams.
 # Copyright, 2017, by Denis Sadomowski.
 # Copyright, 2017, by 莫粒.
 # Copyright, 2018, by Leonhardt Wille.
 # Copyright, 2018, by Michael Kalygin.
-# Copyright, 2018, by Sherman K.
+# Copyright, 2018, by Sherman Koa.
 # Copyright, 2018, by Kugayama Nana.
 # Copyright, 2018, by Casey Lopez.
-# Copyright, 2019, by Akinori MUSHA.
+# Copyright, 2019, by Akinori Musha.
 # Copyright, 2019, by Rob Widmer.
 
 require_relative "representation"

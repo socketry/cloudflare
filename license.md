@@ -1,9 +1,9 @@
 # MIT License
 
 Copyright, 2012-2017, by Marcin Prokop.  
-Copyright, 2013, by emckay.  
+Copyright, 2013, by Eric McKay.  
 Copyright, 2014, by Jason Green.  
-Copyright, 2014-2021, by Samuel Williams.  
+Copyright, 2014-2024, by Samuel Williams.  
 Copyright, 2014, by Greg Retkowski.  
 Copyright, 2015, by Kyle Corbitt.  
 Copyright, 2015, by Guillaume Leseur.  
@@ -12,12 +12,12 @@ Copyright, 2017, by 莫粒.
 Copyright, 2018, by Leonhardt Wille.  
 Copyright, 2018, by Mike Perham.  
 Copyright, 2018, by Michael Kalygin.  
-Copyright, 2018, by Sherman K.  
+Copyright, 2018, by Sherman Koa.  
 Copyright, 2018, by Kugayama Nana.  
 Copyright, 2018, by Casey Lopez.  
-Copyright, 2019, by Akinori MUSHA.  
+Copyright, 2019, by Akinori Musha.  
 Copyright, 2019, by Rob Widmer.  
-Copyright, 2019, by Nazar.  
+Copyright, 2019, by Fedishin Nazar.  
 Copyright, 2019, by David Wegman.  
 Copyright, 2020, by Olle Jonsson.  
 Copyright, 2021, by Terry Kerr.  

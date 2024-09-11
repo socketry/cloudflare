@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2017-2020, by Samuel Williams.
+# Copyright, 2017-2024, by Samuel Williams.
 # Copyright, 2018, by Leonhardt Wille.
 # Copyright, 2018, by Michael Kalygin.
-# Copyright, 2018, by Sherman K.
+# Copyright, 2018, by Sherman Koa.
 # Copyright, 2019, by Rob Widmer.
 
 AUTH_EMAIL = ENV["CLOUDFLARE_EMAIL"]

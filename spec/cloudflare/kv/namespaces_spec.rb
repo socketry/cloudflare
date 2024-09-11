@@ -2,7 +2,7 @@
 
 # Released under the MIT License.
 # Copyright, 2019, by Rob Widmer.
-# Copyright, 2019, by Samuel Williams.
+# Copyright, 2019-2024, by Samuel Williams.
 
 RSpec.describe Cloudflare::KV::Namespaces, kv_spec: true, order: :defined, timeout: 30 do
 	include_context Cloudflare::Account

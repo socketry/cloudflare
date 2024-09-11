@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2014-2020, by Samuel Williams.
+# Copyright, 2014-2024, by Samuel Williams.
 # Copyright, 2014, by Marcin Prokop.
 # Copyright, 2018, by Leonhardt Wille.
 
@@ -19,13 +19,15 @@ end
 
 group :test do
 	gem "rspec"
+	gem "covered"
 	gem "decode"
 	gem "rubocop"
 	
 	gem "async-rspec"
 	
-	gem "coveralls", require: false
-	gem "simplecov"
 	gem "sinatra"
 	gem "webmock"
+	
+	gem "bake-test"
+	gem "bake-test-external"
 end
