@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-require_relative './ssl_attribute/settings'
+# Released under the MIT License.
+# Copyright, 2019, by Rob Widmer.
+# Copyright, 2019, by Samuel Williams.
+
+require_relative "./ssl_attribute/settings"
 
 module Cloudflare
 	class CustomHostname < Representation
@@ -10,7 +14,7 @@ module Cloudflare
 			end
 
 			def active?
-				status == 'active'
+				status == "active"
 			end
 
 			def cname
@@ -34,7 +38,7 @@ module Cloudflare
 			end
 
 			def pending_validation?
-				status == 'pending_validation'
+				status == "pending_validation"
 			end
 
 			# Wraps the settings hash if it exists or initializes the settings hash and then wraps it

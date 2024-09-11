@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
-# This implements the Custom Hostname API
-# https://api.cloudflare.com/#custom-hostname-for-a-zone-properties
+# Released under the MIT License.
+# Copyright, 2019, by Rob Widmer.
+# Copyright, 2019, by Samuel Williams.
 
-require_relative 'custom_hostname/ssl_attribute'
-require_relative 'paginate'
-require_relative 'representation'
+require_relative "custom_hostname/ssl_attribute"
+require_relative "paginate"
+require_relative "representation"
 
 module Cloudflare
 	class CustomHostname < Representation
@@ -68,7 +69,7 @@ module Cloudflare
 
 		# initializes a custom hostname object and yields it for customization before saving
 		def create(hostname, metadata: nil, origin: nil, ssl: {}, &block)
-			attrs = { hostname: hostname, ssl: { method: 'http', type: 'dv' }.merge(ssl) }
+			attrs = { hostname: hostname, ssl: { method: "http", type: "dv" }.merge(ssl) }
 			attrs[:custom_metadata] = metadata if metadata
 			attrs[:custom_origin_server] = origin if origin
 

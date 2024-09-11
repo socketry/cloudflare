@@ -1,51 +1,41 @@
 # frozen_string_literal: true
 
-# Copyright, 2012, by Marcin Prokop.
-# Copyright, 2017, by Samuel G. D. Williams. <http://www.codeotaku.com>
-# Copyright, 2017, by David Rosenbloom. <http://artifactory.com>
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# Released under the MIT License.
+# Copyright, 2017-2019, by Samuel Williams.
+# Copyright, 2017, by Denis Sadomowski.
+# Copyright, 2017, by 莫粒.
+# Copyright, 2018, by Leonhardt Wille.
+# Copyright, 2018, by Michael Kalygin.
+# Copyright, 2018, by Sherman K.
+# Copyright, 2018, by Kugayama Nana.
+# Copyright, 2018, by Casey Lopez.
+# Copyright, 2019, by Akinori MUSHA.
+# Copyright, 2019, by Rob Widmer.
 
-require_relative 'representation'
-require_relative 'paginate'
+require_relative "representation"
+require_relative "paginate"
 
-require_relative 'custom_hostnames'
-require_relative 'firewall'
-require_relative 'dns'
-require_relative 'logs'
+require_relative "custom_hostnames"
+require_relative "firewall"
+require_relative "dns"
+require_relative "logs"
 
 module Cloudflare
 	class Zone < Representation
 		def custom_hostnames
-			self.with(CustomHostnames, path: 'custom_hostnames')
+			self.with(CustomHostnames, path: "custom_hostnames/")
 		end
 
 		def dns_records
-			self.with(DNS::Records, path: 'dns_records')
+			self.with(DNS::Records, path: "dns_records/")
 		end
 		
 		def firewall_rules
-			self.with(Firewall::Rules, path: 'firewall/access_rules/rules')
+			self.with(Firewall::Rules, path: "firewall/access_rules/rules/")
 		end
 		
 		def logs
-			self.with(Logs::Received, path: 'logs/received')
+			self.with(Logs::Received, path: "logs/received/")
 		end
 		
 		DEFAULT_PURGE_CACHE_PARAMS = {
@@ -53,7 +43,7 @@ module Cloudflare
 		}.freeze
 		
 		def purge_cache(parameters = DEFAULT_PURGE_CACHE_PARAMS)
-			self.with(Zone, path: 'purge_cache').post(parameters)
+			self.with(Zone, path: "purge_cache").post(parameters)
 			
 			return self
 		end

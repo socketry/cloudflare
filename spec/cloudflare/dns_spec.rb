@@ -1,5 +1,10 @@
+# frozen_string_literal: true
 
-require 'cloudflare/rspec/connection'
+# Released under the MIT License.
+# Copyright, 2019-2020, by Samuel Williams.
+# Copyright, 2019, by David Wegman.
+
+require "cloudflare/rspec/connection"
 
 RSpec.describe Cloudflare::DNS, order: :defined, timeout: 30 do
 	include_context Cloudflare::Zone

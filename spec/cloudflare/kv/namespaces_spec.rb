@@ -1,3 +1,8 @@
+# frozen_string_literal: true
+
+# Released under the MIT License.
+# Copyright, 2019, by Rob Widmer.
+# Copyright, 2019, by Samuel Williams.
 
 RSpec.describe Cloudflare::KV::Namespaces, kv_spec: true, order: :defined, timeout: 30 do
 	include_context Cloudflare::Account
@@ -11,18 +16,18 @@ RSpec.describe Cloudflare::KV::Namespaces, kv_spec: true, order: :defined, timeo
 		end
 	end
 
-	it 'can create a namespace' do
+	it "can create a namespace" do
 		expect(namespace).to be_kind_of Cloudflare::KV::Namespace
 		expect(namespace.id).not_to be_nil
 		expect(namespace.title).to eq namespace_title
 	end
 
-	it 'can find a namespace by title' do
+	it "can find a namespace by title" do
 		namespace # Call this so that the namespace gets created
 		expect(account.kv_namespaces.find_by_title(namespace_title).id).to eq namespace.id
 	end
 
-	it 'can rename the namespace' do
+	it "can rename the namespace" do
 		new_title = "#{namespace_title}-#{rand(1..100)}"
 		namespace.rename(new_title)
 		expect(namespace.title).to eq new_title
@@ -30,21 +35,21 @@ RSpec.describe Cloudflare::KV::Namespaces, kv_spec: true, order: :defined, timeo
 		expect(account.kv_namespaces.find_by_title(namespace_title)).to be_nil
 	end
 
-	it 'can store a key/value, read it back' do
+	it "can store a key/value, read it back" do
 		key = "key-#{rand(1..100)}"
 		value = rand(100..999)
 		namespace.write_value(key, value)
 		expect(account.kv_namespaces.find_by_id(namespace.id).read_value(key)).to eq value.to_s
 	end
 
-	it 'can read a previously stored key' do
+	it "can read a previously stored key" do
 		key = "key-#{rand(1..100)}"
 		value = rand(100..999)
 		expect(account.kv_namespaces.find_by_id(namespace.id).write_value(key, value)).to be true
 		expect(namespace.read_value(key)).to eq value.to_s
 	end
 
-	it 'can delete keys' do
+	it "can delete keys" do
 		key = "key-#{rand(1..100)}"
 		value = rand(100..999)
 		expect(namespace.write_value(key, value)).to be true
@@ -55,7 +60,7 @@ RSpec.describe Cloudflare::KV::Namespaces, kv_spec: true, order: :defined, timeo
 		end.to raise_error(Cloudflare::RequestError)
 	end
 
-	it 'can get the keys that exist in the namespace' do
+	it "can get the keys that exist in the namespace" do
 		counter = 0
 		keys = Array.new(rand(1..9)) { "key-#{counter += 1}" } # Keep this single digits so ordering works
 		keys.each_with_index do |key, i|

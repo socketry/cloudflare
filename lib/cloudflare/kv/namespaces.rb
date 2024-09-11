@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-# This implements the Worker KV Store API
-# https://api.cloudflare.com/#workers-kv-namespace-properties
+# Released under the MIT License.
+# Copyright, 2019, by Rob Widmer.
+# Copyright, 2019, by Samuel Williams.
+# Copyright, 2021, by Terry Kerr.
 
-require_relative '../paginate'
-require_relative '../representation'
-require_relative 'rest_wrapper'
+require_relative "../paginate"
+require_relative "../representation"
+require_relative "rest_wrapper"
 
 module Cloudflare
 	module KV
@@ -33,7 +35,7 @@ module Cloudflare
 			end
 
 			def keys
-				self.with(Keys, path: 'keys')
+				self.with(Keys, path: "keys/")
 			end
 
 			def read_value(name)
@@ -57,7 +59,7 @@ module Cloudflare
 
 			def value_representation(name)
 				@representation_class ||= Representation[RESTWrapper]
-				self.with(@representation_class, path: "values/#{name}")
+				self.with(@representation_class, path: "values/#{name}/")
 			end
 		end
 
