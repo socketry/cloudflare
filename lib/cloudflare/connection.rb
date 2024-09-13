@@ -1,44 +1,36 @@
 # frozen_string_literal: true
 
-# Copyright, 2018, by Samuel G. D. Williams. <http://www.codeotaku.com>
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# Released under the MIT License.
+# Copyright, 2014-2016, by Marcin Prokop.
+# Copyright, 2014-2024, by Samuel Williams.
+# Copyright, 2015, by Kyle Corbitt.
+# Copyright, 2015, by Guillaume Leseur.
+# Copyright, 2018, by Leonhardt Wille.
+# Copyright, 2018, by Michael Kalygin.
+# Copyright, 2018, by Sherman Koa.
+# Copyright, 2019, by Akinori Musha.
 
-require_relative 'representation'
+require "async/rest/resource"
 
-require_relative 'zones'
-require_relative 'accounts'
-require_relative 'user'
+require_relative "zones"
+require_relative "accounts"
+require_relative "user"
 
 module Cloudflare
-	class Connection < Representation
+	class Connection < Async::REST::Resource
+		ENDPOINT = Async::HTTP::Endpoint.parse("https://api.cloudflare.com/client/v4/")
+		
 		def authenticated(token: nil, key: nil, email: nil)
 			headers = {}
 			
 			if token
-				headers['Authorization'] = "Bearer #{token}"
+				headers["authorization"] = "bearer #{token}"
 			elsif key
 				if email
-					headers['X-Auth-Key'] = key
-					headers['X-Auth-Email'] = email
+					headers["x-auth-key"] = key
+					headers["x-auth-email"] = email
 				else
-					headers['X-Auth-User-Service-Key'] = key
+					headers["x-auth-user-service-key"] = key
 				end
 			end
 			
@@ -46,15 +38,15 @@ module Cloudflare
 		end
 		
 		def zones
-			self.with(Zones, path: 'zones')
+			Zones.new(self.with(path: "zones/"))
 		end
 		
 		def accounts
-			self.with(Accounts, path: 'accounts')
+			Accounts.new(self.with(path: "accounts"))
 		end
 		
 		def user
-			self.with(User, path: 'user')
+			User.new(self.with(path: "user"))
 		end
 	end
 end

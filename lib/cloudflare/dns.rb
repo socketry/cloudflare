@@ -1,86 +1,84 @@
 # frozen_string_literal: true
 
-# Copyright, 2012, by Marcin Prokop.
-# Copyright, 2017, by Samuel G. D. Williams. <http://www.codeotaku.com>
-# Copyright, 2017, by David Rosenbloom. <http://artifactory.com>
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# Released under the MIT License.
+# Copyright, 2019-2024, by Samuel Williams.
+# Copyright, 2019, by Rob Widmer.
+# Copyright, 2019, by David Wegman.
 
-require_relative 'representation'
-require_relative 'paginate'
+require_relative "representation"
+require_relative "paginate"
 
 module Cloudflare
 	module DNS
 		class Record < Representation
-			def initialize(url, record = nil, **options)
-				super(url, **options)
-
-				@record = record || get.result
-			end
-
+			include Async::REST::Representation::Mutable
+			
 			def update_content(content, **options)
-				response = put(
-					type: @record[:type],
-					name: @record[:name],
+				self.class.put(@resource, {
+					type: self.type,
+					name: self.name,
 					content: content,
 					**options
-				)
-
-				@value = response.result
+				}) do |resource, response|
+					if response.success?
+						@value = response.read
+						@metadata = response.headers
+					else
+						raise RequestError.new(resource, response.read)
+					end
+					
+					self
+				end
 			end
-
+			
 			def type
-				value[:type]
+				result[:type]
 			end
-
+			
 			def name
-				value[:name]
+				result[:name]
 			end
-
+			
 			def content
-				value[:content]
+				result[:content]
 			end
-
-			def proxied
-				value[:proxied]
+			
+			def proxied?
+				result[:proxied]
 			end
-
+			
+			alias proxied proxied?
+			
 			def to_s
-				"#{@record[:name]} #{@record[:type]} #{@record[:content]}"
+				"#{self.name} #{self.type} #{self.content}"
 			end
 		end
-
+		
 		class Records < Representation
 			include Paginate
-
+			
 			def representation
 				Record
 			end
-
-			TTL_AUTO = 1
 			
 			def create(type, name, content, **options)
-				represent_message(self.post(type: type, name: name, content: content, **options))
+				payload = {type: type, name: name, content: content, **options}
+				
+				Record.post(@resource, payload) do |resource, response|
+					value = response.read
+					result = value[:result]
+					metadata = response.headers
+					
+					if id = result[:id]
+						resource = resource.with(path: id)
+					end
+					
+					Record.new(resource, value: value, metadata: metadata)
+				end
 			end
 
 			def find_by_name(name)
-				each(name: name).first
+				each(name: name).find{|record| record.name == name}
 			end
 		end
 	end
