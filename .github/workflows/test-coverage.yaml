@@ -8,6 +8,8 @@ permissions:
 env:
   CONSOLE_OUTPUT: XTerm
   COVERAGE: PartialSummary
+  CLOUDFLARE_EMAIL: ${{secrets.CLOUDFLARE_EMAIL}}
+  CLOUDFLARE_KEY: ${{secrets.CLOUDFLARE_KEY}}
 
 jobs:
   test:
@@ -31,9 +33,6 @@ jobs:
     
     - name: Run tests
       timeout-minutes: 5
-      env:
-        CLOUDFLARE_EMAIL: ${{secrets.CLOUDFLARE_EMAIL}}
-        CLOUDFLARE_KEY: ${{secrets.CLOUDFLARE_KEY}}
       run: bundle exec bake test
     
     - uses: actions/upload-artifact@v4
