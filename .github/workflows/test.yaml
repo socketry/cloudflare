@@ -47,4 +47,7 @@ jobs:
     
     - name: Run tests
       timeout-minutes: 10
+      env:
+        CLOUDFLARE_EMAIL: ${{secrets.CLOUDFLARE_EMAIL}}
+        CLOUDFLARE_KEY: ${{secrets.CLOUDFLARE_KEY}}
       run: bundle exec bake test
