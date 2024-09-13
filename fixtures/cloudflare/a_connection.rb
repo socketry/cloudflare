@@ -5,6 +5,7 @@
 
 require "cloudflare"
 require "sus/fixtures/async/reactor_context"
+require "async/http/proxy"
 
 module Cloudflare
 	AUTH_EMAIL = ENV["CLOUDFLARE_EMAIL"]
@@ -32,7 +33,7 @@ module Cloudflare
 			if proxy_url = PROXY_URL
 				proxy_endpoint = Async::HTTP::Endpoint.parse(proxy_url)
 				@client = Async::HTTP::Client.new(proxy_endpoint)
-				@connection = Cloudflare.connect(@client.proxied_endpoint(ENDPOINT), email: AUTH_EMAIL, key: AUTH_KEY)
+				@connection = Cloudflare.connect(@client.proxied_endpoint(Connection::ENDPOINT), email: AUTH_EMAIL, key: AUTH_KEY)
 			else
 				@client = nil
 				@connection = Cloudflare.connect(email: AUTH_EMAIL, key: AUTH_KEY)
