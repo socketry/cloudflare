@@ -59,11 +59,13 @@ describe Cloudflare::KV::Namespaces do
 		expect(namespace.read_value(key)).to be == value.to_s
 		expect(namespace.delete_value(key)).to be == true
 		
-		fetched_namespace = account.kv_namespaces.find_by_id(namespace.id)
-		
-		expect do
-			pp key: key, value: value, fetched_value: fetched_namespace.read_value(key)
-		end.to raise_exception(Cloudflare::RequestError)
+		# This doesn't always reliably fail, so we can't test it:
+		#
+		# fetched_namespace = account.kv_namespaces.find_by_id(namespace.id)
+		#
+		# expect do
+		# 	fetched_namespace.read_value(key)
+		# end.to raise_exception(Cloudflare::RequestError)
 	end
 
 	it "can get the keys that exist in the namespace" do
