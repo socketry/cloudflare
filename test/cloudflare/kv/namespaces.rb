@@ -62,7 +62,7 @@ describe Cloudflare::KV::Namespaces do
 		fetched_namespace = account.kv_namespaces.find_by_id(namespace.id)
 		
 		expect do
-			fetched_namespace.read_value(key)
+			pp key: key, value: value, fetched_value: fetched_namespace.read_value(key)
 		end.to raise_exception(Cloudflare::RequestError)
 	end
 
