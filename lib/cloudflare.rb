@@ -14,20 +14,18 @@ require_relative "cloudflare/connection"
 
 module Cloudflare
 	def self.connect(*arguments, **auth_info)
+		connection = Connection.open(*arguments)
+		
+		if !auth_info.empty?
+			connection = connection.authenticated(**auth_info)
+		end
+		
+		return connection unless block_given?
+		
 		Sync do
-			connection = Connection.open(*arguments)
-			
-			if !auth_info.empty?
-				connection = connection.authenticated(**auth_info)
-			end
-			
-			return connection unless block_given?
-			
-			begin
-				yield connection
-			ensure
-				connection.close
-			end
+			yield connection
+		ensure
+			connection.close
 		end
 	end
 end

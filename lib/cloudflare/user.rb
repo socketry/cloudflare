@@ -9,11 +9,11 @@ require_relative "representation"
 module Cloudflare
 	class User < Representation
 		def id
-			value[:id]
+			result[:id]
 		end
 		
 		def email
-			value[:email]
+			result[:email]
 		end
 	end
 end

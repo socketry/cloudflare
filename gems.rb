@@ -18,12 +18,12 @@ group :maintenance, optional: true do
 end
 
 group :test do
-	gem "rspec"
+	gem "sus"
 	gem "covered"
 	gem "decode"
 	gem "rubocop"
 	
-	gem "async-rspec"
+	gem "sus-fixtures-async"
 	
 	gem "sinatra"
 	gem "webmock"

@@ -24,13 +24,13 @@ module Cloudflare
 			headers = {}
 			
 			if token
-				headers["Authorization"] = "Bearer #{token}"
+				headers["authorization"] = "bearer #{token}"
 			elsif key
 				if email
-					headers["X-Auth-Key"] = key
-					headers["X-Auth-Email"] = email
+					headers["x-auth-key"] = key
+					headers["x-auth-email"] = email
 				else
-					headers["X-Auth-User-Service-Key"] = key
+					headers["x-auth-user-service-key"] = key
 				end
 			end
 			

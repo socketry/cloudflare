@@ -22,34 +22,38 @@ require_relative "logs"
 
 module Cloudflare
 	class Zone < Representation
+		include Async::REST::Representation::Mutable
+		
 		def custom_hostnames
-			self.with(CustomHostnames, path: "custom_hostnames/")
+			self.with(CustomHostnames, path: "custom_hostnames")
 		end
 
 		def dns_records
-			self.with(DNS::Records, path: "dns_records/")
+			self.with(DNS::Records, path: "dns_records")
 		end
 		
 		def firewall_rules
-			self.with(Firewall::Rules, path: "firewall/access_rules/rules/")
+			self.with(Firewall::Rules, path: "firewall/access_rules/rules")
 		end
 		
 		def logs
-			self.with(Logs::Received, path: "logs/received/")
+			self.with(Logs::Received, path: "logs/received")
 		end
 		
-		DEFAULT_PURGE_CACHE_PARAMS = {
+		DEFAULT_PURGE_CACHE_PARAMETERS = {
 			purge_everything: true
 		}.freeze
 		
-		def purge_cache(parameters = DEFAULT_PURGE_CACHE_PARAMS)
-			self.with(Zone, path: "purge_cache").post(parameters)
+		def purge_cache(**options)
+			if options.empty?
+				options = DEFAULT_PURGE_CACHE_PARAMETERS
+			end
 			
-			return self
+			self.class.post(@resource.with(path: "purge_cache"), options)
 		end
 		
 		def name
-			value[:name]
+			result[:name]
 		end
 		
 		alias to_s name
@@ -62,12 +66,24 @@ module Cloudflare
 			Zone
 		end
 
-		def create(name, account, jump_start = false)
-			represent_message(self.post(name: name, account: account.to_hash, jump_start: jump_start))
+		def create(name, account, jump_start: false, **options)
+			payload = {name: name, account: account.to_id, jump_start: jump_start, **options}
+			
+			Zone.post(@resource, payload) do |resource, response|
+				value = response.read
+				result = value[:result]
+				metadata = response.headers
+				
+				if id = result[:id]
+					resource = resource.with(path: id)
+				end
+				
+				Zone.new(resource, value: value, metadata: metadata)
+			end
 		end
-
+		
 		def find_by_name(name)
-			each(name: name).first
+			each(name: name).find{|zone| zone.name == name}
 		end
 	end
 end

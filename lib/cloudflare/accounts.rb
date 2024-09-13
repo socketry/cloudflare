@@ -11,7 +11,7 @@ require_relative "kv/namespaces"
 module Cloudflare
 	class Account < Representation
 		def id
-			value[:id]
+			result[:id]
 		end
 
 		def kv_namespaces

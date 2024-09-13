@@ -4,11 +4,13 @@
 # Copyright, 2019, by Rob Widmer.
 # Copyright, 2019-2024, by Samuel Williams.
 
+require_relative "../../representation"
+
 module Cloudflare
 	class CustomHostname < Representation
 		class SSLAttribute
 			class Settings
-				def initialize(settings)
+				def initialize(settings = {})
 					@settings = settings
 				end
 

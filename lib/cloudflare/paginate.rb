@@ -12,7 +12,9 @@ module Cloudflare
 			return to_enum(:each, page: page, per_page: per_page, **parameters) unless block_given?
 			
 			while true
-				response = self.class.get(@resource, {page: page, per_page: per_page, **parameters})
+				resource = @resource.with(parameters: {page: page, per_page: per_page, **parameters})
+				
+				response = self.class.get(resource)
 				
 				break if response.empty?
 				

@@ -3,14 +3,15 @@
 # Released under the MIT License.
 # Copyright, 2019-2024, by Samuel Williams.
 
-require "cloudflare/rspec/connection"
+require "cloudflare/firewall"
+require "cloudflare/a_connection"
 
-RSpec.describe Cloudflare::Firewall, order: :defined, timeout: 30 do
-	include_context Cloudflare::Zone
+describe Cloudflare::Firewall do
+	include_context Cloudflare::AConnection
 	
 	let(:notes) {"gemtest"}
 	
-	context "with several rules" do
+	with "several rules" do
 		let(:allow_ip) {"123.123.123.123"}
 		let(:block_ip) {"123.123.123.124"}
 		
@@ -37,7 +38,7 @@ RSpec.describe Cloudflare::Firewall, order: :defined, timeout: 30 do
 	end
 	
 	%w[block challenge whitelist].each_with_index do |mode, index|
-		it "should create a #{mode} rule" do
+		it "should create a #{mode} rule", unique: mode do
 			value = "1.2.3.#{index}"
 			rule = zone.firewall_rules.set(mode, value, notes: notes)
 			

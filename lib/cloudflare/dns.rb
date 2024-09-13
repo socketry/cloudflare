@@ -11,59 +11,74 @@ require_relative "paginate"
 module Cloudflare
 	module DNS
 		class Record < Representation
-			def initialize(url, record = nil, **options)
-				super(url, **options)
-
-				@record = record || get.result
-			end
-
+			include Async::REST::Representation::Mutable
+			
 			def update_content(content, **options)
-				response = put(
-					type: @record[:type],
-					name: @record[:name],
+				self.class.put(@resource, {
+					type: self.type,
+					name: self.name,
 					content: content,
 					**options
-				)
-
-				@value = response.result
+				}) do |resource, response|
+					if response.success?
+						@value = response.read
+						@metadata = response.headers
+					else
+						raise RequestError.new(resource, response.read)
+					end
+					
+					self
+				end
 			end
-
+			
 			def type
-				value[:type]
+				result[:type]
 			end
-
+			
 			def name
-				value[:name]
+				result[:name]
 			end
-
+			
 			def content
-				value[:content]
+				result[:content]
 			end
-
-			def proxied
-				value[:proxied]
+			
+			def proxied?
+				result[:proxied]
 			end
-
+			
+			alias proxied proxied?
+			
 			def to_s
-				"#{@record[:name]} #{@record[:type]} #{@record[:content]}"
+				"#{self.name} #{self.type} #{self.content}"
 			end
 		end
-
+		
 		class Records < Representation
 			include Paginate
-
+			
 			def representation
 				Record
 			end
-
-			TTL_AUTO = 1
 			
 			def create(type, name, content, **options)
-				represent_message(self.post(type: type, name: name, content: content, **options))
+				payload = {type: type, name: name, content: content, **options}
+				
+				Record.post(@resource, payload) do |resource, response|
+					value = response.read
+					result = value[:result]
+					metadata = response.headers
+					
+					if id = result[:id]
+						resource = resource.with(path: id)
+					end
+					
+					Record.new(resource, value: value, metadata: metadata)
+				end
 			end
 
 			def find_by_name(name)
-				each(name: name).first
+				each(name: name).find{|record| record.name == name}
 			end
 		end
 	end

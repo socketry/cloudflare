@@ -10,7 +10,7 @@ module Cloudflare
 	module Logs
 		class Entry < Representation
 			def to_s
-				"#{value[:rayid]}-#{value[:ClientRequestURI]}"
+				"#{result[:rayid]}-#{result[:ClientRequestURI]}"
 			end
 		end
 	
@@ -23,4 +23,3 @@ module Cloudflare
 		end
 	end
 end
-
