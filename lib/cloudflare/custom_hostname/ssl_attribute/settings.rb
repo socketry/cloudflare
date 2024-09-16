@@ -1,10 +1,16 @@
 # frozen_string_literal: true
 
+# Released under the MIT License.
+# Copyright, 2019, by Rob Widmer.
+# Copyright, 2019-2024, by Samuel Williams.
+
+require_relative "../../representation"
+
 module Cloudflare
 	class CustomHostname < Representation
 		class SSLAttribute
 			class Settings
-				def initialize(settings)
+				def initialize(settings = {})
 					@settings = settings
 				end
 
@@ -25,7 +31,7 @@ module Cloudflare
 				# Always coerce into a boolean, if the key is not
 				# provided, this value may not be accurate
 				def http2?
-					http2 == 'on'
+					http2 == "on"
 				end
 
 				def http2=(value)
@@ -49,7 +55,7 @@ module Cloudflare
 				# Always coerce into a boolean, if the key is not
 				# provided, this value may not be accurate
 				def tls_1_3?
-					tls_1_3 == 'on'
+					tls_1_3 == "on"
 				end
 
 				def tls_1_3=(value)
@@ -62,7 +68,7 @@ module Cloudflare
 					if value.nil?
 						@settings.delete(key)
 					else
-						@settings[key] = !value || value == 'off' ? 'off' : 'on'
+						@settings[key] = !value || value == "off" ? "off" : "on"
 					end
 				end
 			end

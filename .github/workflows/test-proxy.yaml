@@ -1,0 +1,55 @@
+name: Test
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+env:
+  CONSOLE_OUTPUT: XTerm
+  CLOUDFLARE_PROXY: http://localhost:3128
+  CLOUDFLARE_EMAIL: ${{secrets.CLOUDFLARE_EMAIL}}
+  CLOUDFLARE_KEY: ${{secrets.CLOUDFLARE_KEY}}
+
+jobs:
+  test:
+    name: ${{matrix.ruby}} on ${{matrix.os}}
+    runs-on: ${{matrix.os}}-latest
+    continue-on-error: ${{matrix.experimental}}
+    
+    strategy:
+      matrix:
+        os:
+          - ubuntu
+        
+        ruby:
+          - "3.3"
+        
+        experimental: [false]
+        
+        include:
+          - os: ubuntu
+            ruby: truffleruby
+            experimental: true
+          - os: ubuntu
+            ruby: jruby
+            experimental: true
+          - os: ubuntu
+            ruby: head
+            experimental: true
+    
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{matrix.ruby}}
+        bundler-cache: true
+    
+    - name: Prepare squid
+      run: |
+        sudo apt-get install squid
+        sudo systemctl start squid
+    
+    - name: Run tests
+      timeout-minutes: 10
+      run: bundle exec bake test
