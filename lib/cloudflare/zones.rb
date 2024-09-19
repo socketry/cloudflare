@@ -52,6 +52,10 @@ module Cloudflare
 			self.class.post(@resource.with(path: "purge_cache"), options)
 		end
 		
+		def activation_check
+			self.class.put(@resource.with(path: "activation_check"))
+		end
+
 		def name
 			result[:name]
 		end
