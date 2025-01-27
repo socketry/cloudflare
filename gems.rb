@@ -11,23 +11,26 @@ source "https://rubygems.org"
 gemspec
 
 group :maintenance, optional: true do
-	gem "bake-gem"
-	gem "bake-modernize"
-	
-	gem "utopia-project"
+  gem "bake-gem"
+  gem "bake-modernize"
+
+  gem "utopia-project"
 end
 
 group :test do
-	gem "sus"
-	gem "covered"
-	gem "decode"
-	gem "rubocop"
-	
-	gem "sus-fixtures-async"
-	
-	gem "sinatra"
-	gem "webmock"
-	
-	gem "bake-test"
-	gem "bake-test-external"
+  gem "sus"
+  gem "covered"
+  gem "decode"
+  gem "rubocop"
+
+  gem "sus-fixtures-async"
+
+  gem "sinatra"
+  gem "webmock"
+
+  gem "bake-test"
+  gem "bake-test-external"
+
+  gem "dotenv"
+  gem "pry"
 end
