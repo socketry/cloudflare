@@ -9,8 +9,6 @@ require_relative "../representation"
 module Cloudflare
 	module R2
 		class Domain < Representation
-			include Async::REST::Representation::Mutable
-
 			def name
 				result[:domain]
 			end

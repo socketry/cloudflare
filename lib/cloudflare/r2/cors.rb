@@ -9,8 +9,6 @@ require_relative "../representation"
 module Cloudflare
 	module R2
 		class Cors < Representation
-			include Async::REST::Representation::Mutable
-
 			def rules
 				result[:rules]
 			end

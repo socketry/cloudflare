@@ -60,7 +60,7 @@ end
 
 ### Using a Bearer Token
 
-You can read more about [bearer tokens here](https://blog.cloudflare.com/api-tokens-general-availability/). This allows you to limit priviledges.
+You can read more about [bearer tokens here](https://blog.cloudflare.com/api-tokens-general-availability/). This allows you to limit privileges.
 
 ``` ruby
 require 'cloudflare'
