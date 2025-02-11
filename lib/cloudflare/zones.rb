@@ -59,6 +59,10 @@ module Cloudflare
 		def name
 			result[:name]
 		end
+
+		def id
+			result[:id]
+		end
 		
 		alias to_s name
 	end

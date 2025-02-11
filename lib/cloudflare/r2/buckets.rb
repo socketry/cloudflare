@@ -26,12 +26,19 @@ module Cloudflare
 			end
 
 			def create_cors(**options)
-				self.class.put(@resource.with(path: "#{name}/cors"), options) do |resource, response|
+				payload = { bucket_name: name, **options}
+				self.class.put(@resource.with(path: "#{name}/cors"), payload) do |resource, response|
 					if response.success?
 						cors
 					else
 						raise RequestError.new(resource, response.read)
 					end
+				end
+			end
+
+			def delete
+				self.class.delete(@resource.with(path: name)) do |resource, response|
+					response.success?
 				end
 			end
 		end
