@@ -55,6 +55,46 @@ Cloudflare.connect(key: key, email: email) do |connection|
 	
 	# Block an ip:
 	rule = zone.firewall_rules.set('block', '1.2.3.4', notes: "ssh dictionary attack")
+
+	# Get an account
+	connection.accounts.find_by_id(ENV["CLOUDFLARE_ACCOUNT_ID"]) do |account|
+		# Find a R2 bucket
+		bucket = account.r2_buckets.find_by_name("a-s3-compatible-bucket")
+
+		# Create a new bucket
+		bucket = account.r2_buckets.create("another-s3-compatible-bucket")
+
+		# Attaching a public domain to a bucket
+		payload = {
+			"zoneId" => zone.id,
+			"enabled" => true
+		}
+		bucket.domains.attach("bucket.example.com", **payload)
+
+		# Adding a CORS policy to a bucket
+		rules = [
+		{
+			allowed: {
+			origins: ["domain.tld", "anotherdomain.tld"],
+			methods: ["GET", "PUT"],
+			headers: ["*"],
+			},
+			exposeHeaders: [
+			"Origin",
+			"Content-Type",
+			"Content-MD5",
+			"Content-Disposition"
+			],
+			maxAgeSeconds: 3600
+		}
+		]
+		payload = {
+			"account_id" => account.id,
+			"bucket_name" => "a-nice-bucket",
+			"rules" => rules
+		}
+		bucket.create_cors(**payload)
+	end
 end
 ```
 
