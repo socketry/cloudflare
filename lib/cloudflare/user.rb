@@ -5,6 +5,7 @@
 # Copyright, 2018, by Leonhardt Wille.
 
 require_relative "representation"
+require_relative "tokens"
 
 module Cloudflare
 	class User < Representation
@@ -14,6 +15,10 @@ module Cloudflare
 		
 		def email
 			result[:email]
+		end
+
+		def tokens
+			self.with(Tokens, path: "tokens")
 		end
 	end
 end

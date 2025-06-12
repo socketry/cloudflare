@@ -9,6 +9,7 @@ require_relative "representation"
 require_relative "paginate"
 require_relative "kv/namespaces"
 require_relative "r2/buckets"
+require_relative "tokens"
 
 module Cloudflare
 	class Account < Representation
@@ -22,6 +23,10 @@ module Cloudflare
 
 		def r2_buckets
 			self.with(R2::Buckets, path: "r2/buckets")
+		end
+
+		def tokens
+			self.with(Tokens, path: "tokens")
 		end
 	end
 
