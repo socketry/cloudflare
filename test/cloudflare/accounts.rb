@@ -36,4 +36,12 @@ describe Cloudflare::Accounts do
 		
 		expect(namespace.resource.reference.path).to be(:end_with?, "/#{account.id}/storage/kv/namespaces")
 	end
+
+	it "can generate a representation for the R2 bucket endpoint" do
+		buckets = connection.accounts.find_by_id(account.id).r2_buckets
+		
+		expect(buckets).to be_a(Cloudflare::R2::Buckets)
+		
+		expect(buckets.resource.reference.path).to be(:end_with?, "/#{account.id}/r2/buckets")
+	end
 end
