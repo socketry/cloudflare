@@ -62,7 +62,7 @@ module Cloudflare
 			self.class.patch(@resource, payload) do |resource, response|
 				value = response.read
 				
-				if value[:sucess]
+				if value[:success]
 					@ssl = nil
 					@value = value
 				else
