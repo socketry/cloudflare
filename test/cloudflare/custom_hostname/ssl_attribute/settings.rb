@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2019, by Rob Widmer.
 # Copyright, 2024, by Samuel Williams.
 
 require "cloudflare/custom_hostname/ssl_attribute/settings"

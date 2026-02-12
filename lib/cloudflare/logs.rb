@@ -13,7 +13,7 @@ module Cloudflare
 				"#{result[:rayid]}-#{result[:ClientRequestURI]}"
 			end
 		end
-	
+		
 		class Received < Representation
 			include Paginate
 			

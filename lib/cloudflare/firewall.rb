@@ -28,7 +28,7 @@ module Cloudflare
 				"#{configuration[:value]} - #{mode} - #{notes}"
 			end
 		end
-
+		
 		class Rules < Representation
 			include Paginate
 			

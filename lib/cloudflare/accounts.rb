@@ -13,15 +13,15 @@ module Cloudflare
 		def id
 			result[:id]
 		end
-
+		
 		def kv_namespaces
 			self.with(KV::Namespaces, path: "storage/kv/namespaces")
 		end
 	end
-
+	
 	class Accounts < Representation
 		include Paginate
-
+		
 		def representation
 			Account
 		end

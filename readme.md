@@ -9,7 +9,7 @@ It is a Ruby wrapper for the Cloudflare V4 API. It provides a light weight wrapp
 Add this line to your application's Gemfile:
 
 ``` ruby
-gem 'cloudflare'
+gem "cloudflare"
 ```
 
 And then execute:
@@ -25,11 +25,11 @@ Or install it yourself as:
 Here are some basic examples. For more details, refer to the code and specs.
 
 ``` ruby
-require 'cloudflare'
+require "cloudflare"
 
 # Grab some details from somewhere:
-email = ENV['CLOUDFLARE_EMAIL']
-key = ENV['CLOUDFLARE_KEY']
+email = ENV["CLOUDFLARE_EMAIL"]
+key = ENV["CLOUDFLARE_KEY"]
 
 Cloudflare.connect(key: key, email: email) do |connection|
 	# Get all available zones:
@@ -48,13 +48,13 @@ Cloudflare.connect(key: key, email: email) do |connection|
 	
 	# Add a DNS record. Here we add an A record for `batman.example.com`:
 	zone = zones.find_by_name("example.com")
-	zone.dns_records.create('A', 'batman', '1.2.3.4', proxied: false)
+	zone.dns_records.create("A", "batman", "1.2.3.4", proxied: false)
 	
 	# Get firewall rules:
 	all_rules = zone.firewall_rules
 	
 	# Block an ip:
-	rule = zone.firewall_rules.set('block', '1.2.3.4', notes: "ssh dictionary attack")
+	rule = zone.firewall_rules.set("block", "1.2.3.4", notes: "ssh dictionary attack")
 end
 ```
 
@@ -63,9 +63,9 @@ end
 You can read more about [bearer tokens here](https://blog.cloudflare.com/api-tokens-general-availability/). This allows you to limit priviledges.
 
 ``` ruby
-require 'cloudflare'
+require "cloudflare"
 
-token = 'a_generated_api_token'
+token = "a_generated_api_token"
 
 Cloudflare.connect(token: token) do |connection|
 	# ...
@@ -76,7 +76,7 @@ end
 
 ``` ruby
 Async do
-	connection = Cloudflare.connect(...)
+	connection = Cloudflare.connect
 	
 	# ... do something with connection ...
 ensure

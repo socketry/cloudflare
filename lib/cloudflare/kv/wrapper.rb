@@ -27,7 +27,7 @@ module Cloudflare
 					super
 				end
 			end
-
+			
 			class OctetParser < ::Protocol::HTTP::Body::Wrapper
 				def join
 					super.force_encoding(Encoding::BINARY)

@@ -21,6 +21,7 @@ Copyright, 2019, by Fedishin Nazar.
 Copyright, 2019, by David Wegman.  
 Copyright, 2020, by Olle Jonsson.  
 Copyright, 2021, by Terry Kerr.  
+Copyright, 2025, by Travis Skindzier.  
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

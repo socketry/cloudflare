@@ -71,7 +71,7 @@ module Cloudflare
 			end
 		end
 	end
-
+	
 	class CustomHostnames < Representation
 		include Paginate
 		
@@ -97,7 +97,7 @@ module Cloudflare
 				CustomHostname.new(resource, value: value, metadata: metadata)
 			end
 		end
-
+		
 		def find_by_hostname(hostname)
 			each(hostname: hostname).first
 		end

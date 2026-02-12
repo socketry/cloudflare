@@ -11,6 +11,7 @@
 # Copyright, 2018, by Casey Lopez.
 # Copyright, 2019, by Akinori Musha.
 # Copyright, 2019, by Rob Widmer.
+# Copyright, 2025, by Travis Skindzier.
 
 require_relative "representation"
 require_relative "paginate"
@@ -27,7 +28,7 @@ module Cloudflare
 		def custom_hostnames
 			self.with(CustomHostnames, path: "custom_hostnames")
 		end
-
+		
 		def dns_records
 			self.with(DNS::Records, path: "dns_records")
 		end
@@ -55,7 +56,7 @@ module Cloudflare
 		def activation_check
 			self.class.put(@resource.with(path: "activation_check"))
 		end
-
+		
 		def name
 			result[:name]
 		end
@@ -69,7 +70,7 @@ module Cloudflare
 		def representation
 			Zone
 		end
-
+		
 		def create(name, account, jump_start: false, **options)
 			payload = {name: name, account: account.to_id, jump_start: jump_start, **options}
 			

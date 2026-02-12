@@ -107,7 +107,7 @@ module Cloudflare
 			end
 			
 			def find_by_title(title)
-				each.find {|namespace| namespace.title == title }
+				each.find{|namespace| namespace.title == title}
 			end
 		end
 	end

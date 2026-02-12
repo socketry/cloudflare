@@ -11,7 +11,7 @@ describe Cloudflare::Logs do
 	
 	# it "can list logs" do
 	# 	logs = zone.logs.first(10)
-		
+	
 	# 	expect(logs).not.to be(:empty?)
 	# end
 end

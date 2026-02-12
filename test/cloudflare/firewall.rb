@@ -23,7 +23,7 @@ describe Cloudflare::Firewall do
 			zone.firewall_rules.set("whitelist", allow_ip)
 			zone.firewall_rules.set("block", block_ip)
 		end
-
+		
 		it "should get all rules" do
 			rules = zone.firewall_rules.to_a
 			

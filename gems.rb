@@ -21,7 +21,10 @@ group :test do
 	gem "sus"
 	gem "covered"
 	gem "decode"
+	
 	gem "rubocop"
+	gem "rubocop-md"
+	gem "rubocop-socketry"
 	
 	gem "sus-fixtures-async"
 	
@@ -31,3 +34,4 @@ group :test do
 	gem "bake-test"
 	gem "bake-test-external"
 end
+

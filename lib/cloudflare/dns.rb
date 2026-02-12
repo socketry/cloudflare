@@ -76,7 +76,7 @@ module Cloudflare
 					Record.new(resource, value: value, metadata: metadata)
 				end
 			end
-
+			
 			def find_by_name(name)
 				each(name: name).find{|record| record.name == name}
 			end

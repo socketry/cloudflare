@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2019, by Rob Widmer.
-# Copyright, 2019-2024, by Samuel Williams.
+# Copyright, 2024, by Samuel Williams.
 
 require "cloudflare/kv/namespaces"
 require "cloudflare/a_connection"
@@ -11,7 +10,7 @@ describe Cloudflare::KV::Namespaces do
 	include_context Cloudflare::AConnection
 	
 	let(:namespace_title) {"Test Worker #{SecureRandom.hex(4)}"}
-	let(:namespace) {account.kv_namespaces.create(namespace_title) }
+	let(:namespace) {account.kv_namespaces.create(namespace_title)}
 	
 	after do
 		@namespace&.delete
@@ -27,7 +26,7 @@ describe Cloudflare::KV::Namespaces do
 			id: be == namespace.id
 		)
 	end
-
+	
 	it "can rename the namespace" do
 		new_title = namespace_title + " Renamed"
 		
@@ -40,7 +39,7 @@ describe Cloudflare::KV::Namespaces do
 			id: be == namespace.id
 		)
 	end
-
+	
 	it "can store a key/value, read it back" do
 		key = "key-#{rand(1..100)}"
 		value = rand(100..999)
@@ -50,7 +49,7 @@ describe Cloudflare::KV::Namespaces do
 		fetched_namespace = account.kv_namespaces.find_by_id(namespace.id)
 		expect(fetched_namespace.read_value(key)).to be == value.to_s
 	end
-
+	
 	it "can delete keys" do
 		key = "key-#{SecureRandom.hex(8)}"
 		value = SecureRandom.hex(32)
@@ -67,7 +66,7 @@ describe Cloudflare::KV::Namespaces do
 		# 	fetched_namespace.read_value(key)
 		# end.to raise_exception(Cloudflare::RequestError)
 	end
-
+	
 	it "can get the keys that exist in the namespace" do
 		keys = 10.times.map{|index| "key-#{index}"}
 		

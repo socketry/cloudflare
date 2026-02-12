@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
 	spec.version = Cloudflare::VERSION
 	
 	spec.summary = "A Ruby wrapper for the Cloudflare API."
-	spec.authors = ["Samuel Williams", "Marcin Prokop", "Leonhardt Wille", "Rob Widmer", "Akinori Musha", "Sherman Koa", "Michael Kalygin", "Denis Sadomowski", "Eric McKay", "Fedishin Nazar", "Casey Lopez", "David Wegman", "Greg Retkowski", "Guillaume Leseur", "Jason Green", "Kugayama Nana", "Kyle Corbitt", "Mike Perham", "Olle Jonsson", "Terry Kerr", "莫粒"]
+	spec.authors = ["Samuel Williams", "Marcin Prokop", "Leonhardt Wille", "Rob Widmer", "Akinori Musha", "Sherman Koa", "Michael Kalygin", "Denis Sadomowski", "Eric McKay", "Fedishin Nazar", "Casey Lopez", "David Wegman", "Greg Retkowski", "Guillaume Leseur", "Jason Green", "Kugayama Nana", "Kyle Corbitt", "Mike Perham", "Olle Jonsson", "Terry Kerr", "Travis Skindzier", "莫粒"]
 	spec.license = "MIT"
 	
 	spec.cert_chain  = ["release.cert"]
@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
 	
 	spec.files = Dir.glob(["{lib}/**/*", "*.md"], File::FNM_DOTMATCH, base: __dir__)
 	
-	spec.required_ruby_version = ">= 3.1"
+	spec.required_ruby_version = ">= 3.2"
 	
 	spec.add_dependency "async-rest", "~> 0.18"
 end
