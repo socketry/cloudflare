@@ -12,9 +12,11 @@
 
 require "async/rest/resource"
 
+require_relative "ips"
 require_relative "zones"
 require_relative "accounts"
 require_relative "user"
+require_relative "certificates"
 
 module Cloudflare
 	class Connection < Async::REST::Resource
@@ -37,6 +39,10 @@ module Cloudflare
 			self.with(headers: headers)
 		end
 		
+		def cidrs(ipv: nil)
+			IPs.new(self.with(path: "ips")).cidrs(ipv: ipv)
+		end
+		
 		def zones
 			Zones.new(self.with(path: "zones/"))
 		end
@@ -47,6 +53,10 @@ module Cloudflare
 		
 		def user
 			User.new(self.with(path: "user"))
+		end
+		
+		def certificates
+			Certificates.new(self.with(path: "certificates"))
 		end
 	end
 end
