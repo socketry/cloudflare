@@ -8,5 +8,5 @@
 # Copyright, 2018, by Casey Lopez.
 
 module Cloudflare
-	VERSION = "4.4.0"
+	VERSION = "4.5.0"
 end
