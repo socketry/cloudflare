@@ -10,23 +10,9 @@ require "json"
 require "async/rest/representation"
 require "async/rest/wrapper/json"
 
+require_relative "request_error"
+
 module Cloudflare
-	class RequestError < StandardError
-		def initialize(request, value)
-			if error = value[:error]
-				super("#{request}: #{error}")
-			elsif errors = value[:errors]
-				super("#{request}: #{errors.map{|attributes| attributes[:message]}.join(', ')}")
-			else
-				super("#{request}: #{value.inspect}")
-			end
-			
-			@value = value
-		end
-		
-		attr :value
-	end
-	
 	class Wrapper < Async::REST::Wrapper::JSON
 		def process_response(request, response)
 			super
